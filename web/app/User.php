@@ -64,6 +64,6 @@ class User extends Model {
    * Get user jackpot plays
    */
   public function jackpots() {
-    return $this->hasManyThrough('App\JackpotParticipant', 'App\Jackpot');
+    return $this->hasManyThrough('App\Jackpot', 'App\JackpotParticipant');
   }
 }
