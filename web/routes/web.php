@@ -11,9 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-  return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 
-Route::get('/login', 'LoginController@login');
-Route::get('/logout', 'LoginController@logout');
+
+// Route::get('/', function () {
+//   return view('jackpot');
+// });
+
+Route::get('/login', 'SessionController@login');
+Route::get('/logout', 'SessionController@logout');
+
+Route::namespace('Admin')->middleware('auth:admin')->group(function () {
+  Route::get('/admin', 'HomeController@dashboard');
+});

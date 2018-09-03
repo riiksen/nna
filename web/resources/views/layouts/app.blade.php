@@ -11,7 +11,19 @@
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css"  media="screen,projection"/>
   </head>
   <body>
-
+    @include('shared.nav')
+    
+    <div class="container">
+      <div class="row">
+        <div class="col s3">
+          Chat
+          {{-- @include('shared.chat') --}}
+        </div>
+        <div class="col s9">
+          @yield('content')
+        </div>
+      </div>
+    </div>
     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
   </body>

@@ -2,12 +2,11 @@
 
 namespace App;
 
-// use Illuminate\Notifications\Notifiable;
-// use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-// class User extends Authenticatable {
-class User extends Model {
-  // use Notifiable;
+class User extends Authenticatable {
+  use Notifiable;
 
   /**
    * The table associated with the model.
