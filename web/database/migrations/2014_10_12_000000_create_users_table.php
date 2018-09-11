@@ -14,7 +14,8 @@ class CreateUsersTable extends Migration {
     Schema::create('users', function (Blueprint $table) {
       $table->increments('id');
       $table->string('username');
-      $table->string('steam_id')->unique();
+      $table->string('steamid')->unique();
+      $table->string('avatar');
       $table->integer('coins');
       $table->boolean('locked')->default(false);
       $table->boolean('is_admin')->default(false);

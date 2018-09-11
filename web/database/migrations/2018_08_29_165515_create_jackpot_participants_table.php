@@ -21,7 +21,7 @@ class CreateJackpotParticipantsTable extends Migration {
       $table->timestamps();
     });
 
-    Schema::table('coinflip_participants', function (Blueprint $table) {
+    Schema::table('jackpot_participants', function (Blueprint $table) {
       $table->foreign('user_id')->references('id')->on('users');
       $table->foreign('jackpot_id')->references('id')->on('jackpots');
     });
