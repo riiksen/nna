@@ -44,6 +44,7 @@
     <div class="container">
       <div class="row">
         <div class="col s3">
+          {{ Auth::user()['username'] }}
           Chat
           {{-- @include('shared.chat') --}}
         </div>

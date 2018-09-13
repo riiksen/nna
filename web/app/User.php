@@ -21,7 +21,7 @@ class User extends Authenticatable {
    * @var array
    */
   protected $fillable = [
-    'username', 'steam_id', 'avatar', 'coins',
+    'username', 'steamid', 'avatar',
   ];
 
   /**
@@ -41,16 +41,16 @@ class User extends Authenticatable {
   /** TODO: See if it works
    * Lock the account
    */
-  public function lock() {
-    $this->update(['locked'] => true);
-  }
+  // public function lock() {
+  //   $this->update(['locked'] => true);
+  // }
 
   /** TODO: See if it works
    * Unlock the account
    */
-  public function unlock() {
-    $this->update(['locked'] => false);
-  }
+  // public function unlock() {
+  //   $this->update(['locked'] => false);
+  // }
 
   /** FIXME
    * Get user coinflips plays
@@ -64,5 +64,15 @@ class User extends Authenticatable {
    */
   public function jackpots() {
     return $this->hasManyThrough('App\Jackpot', 'App\JackpotParticipant');
+  }
+
+  /**
+   * Overrides the method to ignore the remember token.
+   */
+  public function setAttribute($key, $value) {
+    $isRememberTokenAttribute = $key == $this->getRememberTokenName();
+    if (!$isRememberTokenAttribute) {
+      parent::setAttribute($key, $value);
+    }
   }
 }

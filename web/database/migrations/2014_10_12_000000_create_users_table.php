@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration {
       $table->string('username');
       $table->string('steamid')->unique();
       $table->string('avatar');
-      $table->integer('coins');
+      $table->integer('coins')->default(0);
       $table->boolean('locked')->default(false);
       $table->boolean('is_admin')->default(false);
       // $table->string('used_refferal');
