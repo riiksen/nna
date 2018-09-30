@@ -24,6 +24,10 @@ class User extends Authenticatable {
     'username', 'steamid', 'avatar',
   ];
 
+  public function isAdmin() {
+    return $this->is_admin;
+  }
+
   /**
    * Get user withdraws 
    */

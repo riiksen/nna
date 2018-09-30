@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->name('home');
 
 
 // Route::get('/', function () {
@@ -19,11 +19,11 @@ Route::get('/', 'HomeController@index');
 // });
 
 // Route::get('/login', 'SessionController@login');
-Route::get('/logout', 'SessionController@logout');
+Route::get('/logout', 'SessionController@logout')->name('auth.logout');
 
 Route::get('/login', 'SessionController@redirectToSteam')->name('auth.steam');
 Route::get('/login/handle', 'SessionController@handle')->name('auth.steam.handle');
 
-Route::namespace('Admin')->middleware('auth:admin')->group(function () {
-  Route::get('/admin', 'HomeController@dashboard');
+Route::namespace('Admin')->middleware('admin')->prefix('admin')->group(function () {
+  Route::get('/', 'HomeController@dashboard')->name('admin.dashboard');
 });
