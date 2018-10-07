@@ -24,7 +24,7 @@
         <a id="logo-container" class="brand-logo" href="#">VGOscam</a>
         <ul class="right-hide-on-med-and-down">
           @guest
-            <li><a href="/signin">Sign in with steam</a></li>
+            <li><a href="/login">Sign in with steam</a></li>
           @else
             <li><a href="/logout">Logout</a></li>
           @endguest

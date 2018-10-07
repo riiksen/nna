@@ -9,6 +9,6 @@ class Deposit extends Model {
    * Get user that created this deposit
    */
   public function user() {
-    $this->belongsTo('App\User');
+    $this->belongsTo('App\Models\User');
   }
 }

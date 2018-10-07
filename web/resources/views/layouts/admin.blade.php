@@ -14,6 +14,8 @@
     {{-- <title>No chyba panel administracyjny nie</title> --}}
 
     <!-- Fontfaces CSS-->
+    {{-- <link rel="stylesheet" href="{{ mix('/css/admin.css') }}"> --}}
+
     <link href="css/font-face.css" rel="stylesheet" media="all">
     <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
     <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
@@ -65,6 +67,6 @@
     <script src="vendor/select2/select2.min.js"></script>
 
     <!-- Main JS -->
-    <script src="js/main.js"></script>
+    {{-- <script src="js/main.js"></script> --}}
   </body>
 </html>

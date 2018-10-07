@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Invisnik\LaravelSteamAuth\SteamAuth;
-use App\User;
+use App\Models\User;
 use Auth;
 
 class SessionController extends Controller {

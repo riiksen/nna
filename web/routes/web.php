@@ -26,4 +26,12 @@ Route::get('/login/handle', 'SessionController@handle')->name('auth.steam.handle
 
 Route::namespace('Admin')->middleware('admin')->prefix('admin')->group(function () {
   Route::get('/', 'HomeController@dashboard')->name('admin.dashboard');
+
+  Route::resource('users', 'UserController')->except(['destroy']);
+  // Route::resource('', '');
+  // Route::resource('', '');
+
+  // Route::get('/users', 'UserController@index')->name('admin.users');
+  // Route::get('/users/{id}', 'UserController@show')->name('admin.users.show');
+  // Route::post('/users/{id}');
 });

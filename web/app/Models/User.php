@@ -1,12 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable {
-  use Notifiable;
+  use Notifiable,
+      SoftDeletes;
 
   /**
    * The table associated with the model.
@@ -21,7 +23,9 @@ class User extends Authenticatable {
    * @var array
    */
   protected $fillable = [
-    'username', 'steamid', 'avatar',
+    'username',
+    'steamid',
+    'avatar',
   ];
 
   public function isAdmin() {
