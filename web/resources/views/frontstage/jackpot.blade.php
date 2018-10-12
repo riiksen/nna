@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('frontstage.layouts.app')
 
 @section('title', 'VGOscam - Jackpot')
 

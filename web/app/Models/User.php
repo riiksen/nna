@@ -36,14 +36,14 @@ class User extends Authenticatable {
    * Get user withdraws 
    */
   public function withdraws() {
-    return $this->hasMany('App\Withdraw');
+    return $this->hasMany('App\Models\Withdraw');
   }
 
   /**
    * Get user deposits 
    */
   public function deposits() {
-    return $this->hasMany('App\Deposit');
+    return $this->hasMany('App\Models\Deposit');
   }
   
   /** TODO: See if it works
@@ -64,14 +64,14 @@ class User extends Authenticatable {
    * Get user coinflips plays
    */
   public function coinflips() {
-    return $this->hasMany('App\Coinflip');
+    return $this->hasMany('App\Models\Coinflip');
   }
 
   /** FIXME
    * Get user jackpot plays
    */
   public function jackpots() {
-    return $this->hasManyThrough('App\Jackpot', 'App\JackpotParticipant');
+    return $this->hasManyThrough('App\Models\Jackpot', 'App\Models\JackpotParticipant');
   }
 
   /**
