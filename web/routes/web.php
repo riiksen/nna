@@ -18,6 +18,8 @@ Route::group(['namespace' => 'Frontstage', 'name' => 'frontstage.'], function() 
 
   Route::get('/login', 'SessionController@redirectToSteam')->name('login');
   Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
+
+  // Route::get('/account', 'AccountController@index')->name('account');
 });
 
 Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'name' => 'backstage.', 'middleware' => 'admin'], function() {
