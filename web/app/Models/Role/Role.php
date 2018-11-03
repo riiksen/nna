@@ -5,10 +5,12 @@ namespace App\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Role\Traits\RoleAccess;
 use App\Models\Role\Traits\RoleRelationship;
 
 class Role extends Model {
   use SoftDeletes,
+      RoleAccess,
       RoleRelationship;
 
   /**
