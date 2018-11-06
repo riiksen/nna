@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Role\Traits;
+namespace App\Models\Traits;
 
 trait RoleAccess {
    /**

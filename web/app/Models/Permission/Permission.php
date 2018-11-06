@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Permission;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\Permission\Traits\PermissionRelationship;
+use App\Models\Traits\PermissionRelationship;
 
 class Permission extends Model {
   use SoftDeletes,

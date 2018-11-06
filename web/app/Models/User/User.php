@@ -6,8 +6,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Traits\UserRelationship;
+
 class User extends Authenticatable {
   use Notifiable,
+      UserRelationship,
       SoftDeletes;
 
   /**
@@ -28,9 +31,9 @@ class User extends Authenticatable {
     'avatar',
   ];
 
-  public function isAdmin() {
-    return $this->is_admin;
-  }
+  // public function isAdmin() {
+  //   return $this->is_admin;
+  // }
 
   /** TODO: See if it works
    * Lock the account

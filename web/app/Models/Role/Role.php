@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Role;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\Role\Traits\RoleAccess;
-use App\Models\Role\Traits\RoleRelationship;
+use App\Models\Traits\RoleAccess;
+use App\Models\Traits\RoleRelationship;
 
 class Role extends Model {
   use SoftDeletes,

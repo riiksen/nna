@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Permission\Traits;
+namespace App\Models\Traits;
 
-use App\Models\Role\Role;
+use App\Models\Role;
 
 trait PermissionRelationship {
   public function roles() {

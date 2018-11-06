@@ -25,5 +25,8 @@ Route::group(['namespace' => 'Frontstage', 'name' => 'frontstage.'], function() 
 Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'name' => 'backstage.', 'middleware' => 'admin'], function() {
   Route::get('/', 'HomeController@dashboard')->name('dashboard');
 
-  // Route::resource('users', 'UserController')->except(['destroy']);
+  Route::resource('deposits', 'DepositsController')->only(['index', 'show']);
+  Route::resource('withdraws', 'WithdrawsController')->only(['index', 'show']);
+
+  Route::resource('users', 'UsersController')->only(['index', 'show']);
 });

@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Models\Role\Traits;
-
-use App\Models\User\User;
-use App\Models\Permission\Permission;
+namespace App\Models\Traits;
 
 trait RoleRelationship {
   public function users() {
-    return $this->belongsToMany(User::class, 'role_user', 'role_id', 'user_id');
+    return $this->belongsToMany('App\Models\User', 'role_user', 'role_id', 'user_id');
   }
 
   public function permissions() {
-    return $this->belongsToMany(Permission::class, 'permission_role', 'role_id', 'permission_id')->orderBy('display_name', 'asc');
+    return $this->belongsToMany('App\Models\Permission', 'permission_role', 'role_id', 'permission_id')->orderBy('display_name', 'asc');
   }
 }

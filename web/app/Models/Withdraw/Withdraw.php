@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Deposit extends Model {
+class Withdraw extends Model {
   /**
-   * Get user that created this deposit
+   * Get user that created this withdraw
    */
   public function user() {
     $this->belongsTo('App\Models\User');

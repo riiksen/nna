@@ -13,6 +13,8 @@ class CreateRouletteRollsTable extends Migration {
   public function up() {
     Schema::create('roulette_rolls', function (Blueprint $table) {
       $table->increments('id');
+      $table->string('hash');
+      // $table->
       $table->timestamps();
     });
   }
