@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCoinflipPlayedItemsTable extends Migration
+class Bots extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateCoinflipPlayedItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coinflip_played_items', function (Blueprint $table) {
+        Schema::create('bots', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->timestamps();
+            $table->string('login');
+            $table->string('password');
+            $table->string('secret_2fa');
+            $table->string('api_key');
         });
     }
 
@@ -26,6 +29,6 @@ class CreateCoinflipPlayedItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coinflip_played_items');
+        Schema::dropIfExists('bots');
     }
 }

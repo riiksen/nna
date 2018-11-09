@@ -12,7 +12,7 @@ class CreateJackpotsTable extends Migration {
    */
   public function up() {
     Schema::create('jackpots', function (Blueprint $table) {
-      $table->increments('id');
+      $table->increments('id')->unsigned();
       $table->integer('no_participants');
       $table->integer('no_items');
 
