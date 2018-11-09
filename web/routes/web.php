@@ -11,19 +11,19 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
+// Route::get('lang/{lang}', 'LanguageController@swap');
 
+Route::group(['namespace' => 'Frontstage', 'name' => 'frontstage.'], function() {
+  Route::get('/', 'HomeController@index')->name('index');
 
-// Route::get('/', function () {
-//   return view('jackpot');
-// });
+  Route::get('/login', 'SessionController@redirectToSteam')->name('login');
+  Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
+  Route::get('/logout', 'SessionController@logout')->name('logout');
+  // Route::get('/account', 'AccountController@index')->name('account');
+});
 
-// Route::get('/login', 'SessionController@login');
-Route::get('/logout', 'SessionController@logout');
+Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'name' => 'backstage.', 'middleware' => 'admin'], function() {
+  Route::get('/', 'HomeController@dashboard')->name('dashboard');
 
-Route::get('/login', 'SessionController@redirectToSteam')->name('auth.steam');
-Route::get('/login/handle', 'SessionController@handle')->name('auth.steam.handle');
-
-Route::namespace('Admin')->middleware('auth:admin')->group(function () {
-  Route::get('/admin', 'HomeController@dashboard');
+  // Route::resource('users', 'UserController')->except(['destroy']);
 });
