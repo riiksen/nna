@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCoinflipPlayedItemsTable extends Migration
+class Rake extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateCoinflipPlayedItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coinflip_played_items', function (Blueprint $table) {
+        Schema::create('rake', function(Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->timestamps();
+            $table->smallInteger('bot_id')->unsigned();
+            $table->string('item_id');
+            $table->string('game');
+            $table->integer('game_id')->unsigned();
         });
     }
 
@@ -26,6 +29,6 @@ class CreateCoinflipPlayedItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coinflip_played_items');
+        Schema::drop('rake');
     }
 }

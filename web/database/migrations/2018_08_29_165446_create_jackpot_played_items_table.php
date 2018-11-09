@@ -14,7 +14,7 @@ class CreateJackpotPlayedItemsTable extends Migration
     public function up()
     {
         Schema::create('jackpot_played_items', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
             $table->timestamps();
         });
     }
