@@ -19,30 +19,58 @@
 
     <!-- Main content -->
     <section class="content">
+    
+      <div class="row">
 
-      <!-- Default box -->
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title">Title</h3>
-
-          <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
-                    title="Collapse">
-              <i class="fa fa-minus"></i></button>
-            <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
-              <i class="fa fa-times"></i></button>
+        <div class="col col-md-3 col-sm-6 col-xs-12"> <!-- Total users count -->
+          <div class="info-box">
+            <div class="info-box-icon bg-aqua">
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="info-box-content">
+              <div class="info-box-text">Users</div>
+              <div class="info-box-number">{{ App\Models\User::count() }}</div>
+            </div>
           </div>
         </div>
-        <div class="box-body">
-          Start creating your amazing application!
+
+        <div class="col col-md-3 col-sm-6 col-xs-12"> <!-- -->
+          <div class="info-box">
+            <div class="info-box-icon bg-aqua">
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="info-box-content">
+              <div class="info-box-text">Users</div>
+              <div class="info-box-number">{{ App\Models\User::count() }}</div>
+            </div>
+          </div>
         </div>
-        <!-- /.box-body -->
-        <div class="box-footer">
-          Footer
+
+        <div class="col col-md-3 col-sm-6 col-xs-12"> <!-- -->
+          <div class="info-box">
+            <div class="info-box-icon bg-aqua">
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="info-box-content">
+              <div class="info-box-text">Users</div>
+              <div class="info-box-number">{{ App\Models\User::count() }}</div>
+            </div>
+          </div>
         </div>
-        <!-- /.box-footer-->
+
+        <div class="col col-md-3 col-sm-6 col-xs-12"> <!-- -->
+          <div class="info-box">
+            <div class="info-box-icon bg-aqua">
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="info-box-content">
+              <div class="info-box-text">Users</div>
+              <div class="info-box-number">{{ App\Models\User::count() }}</div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <!-- /.box -->
 
     </section>
     <!-- /.content -->

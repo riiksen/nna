@@ -1,3 +1,7 @@
+@php
+  $current_route = Route::currentRouteName();
+@endphp
+
 <!-- Left side column. contains the sidebar -->
 <aside class="main-sidebar">
   <!-- sidebar: style can be found in sidebar.less -->
@@ -26,12 +30,41 @@
     <!-- sidebar menu: : style can be found in sidebar.less -->
 
     <ul class="sidebar-menu" data-widget=tree>
-      <li class="treeview">
-        
+      <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}">
         <a href="{{ route('backstage.dashboard') }}">
           <i class="fa fa-dashboard"></i><span>Dashboard</span>
         </a>
-        
+      </li>
+
+      <li class="treeview {{ strpos($current_route, 'backstage.analytics') ? 'active' : NULL }}">
+        <a href="">
+          <i class="fa fa-bar-chart"></i><span>Analytics</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}"><a href="{{-- route() --}}"><i class="fa fa-circle-o"></i>Users</a></li>
+          <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}"><a href="{{-- route() --}}"><i class="fa fa-circle-o"></i>Earnings</a></li>
+        </ul>
+      </li>
+
+      <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}">
+        <a href="{{ route('backstage.dashboard') }}">
+          <i class="fa fa-user"></i><span>Users</span>
+        </a>
+      </li>
+
+      <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}">
+        <a href="{{ route('backstage.dashboard') }}">
+          <i class="fa fa-download"></i><span>Deposits</span>
+        </a>
+      </li>
+      
+      <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}">
+        <a href="{{ route('backstage.dashboard') }}">
+          <i class="fa fa-upload"></i><span>Withdraws</span>
+        </a>
       </li>
 
     </ul>

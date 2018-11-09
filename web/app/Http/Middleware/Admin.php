@@ -17,9 +17,7 @@ class Admin {
     if (Auth::check() && Auth::user()['is_admin']) return $next($request);
     // if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->isAdmin())
     //   return $next($request);
-
-    return redirect('/');
-
-    // return redirect()->route('frontstage.index');
+    
+    return redirect()->route('frontstage.index');
   }
 }
