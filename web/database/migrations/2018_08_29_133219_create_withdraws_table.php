@@ -12,7 +12,7 @@ class CreateWithdrawsTable extends Migration {
    */
   public function up() {
     Schema::create('withdraws', function (Blueprint $table) {
-      $table->increments('id')->unsigned();
+      $table->increments('id');
       $table->unsignedInteger('user_id');
 
       $table->timestamps();

@@ -6,26 +6,24 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCoinflipPlayedItemsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('coinflip_played_items', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up() {
+    Schema::create('coinflip_played_items', function (Blueprint $table) {
+      $table->increments('id');
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('coinflip_played_items');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down() {
+    Schema::dropIfExists('coinflip_played_items');
+  }
 }

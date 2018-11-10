@@ -12,7 +12,7 @@ class CreateCoinflipsTable extends Migration {
    */
   public function up() {
     Schema::create('coinflips', function (Blueprint $table) {
-      $table->increments('id')->unsigned();
+      $table->increments('id');
       $table->integer('no_host_items')->comment('Number of host items'); // Number of host items
       $table->integer('vo_host_items')->comment('Value of host items'); // Value of host items
       $table->integer('no_guest_items')->comment('Number of guest items'); // Number of guest items

@@ -6,26 +6,24 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateJackpotPlayedItemsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('jackpot_played_items', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up() {
+    Schema::create('jackpot_played_items', function (Blueprint $table) {
+      $table->increments('id');
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('jackpot_played_items');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down() {
+    Schema::dropIfExists('jackpot_played_items');
+  }
 }
