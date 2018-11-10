@@ -17,6 +17,7 @@ class CreateJackpotsTable extends Migration {
       $table->integer('no_items');
 
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

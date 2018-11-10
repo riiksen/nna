@@ -22,6 +22,7 @@ class CreateCoinflipsTable extends Migration {
       $table->integer('guest_user_id')->unsigned();
 
       $table->timestamps();
+      $table->softDeletes();
     });
 
     Schema::table('coinflips', function (Blueprint $table) {

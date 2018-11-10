@@ -19,6 +19,7 @@ class CreateJackpotParticipantsTable extends Migration {
       $table->integer('jackpot_id')->unsigned();
 
       $table->timestamps();
+      $table->softDeletes();
     });
 
     Schema::table('jackpot_participants', function (Blueprint $table) {

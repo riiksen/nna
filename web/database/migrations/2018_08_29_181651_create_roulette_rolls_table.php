@@ -16,6 +16,7 @@ class CreateRouletteRollsTable extends Migration {
       $table->string('hash');
       // $table->
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

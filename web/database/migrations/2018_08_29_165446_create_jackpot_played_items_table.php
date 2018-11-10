@@ -15,6 +15,7 @@ class CreateJackpotPlayedItemsTable extends Migration
     Schema::create('jackpot_played_items', function (Blueprint $table) {
       $table->increments('id');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

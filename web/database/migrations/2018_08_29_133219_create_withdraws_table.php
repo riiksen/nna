@@ -16,6 +16,7 @@ class CreateWithdrawsTable extends Migration {
       $table->unsignedInteger('user_id');
 
       $table->timestamps();
+      $table->softDeletes();
     });
 
     Schema::table('withdraws', function (Blueprint $table) {

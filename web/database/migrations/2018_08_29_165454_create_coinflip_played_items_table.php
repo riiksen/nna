@@ -15,6 +15,7 @@ class CreateCoinflipPlayedItemsTable extends Migration
     Schema::create('coinflip_played_items', function (Blueprint $table) {
       $table->increments('id');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 
