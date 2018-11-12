@@ -13,15 +13,17 @@ class Trades extends Migration
      */
     public function up()
     {
-        Schema::create(function(Blueprint $table) {
+        Schema::create('trades',function(Blueprint $table) {
             $table->unsignedInteger('id');
             $table->integer('bot_id');
             $table->tinyInteger('state');
             $table->string('steamid',17);
             $table->unsignedInteger('value');
-            $table->varchar('secretcode',12);
-            $table->varchar('type');
+            $table->string('secretcode',12);
+            $table->string('type');
             $table->timestamps();
+
+            $table->primary('id');
         });
     }
 
