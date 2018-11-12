@@ -20,6 +20,7 @@ conn.connect((err) => {
 		console.log(err);
 	}
 });
+var exit = false;
 var bots = [];
 var cooldown = {};
 var offers = {
@@ -27,6 +28,143 @@ var offers = {
 	"withdraws": [],
 	"coinflips": [],
 	"jackpots": []
+}
+
+function exitHandler() {
+	var count = 0;
+	exit = true;
+	function check(offersFromType,iteration) {
+		if(Object.values(offers[type]).length==iteration) {
+			count++;
+		}
+		if(count==Object.keys(offers).length) {
+			process.exit();
+		}
+	}
+	for(var type in offers) {
+		var i = 0;
+		if(offers[type].length>0) {
+			Object.values(offers[type]).map(offer => {
+				if(type=="deposits") {
+					bots[0].ITrade.CancelOffer({offer_id:offer.id});
+					conn.query("UPDATE trades SET state = ? WHERE id = ?",[6,offer.id],(err,rows,fields) => {
+						if(err) {
+							log("ERROR",err);
+							check(offers[type],++i);
+						}
+						check(offers[type],++i);
+					});
+				} else if(type=="withdraws") {
+					console.log(`1 ${Object.values(offers[type])}`);
+					bots[0].ITrade.GetOffer({offer_id:offer.id},(err,offer) => {
+						if(err) {
+							log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+							check(offers[type],++i);
+						}
+						if(offer.status==1) {
+							offer = offer["response"]["offer"];
+							console.log(`2 ${Object.values(offers[type])}`);
+							if(offer.state==2) {
+								bots[0].ITrade.CancelOffer({offer_id:offer.id});
+								console.log(`3 ${Object.values(offers[type])}`);
+								conn.beginTransaction((err) => {
+									if(err) {
+										log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+										check(offers[type],++i);
+									}
+									console.log(`4 ${Object.values(offers[type])}`);
+									conn.query("SELECT value FROM trades WHERE id = ?",[offer.id], (err,rows,fields) => {
+										if(err){
+											conn.rollback(() =>{
+												log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+												check(offers[type],++i);
+											});
+										}
+										conn.query("UPDATE trades SET state = ? WHERE id = ?",[offer.state,offer.id],(err,rows2,fields) => {
+											if(err) {
+												conn.rollback(() => {
+													log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+													check(offers[type],++i);
+												});
+											}
+											console.log(`5 ${Object.values(offers[type])}`);
+											conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?",[rows[0].value,offer["recipient"]["steam_id"]], (err,rows3,fields) => {
+												if(err) {
+													conn.rollback(() => {
+														log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+														check(offers[type],++i);
+													});
+												}
+												conn.commit((err) => {
+													if(err) {
+														conn.rollback(() => {
+															log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+															check(offers[type],++i);
+														});
+													}
+													log("INFO",`Successfly refunded user ID64: ${offer["recipient"]["steam_id"]} Offer ID: ${offer.id} For ${rows[0].value}`);
+													console.log(`6 ${Object.values(offers[type])}`);
+													check(offers[type],++i);
+												});
+											});
+										});
+									});
+								});
+							}
+						} else {
+							log("ERROR",`OFFER STATUS ${offer.status} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+						}
+					});
+				} else {
+					check(offers[type],++i);
+				}
+			});
+		} else {
+			check(offers[type],i);
+		}
+	}
+}
+process.on('SIGINT', function() {
+	exitHandler();	
+});
+
+process.on('SIGUSR1', function() {
+	exitHandler();
+});
+process.on('SIGUSR2', function() {
+	exitHandler();
+});
+
+process.on('uncaughtException', function (err) {
+	throwError(err);
+	exitHandler();
+});
+
+function giveCoins(offer,type,value) {
+	conn.beginTransaction((err) => {
+		if(err) throwError(err + " "+type+" ACCEPT steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
+		conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?", [value,offer["recipient"]["steam_id"]],(err,rows,fields) => {
+			if(err) {
+				conn.rollback(() => {
+					throwError(`${err} ${type} state: ${offer["state"]} steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
+				});
+			}
+			conn.query("UPDATE trades SET state = ? WHERE id = ?", [3,offer.id],(err,rows,fields) => {
+				if(err) {
+					conn.rollback(() => {
+						throwError(`${err} ${type} state: ${offer["state"]} steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
+					});
+				}
+				conn.commit((err) => {
+					if(err) {
+						conn.rollback(() => {
+							throwError(`${err} ${type} state: ${offer["state"]} steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
+						});
+					}
+				});
+			});
+		});
+	});
 }
 conn.query("SELECT * FROM bots",(err,result,fields)=> {
 	result.forEach(bot => {
@@ -39,11 +177,15 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 		);
 	});
 	bots[0].on('offerReceived',(offer) => {
-		bots[0].CancelOffer({ offer_id: offer.id });
+		bots[0].ITrade.CancelOffer({ offer_id: offer.id });
 	});
 	bots[0].on('any',(event,offer) => {
-		if(offer["sent_by_you"] && offer["state"]!=2) {
+		if(offer["sent_by_you"] && offer["state"]!=2 && exit!==true) {
+			console.log("a");
 				conn.query("SELECT value,type FROM trades WHERE id = ?",[offer.id],(err,rows,fields) => {
+					if(err) {
+						throwError(err);
+					}
 					var type = rows[0].type;
 					var value = rows[0].value;
 					for(var i in offers[type+"s"]) {
@@ -60,30 +202,7 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 									}
 								});
 							} else if(type=="deposit") {
-								conn.beginTransaction((err) => {
-									if(err) throwError(err + " DEPOSIT ACCEPT steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
-									conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?", [value,offer["recipient"]["steam_id"]],(err,rows,fields) => {
-										if(err) {
-											conn.rollback(() => {
-												throwError(err + " DEPOSIT ACCEPT steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
-											});
-										}
-										conn.query("UPDATE trades SET state = ? WHERE id = ?", [3,offer.id],(err,rows,fields) => {
-											if(err) {
-												conn.rollback(() => {
-													throwError(err + " DEPOSIT ACCEPT steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
-												});
-											}
-											conn.commit((err) => {
-												if(err) {
-													conn.rollback(() => {
-														throwError(err + " DEPOSIT ACCEPT steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
-													});
-												}
-											});
-										});
-									});
-								});
+								giveCoins(offer,type,value);
 							}
 							break;
 						case 5:
@@ -91,31 +210,7 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 						case 7:
 						case 8:
 							if(type=="withdraw") {
-								conn.beginTransaction((err) => {
-									if(err) throwError(err)
-										console.log("withdraw deklajn");
-										conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?", [value,offer["recipient"]["steam_id"]],(err,rows,fields) => {
-											if(err) {
-												conn.rollback(() => {
-													throwError(err + " WITHDRAW DECLINE steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
-												});
-											}
-											conn.query("UPDATE trades SET state = ? WHERE id = ?",[offer.state,offer.id],(err,rows,fields) => {
-												if(err) {
-													conn.rollback(() => {
-														throwError(err + " WITHDRAW DECLINE steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
-													});
-												}
-												conn.commit((err) => {
-													if(err) {
-														conn.rollback(() => {
-															throwError(err + " WITHDRAW DECLINE steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
-														});
-													}
-												});
-											});
-										});
-								});
+								giveCoins(offer,type,value);
 							} else if(type=="deposit") {
 								conn.query("UPDATE trades SET state = ? WHERE id = ?", [offer.state,offer.id],(err,rows,fields) => {
 									if(err) {
@@ -167,7 +262,6 @@ app.post("/loadInventory", (req,res) => {
 });
 app.post("/withdraw", (req, res) => {
 	var json=req.body;
-
 	if(Array.isArray(json["items"]) && json["steamid"]!=undefined) {
 			if(checkIfInTrade(json["steamid"])) res.end("You are already in trade");
 
@@ -185,7 +279,10 @@ app.post("/withdraw", (req, res) => {
 				});
 				if(count==json["items"].length) {
 					conn.query("SELECT coins,locked FROM users WHERE steamid = ?", [json["steamid"]],(err,rows,fields) => {
-						if(rows[0].coins>total && rows[0].locked==0) {
+						if(err) {
+							throwError(err);
+						}
+						if(rows[0].coins>=total && rows[0].locked==0) {
 							conn.beginTransaction((err) => {
 								if(err) throwError(err);
 								conn.query("UPDATE users SET coins = coins - ? WHERE steamid = ?",[total,json["steamid"]], (err,rows,fields) => {
@@ -195,7 +292,7 @@ app.post("/withdraw", (req, res) => {
 										});
 									}
 									var secret = secretcode();
-									bots[0].ITrade.SendOfferToSteamId({steam_id: json["steamid"], items_to_send: json["items"].join(","), message: "Withdrawal from VGOSCAM. Secret code: "+secret, expiration_time:262800} , (err,offer) => {
+									bots[0].ITrade.SendOfferToSteamId({steam_id: json["steamid"], items_to_send: json["items"].join(","), message: "Withdrawal from VGOSCAM. Secret code: "+secret} , (err,offer) => {
 										if(err) {
 											conn.rollback(() => {
 												throwError(err);
@@ -206,14 +303,14 @@ app.post("/withdraw", (req, res) => {
 											conn.query("INSERT INTO trades (id,bot_id,state,steamid,value,secretcode,type) VALUES (?,?,?,?,?,?,?)", [offer.id,0,2,json["steamid"],total,secret,"withdraw"],(err,rows,fields) => {
 												if(err) {
 													conn.rollback(() => {
-														bots[0].CancelOffer({offer_id:offer.id});
+														bots[0].ITrade.CancelOffer({offer_id:offer.id});
 														throwError(err);
 													});
 												}
 												conn.commit((err) => {
 													if(err) {
 														conn.rollback(() => {
-															bots[0].CancelOffer({offer_id:offer.id});
+															bots[0].ITrade.CancelOffer({offer_id:offer.id});
 															throwError(err);
 														})
 													}
@@ -262,14 +359,14 @@ app.post("/deposit", (req,res) => {
 				});
 				if(count==json["items"].length) {
 					var secret = secretcode();
-					bots[0].ITrade.SendOfferToSteamId({steam_id: json["steamid"], items_to_receive: json["items"].join(","), message: "Deposit to VGOSCAM. Secret code: "+secret, expiration_time:262800} , (err,offer) => {
+					bots[0].ITrade.SendOfferToSteamId({steam_id: json["steamid"], items_to_receive: json["items"].join(","), message: "Deposit to VGOSCAM. Secret code: "+secret} , (err,offer) => {
 						if(err) res.end("Error when sending deposit offer.");
 						if(offer.status==1) {
 							offer = offer["response"]["offer"];
 							var secret = secretcode();
 							conn.query("INSERT INTO trades (id,bot_id,state,steamid,value,secretcode,type) VALUES (?,?,?,?,?,?,?)", [offer.id,0,2,json["steamid"],total,secret,"deposit"],(err,rows,fields) => {
 								if(err) {
-									bots[0].CancelOffer({offer_id: offer.id});
+									bots[0].ITrade.CancelOffer({offer_id: offer.id});
 									throwError(err);
 								}
 								offers["deposits"].push(offer);
@@ -294,10 +391,10 @@ app.post("/deposit", (req,res) => {
 app.listen(3000, () => console.log(`Listening to port 3000`));
 
 function checkIfInTrade(steamid) {
-	offers["withdraws"].forEach((offer) => {
+	offers["withdraws"].map(offer => {
 		if(offer["recipient"]["steam_id"]==steamid) return true;
 	});
-	offers["deposits"].forEach((offer) => {
+	offers["deposits"].map(offer => {
 		if(offer["recipient"]["steam_id"]==steamid) return true;
 	});
 	return false;
