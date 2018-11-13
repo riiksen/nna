@@ -31,80 +31,68 @@ var offers = {
 }
 
 function exitHandler() {
-	var count = 0;
 	exit = true;
-	function check(offersFromType,iteration) {
-		if(Object.values(offers[type]).length==iteration) {
-			count++;
+	var i = 0, count = 0;
+	for(var key in offers) {
+		if(offers[key] instanceof Array) {
+			count+=offers[key].length;
 		}
-		if(count==Object.keys(offers).length) {
+	}
+	function check() {
+		i++;
+		if(count==i) {
 			process.exit();
 		}
 	}
 	for(var type in offers) {
-		var i = 0;
 		if(offers[type].length>0) {
-			Object.values(offers[type]).map(offer => {
+			Object.values(offers[type]).forEach(offer => {
 				if(type=="deposits") {
 					bots[0].ITrade.CancelOffer({offer_id:offer.id});
 					conn.query("UPDATE trades SET state = ? WHERE id = ?",[6,offer.id],(err,rows,fields) => {
 						if(err) {
 							log("ERROR",err);
-							check(offers[type],++i);
 						}
-						check(offers[type],++i);
 					});
 				} else if(type=="withdraws") {
-					console.log(`1 ${Object.values(offers[type])}`);
 					bots[0].ITrade.GetOffer({offer_id:offer.id},(err,offer) => {
 						if(err) {
 							log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-							check(offers[type],++i);
 						}
 						if(offer.status==1) {
 							offer = offer["response"]["offer"];
-							console.log(`2 ${Object.values(offers[type])}`);
 							if(offer.state==2) {
 								bots[0].ITrade.CancelOffer({offer_id:offer.id});
-								console.log(`3 ${Object.values(offers[type])}`);
 								conn.beginTransaction((err) => {
 									if(err) {
 										log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-										check(offers[type],++i);
 									}
-									console.log(`4 ${Object.values(offers[type])}`);
 									conn.query("SELECT value FROM trades WHERE id = ?",[offer.id], (err,rows,fields) => {
 										if(err){
 											conn.rollback(() =>{
 												log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-												check(offers[type],++i);
 											});
 										}
 										conn.query("UPDATE trades SET state = ? WHERE id = ?",[offer.state,offer.id],(err,rows2,fields) => {
 											if(err) {
 												conn.rollback(() => {
 													log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-													check(offers[type],++i);
 												});
 											}
-											console.log(`5 ${Object.values(offers[type])}`);
 											conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?",[rows[0].value,offer["recipient"]["steam_id"]], (err,rows3,fields) => {
 												if(err) {
 													conn.rollback(() => {
 														log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-														check(offers[type],++i);
 													});
 												}
 												conn.commit((err) => {
 													if(err) {
 														conn.rollback(() => {
 															log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-															check(offers[type],++i);
 														});
 													}
 													log("INFO",`Successfly refunded user ID64: ${offer["recipient"]["steam_id"]} Offer ID: ${offer.id} For ${rows[0].value}`);
-													console.log(`6 ${Object.values(offers[type])}`);
-													check(offers[type],++i);
+													check();
 												});
 											});
 										});
@@ -116,11 +104,9 @@ function exitHandler() {
 						}
 					});
 				} else {
-					check(offers[type],++i);
+					check();
 				}
 			});
-		} else {
-			check(offers[type],i);
 		}
 	}
 }
@@ -181,7 +167,6 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 	});
 	bots[0].on('any',(event,offer) => {
 		if(offer["sent_by_you"] && offer["state"]!=2 && exit!==true) {
-			console.log("a");
 				conn.query("SELECT value,type FROM trades WHERE id = ?",[offer.id],(err,rows,fields) => {
 					if(err) {
 						throwError(err);
@@ -233,6 +218,7 @@ app.all("*",function(req,res,next) {
 });
 
 app.post("/loadInventory", (req,res) => {
+	if(exit) res.end("Script exitting.");
 	var json = req.body;
 	var inventory = null;
 	if(json["refresh"]!=undefined || json["steamid"]!=undefined || !fileExists("./cache/"+json["steamid"]+".txt")) {
@@ -261,6 +247,7 @@ app.post("/loadInventory", (req,res) => {
 	}
 });
 app.post("/withdraw", (req, res) => {
+	if(exit) res.end("Script exitting.");
 	var json=req.body;
 	if(Array.isArray(json["items"]) && json["steamid"]!=undefined) {
 			if(checkIfInTrade(json["steamid"])) res.end("You are already in trade");
@@ -342,6 +329,7 @@ app.post("/withdraw", (req, res) => {
 });
 
 app.post("/deposit", (req,res) => {
+	if(exit) res.end("Script exitting.");
 	var json=req.body;
 	var inventory = null;
 	if(fileExists("./cache/"+json["steamid"]+".txt")) {
