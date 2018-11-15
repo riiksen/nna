@@ -18,8 +18,17 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
 
   Route::get('/login', 'SessionController@redirectToSteam')->name('login');
   Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
-  Route::get('/logout', 'SessionController@logout')->name('logout');
+  // Route::get('/logout', 'SessionController@logout')->name('logout');
+  Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
   // Route::get('/account', 'AccountController@index')->name('account');
+
+  // Route::get('/withdraw', '')
+  // Route::post('/withdraw')
+  // 
+  // Route::get('/deposit', '')
+  // Route::post('/deposit', '')
+
 });
 
 Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'backstage.', 'middleware' => 'admin'], function() {
