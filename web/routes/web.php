@@ -29,4 +29,6 @@ Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'back
   Route::resource('withdraws', 'WithdrawsController')->only(['index', 'show']);
 
   Route::resource('users', 'UsersController')->only(['index', 'show']);
+  Route::resource('roles', 'RolesController')->only(['index', 'show']);
+  Route::resource('permissions', 'PermissionsController')->only(['index', 'show']);
 });

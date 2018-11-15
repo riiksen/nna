@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backstage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PermissionController extends Controller {
+class PermissionsController extends Controller {
   public function index() {
 
   }

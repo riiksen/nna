@@ -7,10 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Traits\UserRelationship;
+use App\Models\Traits\UserAccess;
 
 class User extends Authenticatable {
   use Notifiable,
       UserRelationship,
+      UserAccess,
       SoftDeletes;
 
   /**

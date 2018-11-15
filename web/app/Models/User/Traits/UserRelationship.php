@@ -2,8 +2,6 @@
 
 namespace App\Models\Traits;
 
-
-
 trait UserRelationship {
   // public function roles() {
   //   

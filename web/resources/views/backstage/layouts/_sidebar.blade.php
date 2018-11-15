@@ -3,8 +3,8 @@
 @endphp
 
 <!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar">
-  <!-- sidebar: style can be found in sidebar.less -->
+<aside class="main-sidebar"
+>  <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
     <!-- Sidebar user panel -->
     <div class="user-panel">
@@ -36,6 +36,8 @@
         </a>
       </li>
 
+      @permission('view-analytics')
+
       <li class="treeview {{ strpos($current_route, 'backstage.analytics') ? 'active' : NULL }}">
         <a href="">
           <i class="fa fa-bar-chart"></i><span>Analytics</span>
@@ -44,28 +46,54 @@
           </span>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}"><a href="{{-- route() --}}"><i class="fa fa-circle-o"></i>Users</a></li>
-          <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}"><a href="{{-- route() --}}"><i class="fa fa-circle-o"></i>Earnings</a></li>
+          @permission('view-users-analytics') <li class="{{ $current_route === 'backstage.analytics.users' ? 'active' : NULL }}"><a href="{{-- route('backstage.analytics.users') --}}"><i class="fa fa-circle-o"></i>Users</a></li> @endpermission
+          @permission('view-earnings') <li class="{{ $current_route === 'backstage.analytics.earnings' ? 'active' : NULL }}"><a href="{{-- route('backstage.analytics.earnings') --}}"><i class="fa fa-circle-o"></i>Earnings</a></li> @endpermission
         </ul>
       </li>
 
-      <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}">
-        <a href="{{ route('backstage.dashboard') }}">
+      @endpermission
+
+      @permission('view-users')
+      <li class="{{ $current_route === 'backstage.users' ? 'active' : NULL }}">
+        <a href="{{-- route('backstage.users') --}}">
           <i class="fa fa-user"></i><span>Users</span>
         </a>
       </li>
+      @endpermission
 
-      <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}">
-        <a href="{{ route('backstage.dashboard') }}">
+      @permission('view-deposits')
+
+      <li class="{{ $current_route === 'backstage.deposits' ? 'active' : NULL }}">
+        <a href="{{-- route('backstage.deposits') --}}">
           <i class="fa fa-download"></i><span>Deposits</span>
         </a>
       </li>
-      
-      <li class="{{ $current_route === 'backstage.dashboard' ? 'active' : NULL }}">
-        <a href="{{ route('backstage.dashboard') }}">
+
+      @endpermission
+
+      @permission('view-withdraws')
+
+      <li class="{{ $current_route === 'backstage.withdraws' ? 'active' : NULL }}">
+        <a href="{{-- route('backstage.withdraws') --}}">
           <i class="fa fa-upload"></i><span>Withdraws</span>
         </a>
       </li>
+
+      @endpermission
+
+      @permission('view-roles')
+
+      <li class="{{ $current_route === 'backstage-roles' ? 'active' : NULL }}">
+        <a href="{{-- route('backstage.roles') --}}">
+          <i class="fa fa-role"></i><span>Roles</span>
+        </a>
+      </li>
+
+      @endpermission
+
+      @permission('view-permissions')
+
+      @endpermission
 
     </ul>
 
