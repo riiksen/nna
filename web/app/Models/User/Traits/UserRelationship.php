@@ -42,4 +42,8 @@ trait UserRelationship {
   public function jackpots() {
     return $this->hasManyThrough('App\Models\Jackpot', 'App\Models\JackpotParticipant');
   }
+
+  public function permissions() {
+    return $this->belongsToMany('App\Models\Permission', 'permission_role', 'user_id', 'permission_id')
+  }
 }
