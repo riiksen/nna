@@ -1,6 +1,6 @@
 {
-    "/js/frontstage.js": "/js/frontstage.js",
-    "/css/frontstage.css": "/css/frontstage.css",
+    "/js/fs/app.js": "/js/fs/app.js",
+    "/css/fs/app.css": "/css/fs/app.css",
     "/css/bs/app.css": "/css/bs/app.css",
     "/js/bs/adminlte.js": "/js/bs/adminlte.js",
     "/js/bs/bootstrap-datepicker.js": "/js/bs/bootstrap-datepicker.js",

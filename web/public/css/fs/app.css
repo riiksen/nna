@@ -1,24 +1,26 @@
-$font-stack: "Helvetica Neue", Helvetica, Arial, sans-serif;
-$background-color: #f4994b;
-$nav-item-color: #ffe4cd;
-
 /**
  * Globals
  */
 
 body {
-  font-family: $font-stack;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #555;
 }
 
-h1, .h1,
-h2, .h2,
-h3, .h3,
-h4, .h4,
-h5, .h5,
-h6, .h6 {
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
   margin-top: 0;
-  font-family: $font-stack;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: normal;
   color: #333;
 }
@@ -38,19 +40,21 @@ h6, .h6 {
  */
 
 .masthead {
-  background-color: $background-color;
-  -webkit-box-shadow: inset 0 -2px 5px rgba(0, 0, 0, .1);
-          box-shadow: inset 0 -2px 5px rgba(0, 0, 0, .1);
+  background-color: #f4994b;
+  -webkit-box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Nav links */
+
 .nav-item {
   position: relative;
   display: inline-block;
   padding: 10px;
   font-weight: 500;
-  color: $nav-item-color;
+  color: #ffe4cd;
 }
+
 .nav-item:hover,
 .nav-item:focus {
   color: #fff;
@@ -58,6 +62,7 @@ h6, .h6 {
 }
 
 /* Active state gets a caret at the bottom */
+
 .nav .active {
   color: #fff;
 }
@@ -80,42 +85,40 @@ h6, .h6 {
   padding-top: 20px;
 }
 
-// #logo {
-//   background-color: $background-color;
-//   background-image: url("../images/logo.png");
-//   background-size:contain;
-//   width: 200px;
-//   height:278px;
-// }
-
 /* Hide logo in small screens */
+
 @media (max-width: 767px) {
   #logo {
     display: none;
   }
 }
 
-.table td, .table th {
+.table td,
+.table th {
   vertical-align: middle;
 }
 
 .alert {
   margin-top: 1em;
-
-  p {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
-// For Navigation pulling right
-.nav-item-auth {
-  &.nav-item-auth-signout, &.nav-item-auth-signup {
-    order: 9999;
-  }
-
-  &.nav-item-auth-profile, &.nav-item-auth-signin {
-    order: 9990;
-    margin-left: auto;
-  }
+.alert p {
+  margin-top: 0;
+  margin-bottom: 0;
 }
+
+.nav-item-auth.nav-item-auth-signout,
+.nav-item-auth.nav-item-auth-signup {
+  -webkit-box-ordinal-group: 10000;
+      -ms-flex-order: 9999;
+          order: 9999;
+}
+
+.nav-item-auth.nav-item-auth-profile,
+.nav-item-auth.nav-item-auth-signin {
+  -webkit-box-ordinal-group: 9991;
+      -ms-flex-order: 9990;
+          order: 9990;
+  margin-left: auto;
+}
+

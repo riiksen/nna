@@ -19,15 +19,21 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
   Route::get('/login', 'SessionController@redirectToSteam')->name('login');
   Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
   // Route::get('/logout', 'SessionController@logout')->name('logout');
-  Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+  // Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
   // Route::get('/account', 'AccountController@index')->name('account');
 
-  // Route::get('/withdraw', '')
-  // Route::post('/withdraw')
-  // 
-  // Route::get('/deposit', '')
-  // Route::post('/deposit', '')
+  Route::get('/withdraw', 'WithdrawController@index')->name('withdraw');
+  // Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
+
+  Route::get('/deposit', 'DepositsController@index')->name('deposit');
+  // Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
+
+  Route::group(['middleware' => 'auth'], function() {
+    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
+    Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
+  });
 
 });
 

@@ -13,8 +13,8 @@ let mix = require('laravel-mix');
  */
 
    // Frontstage assets
-mix.js('resources/assets/js/frontstage/app.js', 'public/js/frontstage.js')
-   .sass('resources/assets/sass/frontstage/app.scss', 'public/css/frontstage.css')
+mix.js('resources/assets/js/frontstage/app.js', 'public/js/fs/app.js')
+   .sass('resources/assets/sass/frontstage/app.scss', 'public/css/fs/app.css')
    // Backstage assets
    // TODO:
    .copy('resources/assets/js/backstage/libs/adminlte.js', 'public/js/bs')

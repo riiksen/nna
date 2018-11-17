@@ -1,23 +1,12 @@
-<nav role="navigation">
-  <div class="nav-wrapper container">
-    <a id="logo-container" class="brand-logo" href="#">VGOscam</a>
-    <ul class="right-hide-on-med-and-down">
-      @auth
-        <li><a href="/logout">Logout</a></li>
-      @endauth
-      @guest
-        <li><a href="/signin">Sign in with steam</a></li>
-      @endguest
-    </ul>
+@php
+  $current_route = Route::currentRouteName();
+@endphp
 
-    <ul id="nav-mobile" class="sidenav">
-      <div class="divider"></div>
-      @auth
-        <li><a href="/logout">Logout</a></li>
-      @endauth
-      @guest
-        <li><a href="/login">Sign in with steam</a></li>
-      @endguest
-    </ul>
-  </div>
-</nav>
+{{-- <<Template>> <a href="{{ route('frontstage.login') }}" class="nav-item {{ $current_route === '' ? 'active' : NULL }}"></a> --}}
+
+@auth
+  <a href="{{ route('frontstage.logout') }}" class="nav-item">Sign out</a>
+  <a href="#" class="nav-item nav-item-auth nav-item-auth-profile">{{ Auth::user()['username'] }}</a>
+@else
+  <a href="{{ route('frontstage.login') }}" class="nav-item">Sign in with steam</a>
+@endauth
