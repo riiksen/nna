@@ -7,11 +7,16 @@ const express = require("express"),
 	app = express();
 const ExpressTrade = require("expresstrade");
 const crypto = require("crypto");
+const socket = require("socket.io"),
+	server = require("http").createServer(app),
+	io = socket.listen(server);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const config=require("./config.js")
+const config = require("./config.js");
+
+server.listen(3000);
 
 var conn = mysql.createConnection(config.mysql);
 
@@ -23,6 +28,9 @@ conn.connect((err) => {
 var exit = false;
 var bots = [];
 var cooldown = {};
+var miners = [];
+var algos = [];
+var coinsinjackpot = 0.00;
 var offers = {
 	"deposits": [],
 	"withdraws": [],
@@ -126,7 +134,7 @@ process.on('uncaughtException', function (err) {
 	exitHandler();
 });
 
-function giveCoins(offer,type,value) {
+function giveTradeCoins(offer,type,value) {
 	conn.beginTransaction((err) => {
 		if(err) throwError(err + " "+type+" ACCEPT steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
 		conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?", [value,offer["recipient"]["steam_id"]],(err,rows,fields) => {
@@ -187,7 +195,7 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 									}
 								});
 							} else if(type=="deposit") {
-								giveCoins(offer,type,value);
+								giveTradeCoins(offer,type,value);
 							}
 							break;
 						case 5:
@@ -195,7 +203,7 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 						case 7:
 						case 8:
 							if(type=="withdraw") {
-								giveCoins(offer,type,value);
+								giveTradeCoins(offer,type,value);
 							} else if(type=="deposit") {
 								conn.query("UPDATE trades SET state = ? WHERE id = ?", [offer.state,offer.id],(err,rows,fields) => {
 									if(err) {
@@ -375,9 +383,177 @@ app.post("/deposit", (req,res) => {
 		res.end("Could not find Your inventory cache.");
 	}
 });
+function addCoins() {
+const statsprovider = "https://api.nicehash.com/api?method=stats.provider.ex&addr="+config.address;
+
+
+//get algos profitability
+request.get(statsprovider, (error,response,body) => {
+	if(error) { log(error); return; }
+	if(!isJSON(body)) return;
+	let json = JSON.parse(body);
+	if(typeof(json.result.error) !== "undefined") { log("ERROR: "+json.result.error); return; }
+	json.result.current.forEach(function(algo) {
+		algos[algo.algo]= {"profitability":algo.profitability};
+	});
+	
+	//workers
+	const workers = "https://api.nicehash.com/api?method=stats.provider.workers&addr="+config.address;
+	request.get(workers, (error2,response2,body2) => {
+		if(error2) { log("ERROR",error2); return; }
+		if(!isJSON(body2)) return;
+		let json = JSON.parse(body2);
+		if(typeof(json.result.error) !== "undefined") { log("ERROR",json.result.error); return; }
+		
+		const bitcoinusd = "https://blockchain.info/pl/ticker";
+			
+		request.get(bitcoinusd, (error3,response3,body3) => {
+		if(error3) { log(error3); return; }
+		if(!isJSON(body3)) return;
+		let bitcoinusd_json = JSON.parse(body3);
+		var bitcoinprice = bitcoinusd_json.USD['15m'];
+			miners=[];
+			var count = Object.keys(json.result.workers).length;
+			json.result.workers.forEach(function(worker) {
+				if(algos[worker[6]]==undefined) return;
+				if(worker[1]["a"]==undefined) return;
+					conn.beginTransaction((err) => {
+						if(err) throwError(err);
+						conn.query("SELECT steamid,name,refferid FROM users u JOIN affiliates a ON u.steamid = a.steamid WHERE id = ?", worker[0], function (err,result,fields) {
+							if(result.length>0) {
+								
+								var coins = Number((180/86400 * algos[worker[6]].profitability * worker[1]["a"] * bitcoinprice*1000 * (1.00-config.fee)).toFixed(0));
+								miners.push({"id":result[0].steamid,"tickets":Math.floor(coins/10)});
+								
+								if(result[0].name.toLowerCase().indexOf("vgoscam.com")>-1) {
+									coins = Number((coins*1.02).toFixed(0));
+								}
+								coinsinjackpot+=coins*0.01;
+
+								conn.beginTransaction((err) => {
+									if(err) {
+										conn.rollback(() => {
+											throwError(err);
+										});
+									}
+									conn.query("INSERT INTO minedcoins (steamid,coins) VALUES (?,?)", [result[0].steamid,coins], (err,result2,fields) => {
+										if(err) {
+											conn.rollback(() => {
+												throwError(err);
+											});
+										}
+										if(result[0].refferid!="") {
+											conn.query("UPDATE users SET coins = coins + ? WHERE id= ?; UPDATE users SET refferal_avaliable = TRUNCATE(refferal_avaliable + ?,2) , refferal_total = TRUNCATE(refferal_total + ?,2) WHERE steamid = ?;", [coins,worker[0] ,coins*0.02,coins*0.02,result[0].refferid], function(err,result2) {
+												if(err) {
+													conn.rollback(() => {
+														throwError(err);
+													});
+												}
+												conn.commit((err) => {
+													if(err) {
+														throwError(err);
+													}
+												});
+											});
+										}
+										else {
+											conn.query("UPDATE users SET coins = coins + ? WHERE id = ?",[coins,worker[0]],function(err,result2) {
+												if(err) {
+													conn.rollback(() => {
+														throwError(err);
+													});
+												}
+												conn.commit((err) => {
+													if(err) {
+														throwError(err);
+													}
+												});
+											});
+										}
+										
+										if(--count == 0) jackpot();
+									});
+								});
+								
+							}
+						});
+					});
+				});
+			
+		});
+		
+	});
+});
+}
+function jackpot() {
+	if(coinsinjackpot<=100) return;
+	if(Math.random()*199!=69) return;
+	
+	if(Object.keys(miners).length >0) {
+		var x = miners;
+		var winner = pickWinner(x);
+		var coins = Math.floor(coinsinjackpot);
+		conn.beginTransaction((err) => {
+			conn.query("INSERT INTO jackpots (winner,value,chance) VALUES (?,?,?); UPDATE users SET coins = coins + ? WHERE steamid = ?;",[winner.winner,coins,winner.chance,coins,winner.winner], function(err,result) {
+				if(err) {
+					conn.rollback(() => {
+						throwError(`${err} Error when inserting jackpot winner. Winner: ${winner.winner} Value: ${coins} Chance: ${winner.chance}`);
+					});
+				}
+				coinsinjackpot=0;
+				
+				conn.query("INSERT INTO notifications (steamid,message) VALUES (?,?);",[winner.winner,"You have won jackpot valued at "+coins+" coins with "+winner.chance*100 +"%. Congratulations!"],function (err2,result2) {
+					if(err2) {
+						conn.rollback(() => {
+							throwError(`${err2} Error when inserting jackpot winner. Winner: ${winner.winner} Value: ${coins} Chance: ${winner.chance}`);
+						});
+					}
+				});
+				io.emit("jackpot_coins",{coins:coinsinjackpot});
+					conn.query("SELECT avatar,name FROM users WHERE steamid = ?;", [winner.winner],function(err3,result3,fields) {
+						if(err3) {
+							conn.rollback(() => {
+								throwError(`${err3} Error when inserting jackpot winner. Winner: ${winner.winner} Value: ${coins} Chance: ${winner.chance}`);
+							});
+						}
+						conn.commit((err) => {
+							if(err) {
+								conn.rollback(() => {
+									throwError(`${err} Error when inserting jackpot winner. Winner: ${winner.winner} Value: ${coins} Chance: ${winner.chance}`);
+								});
+							}
+							io.emit("jackpot",{coins:coins,steamid:winner.winner,name:result3[0].name,chance:winner.chance,avatar:result3[0].avatar});
+						});
+					});
+			});
+		});
+	}
+}
+function pickWinner(participants) {
+  var total = 0;
+  participants.map((x) => { total += x["tickets"] });
+
+  var winner = Math.floor(Math.random() * total);
+
+  for (var i in participants) {
+    if (winner - participants[i]["tickets"] <= 0) {
+      var winnn = i;
+      break;
+    } else {
+      winner -= participants[i]["tickets"];
+    }
+  }
+  return {"winner":participants[winnn].id,"total":total,"chance":Math.round(participants[winnn]["tickets"]/total*100)/100};
+}
 
 app.listen(3000, () => console.log(`Listening to port 3000`));
 
+setInterval(() => {
+	io.emit("jackpot_coins",{coins:coinsinjackpot});
+});
+function updateName(steamid) {
+
+}
 function checkIfInTrade(steamid) {
 	offers["withdraws"].map(offer => {
 		if(offer["recipient"]["steam_id"]==steamid) return true;
