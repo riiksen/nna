@@ -18,8 +18,7 @@ class CreateUsersTable extends Migration {
       $table->string('avatar');
       $table->integer('coins')->unsigned()->default(0);
       $table->boolean('locked')->default(false);
-      // $table->boolean('is_admin')->default(false);
-      $table->smallInteger('rank')->default(0);
+      $table->boolean('admin')->default(false);
       // $table->string('used_refferal');
       // $table->string('password');
       // $table->rememberToken();
