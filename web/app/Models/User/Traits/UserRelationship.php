@@ -44,6 +44,10 @@ trait UserRelationship {
   }
 
   public function permissions() {
-    return $this->belongsToMany('App\Models\Permission', 'permission_role', 'user_id', 'permission_id');
+    return $this->belongsToMany('App\Models\Permission', 'permission_user', 'user_id', 'permission_id');
+  }
+
+  public function roles() {
+    return $this->belongsToMany('App\Models\Roles', 'role_user', 'user_id', 'role_id')
   }
 }
