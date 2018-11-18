@@ -17,9 +17,7 @@ class CreateWithdrawsTable extends Migration {
 
       $table->timestamps();
       $table->softDeletes();
-    });
-
-    Schema::table('withdraws', function (Blueprint $table) {
+      
       $table->foreign('user_id')->references('id')->on('users');
       //                           ->onDelete('restrict')
       //                           ->onUpdate('restrict');
@@ -32,10 +30,6 @@ class CreateWithdrawsTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::table('withdraws', function (Blueprint $table) {
-      $table->dropForeign('withdraws_user_id_foreign');
-    });
-
     Schema::dropIfExists('withdraws');
   }
 }

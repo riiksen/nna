@@ -20,9 +20,7 @@ class CreateJackpotParticipantsTable extends Migration {
 
       $table->timestamps();
       $table->softDeletes();
-    });
-
-    Schema::table('jackpot_participants', function (Blueprint $table) {
+      
       $table->foreign('user_id')->references('id')->on('users');
       $table->foreign('jackpot_id')->references('id')->on('jackpots');
     });
@@ -34,11 +32,6 @@ class CreateJackpotParticipantsTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::table('jackpot_participants', function (Blueprint $table) {
-      $table->dropForeign('jackpot_participants_user_id_foreign');
-      $table->dropForeign('jackpot_participants_jackpot_id_foreign');
-    });
-
     Schema::dropIfExists('jackpot_participants');
   }
 }

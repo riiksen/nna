@@ -23,9 +23,7 @@ class CreateCoinflipsTable extends Migration {
 
       $table->timestamps();
       $table->softDeletes();
-    });
-
-    Schema::table('coinflips', function (Blueprint $table) {
+      
       $table->foreign('host_user_id')->references('id')->on('users');
       $table->foreign('guest_user_id')->references('id')->on('users');
     });
@@ -37,11 +35,6 @@ class CreateCoinflipsTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::table('coinflips', function (Blueprint $table) {
-      $table->dropForeign('coinflips_host_user_id_foreign');
-      $table->dropForeign('coinflips_guest_user_id_foreign');
-    });
-
     Schema::dropIfExists('coinflips');
   }
 }
