@@ -51,7 +51,7 @@ Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'back
 // TODO: Make the backstage routes use permission
 
 /**
- * Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'backstage.', 'middleware' => 'permission:view-dashboard'], function() {
+ * Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'backstage.', 'middleware' => 'permission:access-backstage'], function() {
  *   Route::get('/', 'HomeController@dashboard')->name('dashboard');
  * 
  *   Route::resource('deposits', 'DepositsController')->only(['index', 'show']);

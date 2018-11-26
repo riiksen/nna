@@ -11,7 +11,7 @@ class CreateTradesTable extends Migration {
    * @return void
    */
   public function up() {
-    Schema::create('trades',function(Blueprint $table) {
+    Schema::create('trades', function(Blueprint $table) {
       $table->unsignedInteger('id');
       $table->integer('bot_id');
       $table->tinyInteger('state');
