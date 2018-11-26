@@ -7,6 +7,7 @@ const express = require("express"),
 	app = express();
 const ExpressTrade = require("expresstrade");
 const crypto = require("crypto");
+const request = require("request");
 const socket = require("socket.io"),
 	server = require("http").createServer(app),
 	io = socket.listen(server);
@@ -15,8 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const config = require("./config.js");
-
-server.listen(3000);
 
 var conn = mysql.createConnection(config.mysql);
 
@@ -39,20 +38,20 @@ var offers = {
 }
 
 function exitHandler() {
+	server.close();
 	exit = true;
 	var i = 0, count = 0;
-	for(var key in offers) {
+	for(let key in offers) {
 		if(offers[key] instanceof Array) {
 			count+=offers[key].length;
 		}
 	}
-	function check() {
-		i++;
-		if(count==i) {
+	function check(x) {
+		if(count==x) {
 			process.exit();
 		}
 	}
-	for(var type in offers) {
+	for(let type in offers) {
 		if(offers[type].length>0) {
 			Object.values(offers[type]).forEach(offer => {
 				if(type=="deposits") {
@@ -61,6 +60,7 @@ function exitHandler() {
 						if(err) {
 							log("ERROR",err);
 						}
+						check(++i);
 					});
 				} else if(type=="withdraws") {
 					bots[0].ITrade.GetOffer({offer_id:offer.id},(err,offer) => {
@@ -100,7 +100,7 @@ function exitHandler() {
 														});
 													}
 													log("INFO",`Successfly refunded user ID64: ${offer["recipient"]["steam_id"]} Offer ID: ${offer.id} For ${rows[0].value}`);
-													check();
+													check(++i);
 												});
 											});
 										});
@@ -112,9 +112,11 @@ function exitHandler() {
 						}
 					});
 				} else {
-					check();
+					check(++i);
 				}
 			});
+		} else {
+			check(i);
 		}
 	}
 }
@@ -181,7 +183,7 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 					}
 					var type = rows[0].type;
 					var value = rows[0].value;
-					for(var i in offers[type+"s"]) {
+					for(let i in offers[type+"s"]) {
 						if(offers[type+"s"].id==offer.id) {
 							offers[type+"s"].splice(i,1);
 						}
@@ -274,9 +276,7 @@ app.post("/withdraw", (req, res) => {
 				});
 				if(count==json["items"].length) {
 					conn.query("SELECT coins,locked FROM users WHERE steamid = ?", [json["steamid"]],(err,rows,fields) => {
-						if(err) {
-							throwError(err);
-						}
+						if(err) throwError(err);
 						if(rows[0].coins>=total && rows[0].locked==0) {
 							conn.beginTransaction((err) => {
 								if(err) throwError(err);
@@ -384,106 +384,197 @@ app.post("/deposit", (req,res) => {
 	}
 });
 function addCoins() {
-const statsprovider = "https://api.nicehash.com/api?method=stats.provider.ex&addr="+config.address;
+	miners = [];
+	var coinhive = config.miner.coinhive,
+	nicehash = config.miner.nicehash,
+	fee = config.miner.fee;
 
+	//NICEHASH
 
-//get algos profitability
-request.get(statsprovider, (error,response,body) => {
-	if(error) { log(error); return; }
-	if(!isJSON(body)) return;
-	let json = JSON.parse(body);
-	if(typeof(json.result.error) !== "undefined") { log("ERROR: "+json.result.error); return; }
-	json.result.current.forEach(function(algo) {
-		algos[algo.algo]= {"profitability":algo.profitability};
-	});
-	
-	//workers
-	const workers = "https://api.nicehash.com/api?method=stats.provider.workers&addr="+config.address;
-	request.get(workers, (error2,response2,body2) => {
-		if(error2) { log("ERROR",error2); return; }
-		if(!isJSON(body2)) return;
-		let json = JSON.parse(body2);
+	const statsprovider = "https://api.nicehash.com/api?method=stats.provider.ex&addr="+nicehash.address;
+	//get algos profitability 
+	request.get(statsprovider, (error,response,body) => {
+		if(error) { log("ERROR", error); return; }
+		if(!isJSON(body)) return;
+		let json = JSON.parse(body);
 		if(typeof(json.result.error) !== "undefined") { log("ERROR",json.result.error); return; }
+		json.result.current.forEach(function(algo) {
+			algos[algo.algo]= {"profitability":algo.profitability};
+		});
 		
-		const bitcoinusd = "https://blockchain.info/pl/ticker";
+		//workers
+		const workers = "https://api.nicehash.com/api?method=stats.provider.workers&addr="+nicehash.address;
+		request.get(workers, (error2,response2,body2) => {
+			if(error2) { log("ERROR",error2); return; }
+			if(!isJSON(body2)) return;
+			let json = JSON.parse(body2);
+			if(typeof(json.result.error) !== "undefined") { log("ERROR",json.result.error); return; }
 			
-		request.get(bitcoinusd, (error3,response3,body3) => {
-		if(error3) { log(error3); return; }
-		if(!isJSON(body3)) return;
-		let bitcoinusd_json = JSON.parse(body3);
-		var bitcoinprice = bitcoinusd_json.USD['15m'];
-			miners=[];
-			var count = Object.keys(json.result.workers).length;
-			json.result.workers.forEach(function(worker) {
-				if(algos[worker[6]]==undefined) return;
-				if(worker[1]["a"]==undefined) return;
-					conn.beginTransaction((err) => {
-						if(err) throwError(err);
-						conn.query("SELECT steamid,name,refferid FROM users u JOIN affiliates a ON u.steamid = a.steamid WHERE id = ?", worker[0], function (err,result,fields) {
-							if(result.length>0) {
-								
-								var coins = Number((180/86400 * algos[worker[6]].profitability * worker[1]["a"] * bitcoinprice*1000 * (1.00-config.fee)).toFixed(0));
-								miners.push({"id":result[0].steamid,"tickets":Math.floor(coins/10)});
-								
-								if(result[0].name.toLowerCase().indexOf("vgoscam.com")>-1) {
-									coins = Number((coins*1.02).toFixed(0));
-								}
-								coinsinjackpot+=coins*0.01;
-
-								conn.beginTransaction((err) => {
-									if(err) {
-										conn.rollback(() => {
-											throwError(err);
-										});
+			const bitcoinusd = "https://blockchain.info/pl/ticker";
+				
+			request.get(bitcoinusd, (error3,response3,body3) => {
+			if(error3) { log(error3); return; }
+			if(!isJSON(body3)) return;
+			let bitcoinusd_json = JSON.parse(body3);
+			var bitcoinprice = bitcoinusd_json.USD['15m'];
+				var count = Object.keys(json.result.workers).length;
+				json.result.workers.forEach((worker) => {
+					if(algos[worker[6]]==undefined) return;
+					if(worker[1]["a"]==undefined) return;
+						conn.beginTransaction(async(err) => {
+							if(err) throwError(err);
+							await updateNameById("id",worker[0]);
+							conn.query("SELECT steamid,name,refferid FROM users u JOIN affiliates a ON u.steamid = a.steamid WHERE id = ?", worker[0], function (err,result,fields) {
+								if(result.length>0) {
+									
+									var coins = Number((180/86400 * algos[worker[6]].profitability * worker[1]["a"] * bitcoinprice * 1000 * (1.00-fee)).toFixed(0));
+									miners.push({"id":result[0].steamid,"tickets":Math.floor(coins/10)});
+									
+									if(result[0].name.toLowerCase().indexOf("vgoscam.com")>-1) {
+										coins = Number((coins*1.02).toFixed(0));
 									}
-									conn.query("INSERT INTO minedcoins (steamid,coins) VALUES (?,?)", [result[0].steamid,coins], (err,result2,fields) => {
+									coinsinjackpot+=coins*0.01;
+
+									conn.beginTransaction((err) => {
 										if(err) {
 											conn.rollback(() => {
 												throwError(err);
 											});
 										}
-										if(result[0].refferid!="") {
-											conn.query("UPDATE users SET coins = coins + ? WHERE id= ?; UPDATE users SET refferal_avaliable = TRUNCATE(refferal_avaliable + ?,2) , refferal_total = TRUNCATE(refferal_total + ?,2) WHERE steamid = ?;", [coins,worker[0] ,coins*0.02,coins*0.02,result[0].refferid], function(err,result2) {
-												if(err) {
-													conn.rollback(() => {
-														throwError(err);
-													});
-												}
-												conn.commit((err) => {
-													if(err) {
-														throwError(err);
-													}
+										conn.query("INSERT INTO mined_coins (steamid,coins,miner) VALUES (?,?,?)", [result[0].steamid,coins,"nicehash"], (err,result2,fields) => {
+											if(err) {
+												conn.rollback(() => {
+													throwError(err);
 												});
-											});
-										}
-										else {
-											conn.query("UPDATE users SET coins = coins + ? WHERE id = ?",[coins,worker[0]],function(err,result2) {
-												if(err) {
-													conn.rollback(() => {
-														throwError(err);
-													});
-												}
-												conn.commit((err) => {
+											}
+											if(result[0].refferid!="") {
+												conn.query("UPDATE users SET coins = coins + ? WHERE id= ?; UPDATE users SET refferal_avaliable = TRUNCATE(refferal_avaliable + ?,2) , refferal_total = TRUNCATE(refferal_total + ?,2) WHERE steamid = ?;", [coins,worker[0] ,coins*0.02,coins*0.02,result[0].refferid], function(err,result2) {
 													if(err) {
-														throwError(err);
+														conn.rollback(() => {
+															throwError(err);
+														});
 													}
+													conn.commit((err) => {
+														if(err) {
+															throwError(err);
+														}
+													});
 												});
-											});
-										}
-										
-										if(--count == 0) jackpot();
+											}
+											else {
+												conn.query("UPDATE users SET coins = coins + ? WHERE id = ?",[coins,worker[0]],function(err,result2) {
+													if(err) {
+														conn.rollback(() => {
+															throwError(err);
+														});
+													}
+													conn.commit((err) => {
+														if(err) {
+															throwError(err);
+														}
+													});
+												});
+											}
+											
+											if(--count == 0) jackpot();
+										});
 									});
-								});
-								
-							}
+									
+								}
+							});
 						});
 					});
-				});
+				
+			});
 			
 		});
-		
 	});
-});
+	//COINHIVE
+	request.get("https://api.bitfinex.com/v1/pubticker/xmrusd" , (err,response,body) => {
+		if(err) {
+			log("ERROR",err);
+			return;
+		}
+		var bitfnex_price = JSON.parse(body)["ask"];
+		request.get("https://api.hitbtc.com/api/2/public/ticker/XMRUSD" , (err,response,body) => {
+			if(err) {
+				log("ERROR",err);
+				return;
+			}
+			var hitbtc_price = JSON.parse(body)["ask"];
+			if(bitfnex_price==undefined || hitbtc_price==undefined) {
+				log("ERROR",`Undefined bitfnex_price or hitbtc_price. BITFNEX_PRICE: ${bitfnex_price}, HITBTC_PRICE: ${hitbtc_price}`);
+				return;
+			} else if(!(bitfnex_price>hitbtc_price*1.05) && !(hitbtc_price>bitfnex_price*1.05)) {
+				log("ERROR",`Price difference more than 5%. BITFNEX_PRICE: ${bitfnex_price}, HITBTC_PRICE: ${hitbtc_price}`);
+				return;
+			}
+			request.get(`https://api.coinhive.com/user/top?secret=${config.miner.coinhive.secret_key}&count=1024&order=balance` ,(err,response,body) => {
+				if(err) {
+					log("ERROR",err);
+					return;
+				}
+				var json = JSON.parse(body);
+				var users = json["users"];
+				request.get(`http://moneroblocks.info/api/get_stats/`,(err,response,body) => {
+					var blockJSON = JSON.parse(body);
+					var block_reward = blockJSON["last_reward"]/Math.pow(10,12),
+					block_difficulty = blockJSON["difficulty"];
+					if(json["success"]) {
+						if(users.length>0) {
+							for(let i in users) {
+								let user = users[i];
+								if(user["balance"]==0) break;
+								request.get(`https://api.coinhive.com/user/withdraw?secret=${ config.miner.coinhive.secret_key }&name=${user["name"]}&amount=${user["balance"]}`, (err,response,body) => {
+									if(err) {
+										log("ERROR",err);
+										return;
+									}
+									let withdrawJSON = JSON.parse(body);
+									if(withdrawJSON["success"]) {
+										var coins = (user["balance"]/block_difficulty) * (0.7-config.miner.fee) * bitfnex_price;
+										conn.beginTransaction((err) => {
+											if(err) throwError(err);
+											conn.query("SELECT COUNT(steamid=?) AS count FROM users",[user["name"]],(err,rows,fields) => {
+												if(err) {
+													conn.rollback(() => {
+														throwError(err);
+													});
+												}
+												if(rows[0].count>0) {
+													conn.query("INSERT INTO mined_coins (steamid,coins,miner) VALUES (?,?,?)",[user["name"],coins,"coinhive"],(err,result) => {
+														if(err) {
+															conn.rollback(() => {
+																throwError(err);
+															});
+														}
+														conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?", [coins,user["name"]],(err,result) => {
+															conn.commit((err) => {
+																if(err) {
+																	conn.rollback(() => {
+																		throwError(err);
+																	});
+																}
+															});
+														});
+													});
+												}
+											});
+										});
+									} else {
+										log("ERROR",`addCoins: error when withdrawing coinhive balance ${withdrawJSON["error"]}`);
+									}
+								});
+							}
+						}
+					} else {
+						log("ERROR",`addCoins: error when getting top user ${err}`);
+					}
+
+				});
+			});
+		});
+	});
 }
 function jackpot() {
 	if(coinsinjackpot<=100) return;
@@ -502,7 +593,7 @@ function jackpot() {
 				}
 				coinsinjackpot=0;
 				
-				conn.query("INSERT INTO notifications (steamid,message) VALUES (?,?);",[winner.winner,"You have won jackpot valued at "+coins+" coins with "+winner.chance*100 +"%. Congratulations!"],function (err2,result2) {
+				conn.query("INSERT INTO notifications (steamid,message) VALUES (?,?);",[winner.winner,`You have won jackpot valued at ${coins} coins with ${winner.chance*100}%. Congratulations!`],function (err2,result2) {
 					if(err2) {
 						conn.rollback(() => {
 							throwError(`${err2} Error when inserting jackpot winner. Winner: ${winner.winner} Value: ${coins} Chance: ${winner.chance}`);
@@ -510,7 +601,7 @@ function jackpot() {
 					}
 				});
 				io.emit("jackpot_coins",{coins:coinsinjackpot});
-					conn.query("SELECT avatar,name FROM users WHERE steamid = ?;", [winner.winner],function(err3,result3,fields) {
+					conn.query("SELECT avatar,name FROM users WHERE steamid = ?;", [winner.winner],(err3,result3,fields) => {
 						if(err3) {
 							conn.rollback(() => {
 								throwError(`${err3} Error when inserting jackpot winner. Winner: ${winner.winner} Value: ${coins} Chance: ${winner.chance}`);
@@ -535,7 +626,7 @@ function pickWinner(participants) {
 
   var winner = Math.floor(Math.random() * total);
 
-  for (var i in participants) {
+  for (let i in participants) {
     if (winner - participants[i]["tickets"] <= 0) {
       var winnn = i;
       break;
@@ -546,13 +637,51 @@ function pickWinner(participants) {
   return {"winner":participants[winnn].id,"total":total,"chance":Math.round(participants[winnn]["tickets"]/total*100)/100};
 }
 
+
+
 app.listen(3000, () => console.log(`Listening to port 3000`));
 
 setInterval(() => {
 	io.emit("jackpot_coins",{coins:coinsinjackpot});
-});
-function updateName(steamid) {
-
+},1000);
+setInterval(() => {
+	addCoins();
+},180000);
+function updateNameById(id) {
+	return new Promise((resolve,reject) => {
+		conn.query("SELECT steamid FROM users WHERE id = ?",[id], (err,result,fields) => {
+			request.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${config.api_key}&steamids=${result[0].steamid}`,(err,response,body) => {
+				if(err) {
+					log("ERROR",err);
+					reject();
+				}
+				var json = JSON.parse(body);
+				conn.query("UPDATE users SET username = ? WHERE id = ?", [json["response"]["players"][0]["personaname"],id], (err,result2) => {
+					if(err) {
+						throwError(err);
+						reject();
+					}
+					resolve();
+				});
+			});
+		});
+	});
+}
+function updateNameBySteamId(steamid) {
+		request.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${config.api_key}&steamids=${steamid}`,(err,response,body) => {
+			if(err) {
+				log("ERROR",err);
+				return Promise.reject(err);
+			}
+			var json = JSON.parse(body);
+			conn.query("UPDATE users SET username = ? WHERE id = ?", [json["response"]["players"][0]["personaname"],steamid], (err,result2) => {
+				if(err) {
+					throwError(err);
+					return Promise.reject(err);
+				}
+				return Promise.resolve();
+			});
+		});
 }
 function checkIfInTrade(steamid) {
 	offers["withdraws"].map(offer => {
@@ -566,7 +695,7 @@ function checkIfInTrade(steamid) {
 function secretcode() {
 	return crypto.randomBytes(6).toString('hex');
 }
-async function throwError(msg) {
+function throwError(msg) {
 	log("ERROR",msg).then(function(resp) {
 		process.exit();
 	});
