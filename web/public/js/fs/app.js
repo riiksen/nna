@@ -13701,6 +13701,14 @@ module.exports = __webpack_require__(38);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_echo__);
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+
+__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./bootstrap\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
 window._ = __webpack_require__(12);
 window.Popper = __webpack_require__(3).default;
 

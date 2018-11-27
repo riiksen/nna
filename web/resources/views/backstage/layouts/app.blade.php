@@ -23,11 +23,11 @@
     
     <link rel="stylesheet" href="{{ mix('css/bs/app.css') }}">
     <!-- Bootstrap 3.3.7 -->
-    {{-- <link rel="stylesheet" href="{{ mix('css/bs/bootstrap.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('css/bs/bootstrap.css') }}">
     <!-- Font Awesome -->
-    {{-- <link rel="stylesheet" href="{{ mix('css/bs/font-awesome.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('css/bs/font-awesome.css') }}">
     <!-- Ionicons -->
-    {{-- <link rel="stylesheet" href="{{ mix('css/bs/ionicons.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('css/bs/ionicons.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ mix('css/bs/AdminLTE.css') }}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins

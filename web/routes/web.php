@@ -26,13 +26,13 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
   Route::get('/withdraw', 'WithdrawController@index')->name('withdraw');
   // Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
 
-  Route::get('/deposit', 'DepositsController@index')->name('deposit');
+  Route::get('/deposit', 'DepositController@index')->name('deposit');
   // Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
 
   Route::group(['middleware' => 'auth'], function() {
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
-    Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
+    Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
   });
 
 });

@@ -19,7 +19,7 @@ class DepositController extends Controller {
     $curl = new Curl();
     // $curl->setDefaultJsonDecoder
     $curl->setHeader('Content-Type', 'application/json');
-    $curl->post('', $data) //TODO: Insert address here
+    $curl->post('', $data); //TODO: Insert address here
     // TODO: Do something with $curl->response
   }
 

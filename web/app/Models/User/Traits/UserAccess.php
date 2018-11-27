@@ -129,7 +129,7 @@ trait UserAccess {
     return false;
   }
 
-  public function attahRole($role) {
+  public function attachRole($role) {
     if (is_object($role)) {
       $role = $role->getKey();
     }
