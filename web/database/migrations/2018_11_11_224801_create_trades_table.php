@@ -12,16 +12,20 @@ class CreateTradesTable extends Migration {
    */
   public function up() {
     Schema::create('trades', function(Blueprint $table) {
-      $table->unsignedInteger('id');
+      $table->increments('id');
       $table->integer('bot_id');
       $table->tinyInteger('state');
       $table->string('steamid', 17);
       $table->unsignedInteger('value');
       $table->string('secretcode', 12);
-      $table->string('type');
-      $table->timestamps();
+      $table->string('type'); // TODO: Make everything compatible with enum type
+      // $table->enum('type', ['deposit', 'withdraw']);
 
-      $table->primary('id');
+      $table->timestamps();
+      $table->softDeletes();
+
+      // $table->foreign('bot_id')->references('id')->on('bots');
+      $table->foreign('user_steamid')->references('steamid')->on('users');
     });
   }
 
@@ -31,6 +35,6 @@ class CreateTradesTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::drop('trades');
+    Schema::dropIfExists('trades');
   }
 }
