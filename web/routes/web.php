@@ -31,10 +31,14 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
 
   Route::group(['middleware' => 'auth'], function() {
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
-    Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
-    Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
-  });
 
+
+    // Limit the requests that are passed to the node worker to 20 requests per minute
+    Route::group(['middleware' => 'throttle:20,1'], function() {
+      Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
+      Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
+    });
+  });
 });
 
 /** 
@@ -59,6 +63,6 @@ Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'back
   Route::resource('withdraws', 'WithdrawsController')->only(['index', 'show']);
 
   Route::resource('users', 'UsersController')->only(['index', 'show']);
-  Route::resource('roles', 'RolesController')->only(['index', 'show']);
   Route::resource('permissions', 'PermissionsController')->only(['index', 'show']);
+  Route::resource('roles', 'RolesController');
 });
