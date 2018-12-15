@@ -50,11 +50,20 @@
         </div>
       </div>
     </div>
-
     <!-- Scripts -->
     {{-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script> --}}
     {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script> --}}
     <script src="{{ asset('js/fs/app.js') }}"></script>
+
+    <script>
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="{{ asset('js/socket.js') }}"></script>
   </body>
 </html>
