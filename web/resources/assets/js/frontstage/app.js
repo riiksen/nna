@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+// require('./bootstrap'); // copied bootstrap here
 
 window._ = require('lodash');
 window.Popper = require('popper.js').default;

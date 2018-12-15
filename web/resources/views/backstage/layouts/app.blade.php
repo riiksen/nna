@@ -23,6 +23,7 @@
     
     <link rel="stylesheet" href="{{ mix('css/bs/app.css') }}">
     <!-- Bootstrap 3.3.7 -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     {{-- <link rel="stylesheet" href="{{ mix('css/bs/bootstrap.css') }}"> --}}
     <!-- Font Awesome -->
     {{-- <link rel="stylesheet" href="{{ mix('css/bs/font-awesome.css') }}"> --}}

@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 
+use Auth;
+
 /**
  * Class RouteNeedsRole.
  */
@@ -37,6 +39,6 @@ class RouteNeedsPermission {
     }
 
     // TODO: Flash error 
-    return redirect()->route('frontend.index');
+    return redirect()->route('frontstage.index');
   }
 }

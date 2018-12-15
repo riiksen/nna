@@ -48,6 +48,6 @@ trait UserRelationship {
   }
 
   public function roles() {
-    return $this->belongsToMany('App\Models\Roles', 'role_user', 'user_id', 'role_id');
+    return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
   }
 }

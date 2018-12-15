@@ -12,7 +12,7 @@ class CreateRakeTable extends Migration {
    */
   public function up() {
     Schema::create('rake', function(Blueprint $table) {
-      $table->increments('id')->unsigned();
+      $table->increments('id');
       $table->smallInteger('bot_id')->unsigned();
       $table->string('item_id');
       $table->string('game');
