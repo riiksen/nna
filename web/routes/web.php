@@ -33,6 +33,8 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
     Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
+
+    Route::post('/loginToSocket','SessionController@loginToSocket');
   });
 
 });
