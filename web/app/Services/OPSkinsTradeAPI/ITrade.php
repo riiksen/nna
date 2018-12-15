@@ -43,6 +43,7 @@ class ITrade {
     $client = new \GuzzleHttp\Client();
 
     $response = $client->request($method, $url, [
+      'http_errors' => false,
       'headers' => [
         'Authorization' => base64_encode($api_key)
       ],
