@@ -2,7 +2,7 @@
 
 namespace App\Models\Traits;
 
-trait UserRelationship {
+trait TradeRelationship {
   /**
    * Get user that created this withdraw
    */
