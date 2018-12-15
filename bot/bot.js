@@ -241,7 +241,7 @@ app.use(function(req,res,next) {
 app.post("/loginToSocket", (req,res) => {
 	if(checkIfLocalRequest) {
 		var json = req.body;
-		if(json.steamid==undefined || json.socketId==undefined) {console.log(json.steamid); console.log(json.socketId); res.end(); }
+		if(json.steamid==undefined || json.socketId==undefined) { res.end(); }
 		for(var socket in io.sockets.sockets) {
 			if(json.socketId==socket) {
 				loggedSockets.push({"socketId":socket,"steamid":json.steamid});
