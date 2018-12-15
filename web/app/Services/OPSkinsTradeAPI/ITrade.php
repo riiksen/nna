@@ -7,7 +7,7 @@ class ITrade {
     $url = 'https://api-trade.opskins.com/ITrade/CancelOffer/v1/';
     $method = 'POST';
 
-    $response = $this::makeRequest($url, $method, $api_key, $data);
+    $response = self::makeRequest($url, $method, $api_key, $data);
 
     return $response;
   }
@@ -16,7 +16,7 @@ class ITrade {
     $url = 'https://api-trade.opskins.com/ITrade/AcceptOffer/v1/';
     $method = 'POST';
 
-    $response = $this::makeRequest($url, $method, $api_key, $data);
+    $response = self::makeRequest($url, $method, $api_key, $data);
 
     return $response;
   }
@@ -25,7 +25,7 @@ class ITrade {
     $url = 'https://api-trade.opskins.com/ITrade/GetUserInventoryFromSteamId/v1/';
     $method = 'GET';
 
-    $response = $this::makeRequest($url, $method, $api_key, $data);
+    $response = self::makeRequest($url, $method, $api_key, $data);
 
     return $response;
   }
@@ -34,13 +34,13 @@ class ITrade {
     $url = 'https://api-trade.opskins.com/ITrade/SendOfferToSteamId/v1/';
     $method = 'POST';
 
-    $response = $this::makeRequest($url, $method, $api_key, $data);
+    $response = self::makeRequest($url, $method, $api_key, $data);
 
     return $response;
   }
 
   private static function makeRequest($url, $method, $api_key, $data) {
-    $client = new GuzzleHttp\Client();
+    $client = new \GuzzleHttp\Client();
 
     $response = $client->request($method, $url, [
       'headers' => [
@@ -49,5 +49,7 @@ class ITrade {
 
       $method == 'POST' ? 'form_params' : 'query' => $data
     ]);
+
+    return $response;
   }
 }

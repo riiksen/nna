@@ -9,7 +9,7 @@ class IUser {
     $url = 'https://api-trade.opskins.com/IUser/GetInventory/v1/';
     $method = 'GET';
 
-    $response = $this::makeRequest($url, $method, $api_key, $data);
+    $response = self::makeRequest($url, $method, $api_key, $data);
 
     return $response;
   }
@@ -24,5 +24,7 @@ class IUser {
 
       $method == 'POST' ? 'form_params' : 'query' => $data
     ]);
+
+    return $response;
   }
 }
