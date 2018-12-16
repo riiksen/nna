@@ -30,6 +30,15 @@ class ITrade {
     return $response;
   }
 
+  public static function getUserInventory($data) {
+    $url = 'https://api-trade.opskins.com/ITrade/GetUserInventory/v1/';
+    $method = 'GET';
+
+    $response = self::makeRequest($url, $method, '', $data);
+
+    return $response;
+  }
+
   public static function sendOfferToSteamId($api_key, $data) {
     $url = 'https://api-trade.opskins.com/ITrade/SendOfferToSteamId/v1/';
     $method = 'POST';

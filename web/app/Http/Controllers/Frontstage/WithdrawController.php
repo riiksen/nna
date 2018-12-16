@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Frontstage;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 use App\Services\OPSkinsTradeAPI\ITrade;
 use App\Services\OPSkinsTradeAPI\IUser;
+use App\Services\OPSkinsTradeAPI\IItem;
 
 use Curl\Curl;
 
@@ -29,27 +31,36 @@ class WithdrawController extends Controller {
 
   public function handle(Request $request) {
     if (Auth::user()['in_trade?']) {
-      // TODO: Flash error message and abort
       $request->session()->flash('flash-warning', __('errors.withdraw.in-trade-error'));
-
+      return view('frontstage.withdraw');
     }
 
     if (Auth::user()['locked?']) {
-      // TODO: Flash error message and abort
       $request->session()->flash('flash-warning', __('withdraw.user-locked-error'));
+      return view('frontstage.withdraw');
     }
 
     // If user selected more that 100 items which is the limit for trade
     if (count($request->input('items.*')) < 100) {
-      // TODO: Flash error message and abort
       $request->session()->flash('flash-warning', __('errors.withdraw.to_much_selected_items-error'));
+      return view('frontstage.withdraw');
     }
 
-    $data = ['app_id' => 1]; // data for a request
+    // TODO: See if i can replace this with /IItem/GetItemsById/v1/ endpoint
+    // exactly if tradable in IItem object means if it's currently in trade
+
+    $data = ['app_id' => 1, 'filter_in_trade' => true]; // data for a request, 1 stands for vgo skins
 
     $inventory = IUser::getInventory(env('OPSKINS_API_KEY'), $data);
+    $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
 
-    $inventory[''];
-    //TODO: End this
+    $items_difference = array_diff($request->input('items.*'), $inventory['response']['items']);
+
+    if (count($items_difference != 0)) { // User requested items that are not present in our inventory or are in trade
+      $request->session()->flash('flash-warning', __('errors.withdraw.items-error'));
+      return view('frontstage.withdraw');
+    }
+
+
   }
 }

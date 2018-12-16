@@ -34,7 +34,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          @foreach(['danger', 'warning', 'success', 'info'] as $key)
+          @foreach(['danger', 'warning', 'success', 'info', 'error'] as $key)
             @if(session()->has('flash-' . $key))
               <div class="alert alert-{{ $key }}">
                 <p>{{ session($key) }}</p>

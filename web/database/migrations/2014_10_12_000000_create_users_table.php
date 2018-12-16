@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration {
       $table->increments('id');
       $table->string('username');
       $table->string('steamid', 17)->unique();
+      $table->integer('opskins_id')->unique();
       $table->string('avatar');
       $table->integer('coins')->unsigned()->default(0);
       $table->boolean('locked?')->default(false);
