@@ -36,13 +36,13 @@ class WithdrawController extends Controller {
 
     if (Auth::user()['locked?']) {
       // TODO: Flash error message and abort
-      $request->session()->flash('flash-warning', ''); // TODO: Write error message and i18n
+      $request->session()->flash('flash-warning', __('withdraw.user-locked-error'));
     }
 
     // If user selected more that 100 items which is the limit for trade
     if (count($request->input('items.*')) < 100) {
       // TODO: Flash error message and abort
-      $request->session()->flash('flash-warning', 'You selected more than 100 items, which is global limit for trading'); // TODO: Write better err message and i18n
+      $request->session()->flash('flash-warning', __('errors.withdraw.to_much_selected_items-error'));
     }
 
     $data = ['app_id' => 1]; // data for a request
