@@ -32,7 +32,7 @@ class WithdrawController extends Controller {
     // TODO: Do something with $curl->response
   }
 
-  public function handle(Request $request) {
+  public function handle(Request $request) { // TODO: Add slack logging
     if (Auth::user()['in_trade?']) {
       $request->session()->flash('flash-warning', __('errors.withdraw.in-trade-error'));
       return view('frontstage.withdraw');
@@ -46,7 +46,7 @@ class WithdrawController extends Controller {
     $requested_items = $request->input('items.*');
 
     // If user selected more that 100 items which is the limit for trade
-    if (count($requested_items) < 100) {
+    if (count($requested_items) > 100) {
       $request->session()->flash('flash-warning', __('errors.withdraw.to_much_selected_items-error'));
       return view('frontstage.withdraw');
     }
