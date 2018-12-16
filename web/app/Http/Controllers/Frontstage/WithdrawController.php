@@ -9,6 +9,9 @@ use App\Services\OPSkinsTradeAPI\ITrade;
 use App\Services\OPSkinsTradeAPI\IUser;
 use App\Services\OPSkinsTradeAPI\IItem;
 
+use App\Models\Trade;
+use App\Models\User;
+
 use Curl\Curl;
 
 class WithdrawController extends Controller {
@@ -36,12 +39,14 @@ class WithdrawController extends Controller {
     }
 
     if (Auth::user()['locked?']) {
-      $request->session()->flash('flash-warning', __('withdraw.user-locked-error'));
+      $request->session()->flash('flash-warning', __('errors.withdraw.user-locked-error'));
       return view('frontstage.withdraw');
     }
 
+    $requested_items = $request->input('items.*');
+
     // If user selected more that 100 items which is the limit for trade
-    if (count($request->input('items.*')) < 100) {
+    if (count($requested_items) < 100) {
       $request->session()->flash('flash-warning', __('errors.withdraw.to_much_selected_items-error'));
       return view('frontstage.withdraw');
     }
@@ -54,13 +59,63 @@ class WithdrawController extends Controller {
     $inventory = IUser::getInventory(env('OPSKINS_API_KEY'), $data);
     $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
 
-    $items_difference = array_diff($request->input('items.*'), $inventory['response']['items']);
+    array_filter($inventory['response']['items'], function ($item) use ($requested_items) {
+      foreach ($requested_items as $requested_item) {
+        if ($item['id'] == $requested_item) {
+          return true;
+        }
+      }
 
-    if (count($items_difference != 0)) { // User requested items that are not present in our inventory or are in trade
+      return false;
+    });
+
+    if (count($inventory['response']['items']) != count($requested_items)) { // User requested items that are not present in our inventory or are in trade
       $request->session()->flash('flash-warning', __('errors.withdraw.items-error'));
       return view('frontstage.withdraw');
     }
 
+    $value = 0;
 
+    foreach ($inventory['response']['items'] as $item) {
+      $value += $item['suggested_price'] * 10; // TODO: ??? Why * 10
+    }
+
+    if (Auth::user()['coins'] < $value) {
+      $request->session()->flash('flash-warning', __('errors.withdraw.not-enough-coins'));
+      return view('frontstage.withdraw');
+    }
+
+    $user = Auth::user();
+
+    $user->coins = $user['coins'] - $value;
+
+    $user->save();
+
+    $secret_code = random_bytes(6);
+
+    $data = [
+      'twofactor_code' => '',
+      'steam_id' => Auth::user()['steamid'],
+      'items_to_send' => implode(',', $requested_items),
+      'expiration_time' => 2 * 60, // 2 minutes
+      'message' => 'Withdrawal from XXX, total value: ' . $value . 'secret: ' . $sercret_code // TODO:
+    ];
+
+    $offer = ITrade::senfOfferToSteamId(env('OPSKINS_API_KEY'), $data);
+    $offer = json_decode($offer, true);
+
+    Trade::create([
+      'offer_id' => $offer['result']['offer']['id'],
+      'bot_id' => 0, // TODO: Support for multiple bots accounts
+      'state' => 2, // STATE_ACTIVE
+      'steamid' => $offer['result']['offer']['recipent']['steam_id'],
+      'value' => $value,
+      'secretcode' => $secret_code,
+      'type' => 'withdraw',
+    ]);
+
+    // Everything went ok, no errors... probably
+    $request->session()->flash('flash-success', __('trades.sent-offer'));
+    return view('frontstage.withdraw');
   }
 }
