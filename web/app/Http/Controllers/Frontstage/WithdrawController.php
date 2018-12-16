@@ -19,19 +19,6 @@ class WithdrawController extends Controller {
     return view('frontstage.withdraw');
   }
 
-  public function withdraw(Request $request) {
-    $data = array(
-      'steamid' => Auth::user()['steamid'],
-      'items' => $request->input('items.*'), // NOTE IMPORTANT: items IS A ARRAY
-    );
-
-    $curl = new Curl();
-    // $curl->setDefaultJsonDecoder
-    $curl->setHeader('Content-Type', 'application/json');
-    $curl->post('', $data); //TODO: Insert address here
-    // TODO: Do something with $curl->response
-  }
-
   public function handle(Request $request) { // TODO: Add slack logging
     if (Auth::user()['in_trade?']) {
       $request->session()->flash('flash-warning', __('errors.withdraw.in-trade-error'));
@@ -43,7 +30,7 @@ class WithdrawController extends Controller {
       return view('frontstage.withdraw');
     }
 
-    $requested_items = $request->input('items.*');
+    $requested_items = $request->input('items.*'); // NOTE: items have to be passed as an array
 
     // If user selected more that 100 items which is the limit for trade
     if (count($requested_items) > 100) {
@@ -52,7 +39,7 @@ class WithdrawController extends Controller {
     }
 
     // TODO: See if i can replace this with /IItem/GetItemsById/v1/ endpoint
-    // exactly if tradable in IItem object means if it's currently in trade
+    // TODO: See exactly if tradable in IItem object means if it's currently in trade
 
     $data = ['app_id' => 1, 'filter_in_trade' => true]; // data for a request, 1 stands for vgo skins
 
@@ -77,7 +64,7 @@ class WithdrawController extends Controller {
     $value = 0;
 
     foreach ($inventory['response']['items'] as $item) {
-      $value += $item['suggested_price'] * 10; // TODO: ??? Why * 10
+      $value += $item['suggested_price'] * 10; // * 10 because on this site 1$ == 1000 coins
     }
 
     if (Auth::user()['coins'] < $value) {
@@ -97,11 +84,11 @@ class WithdrawController extends Controller {
       'twofactor_code' => '', // TODO: Write this
       'steam_id' => Auth::user()['steamid'],
       'items_to_send' => implode(',', $requested_items),
-      'expiration_time' => 2 * 60, // 2 minutes
+      'expiration_time' => 1 * 60 * 60, // 1 hour
       'message' => 'Withdrawal from XXX, total value: ' . $value . 'secret: ' . $sercret_code // TODO:
     ];
 
-    $offer = ITrade::senfOfferToSteamId(env('OPSKINS_API_KEY'), $data);
+    $offer = ITrade::sendOfferToSteamId(env('OPSKINS_API_KEY'), $data);
     $offer = json_decode($offer, true);
 
     Trade::create([
