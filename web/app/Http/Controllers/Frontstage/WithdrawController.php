@@ -94,7 +94,7 @@ class WithdrawController extends Controller {
     $secret_code = random_bytes(6);
 
     $data = [
-      'twofactor_code' => '',
+      'twofactor_code' => '', // TODO: Write this
       'steam_id' => Auth::user()['steamid'],
       'items_to_send' => implode(',', $requested_items),
       'expiration_time' => 2 * 60, // 2 minutes
