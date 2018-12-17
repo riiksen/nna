@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Frontstage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Services\OPSkinsTradeAPI\ITrade;
-use App\Services\OPSkinsTradeAPI\IUser;
-use App\Services\OPSkinsTradeAPI\IItem;
+use App\Modules\OPSkinsTradeAPI\ITrade;
+use App\Modules\OPSkinsTradeAPI\IUser;
+use App\Modules\OPSkinsTradeAPI\IItem;
 
 use App\Models\Trade;
 use App\Models\User;

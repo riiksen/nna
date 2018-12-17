@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\OPSkinsTradeAPI;
+namespace App\Modules\OPSkinsTradeAPI;
 
 class ITrade {
   public static function cancelOffer($api_key, $data) {

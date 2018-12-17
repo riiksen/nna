@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Services\OPSkinsTradeAPI;
+namespace App\Modules\OPSkinsTradeAPI;
 
-class IItem {
-  public static function getItemsById($api_key, $data) {
-    $url = 'https://api-trade.opskins.com/IItem/GetItemsById/v1/';
+use GuzzleHttp\Client as GuzzleClient;
+
+class IUser {
+  public static function getInventory($api_key, $data) {
+    $url = 'https://api-trade.opskins.com/IUser/GetInventory/v1/';
     $method = 'GET';
 
     $response = self::makeRequest($url, $method, $api_key, $data);
