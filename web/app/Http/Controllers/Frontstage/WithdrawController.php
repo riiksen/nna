@@ -19,7 +19,11 @@ class WithdrawController extends Controller {
     return view('frontstage.withdraw');
   }
 
-  public function handle(Request $request) { // TODO: Add slack logging
+
+  // TODO: Add slack logging
+  // TODO: Add bypass of in_trade? with permission
+  // TODO: Testing
+  public function handle(Request $request) {
     if (Auth::user()['in_trade?']) {
       $request->session()->flash('flash-warning', __('errors.withdraw.in-trade-error'));
       return view('frontstage.withdraw');
