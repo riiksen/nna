@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Frontstage;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Modules\OPSkinsTradeAPI\ITrade;
 use App\Modules\OPSkinsTradeAPI\IUser;
@@ -12,18 +14,22 @@ use App\Modules\OPSkinsTradeAPI\IItem;
 use App\Models\Trade;
 use App\Models\User;
 
-use Curl\Curl;
+use RobThree\Auth\TwoFactorAuth;
 
 class WithdrawController extends Controller {
   public function index() {
     return view('frontstage.withdraw');
   }
 
-
   // TODO: Add slack logging
   // TODO: Add bypass of in_trade? with permission
   // TODO: Testing
   public function handle(Request $request) {
+    if (is_array($request->input('items.*'))) {
+      $request->session()->flash('flash-warning', __('errors.withdraw.invalid_input'));
+      return view('frontstage.deposit');
+    }
+
     if (Auth::user()['in_trade?']) {
       $request->session()->flash('flash-warning', __('errors.withdraw.in-trade-error'));
       return view('frontstage.withdraw');
@@ -84,8 +90,11 @@ class WithdrawController extends Controller {
 
     $secret_code = random_bytes(6);
 
+    $two_factor = new TwoFactorAuth();
+    $secret = env('STEAMBOT_TWOFACTOR_SECRET');
+
     $data = [
-      'twofactor_code' => '', // TODO: Write this
+      'twofactor_code' => $two_factor->getCode($secret), // TODO:
       'steam_id' => Auth::user()['steamid'],
       'items_to_send' => implode(',', $requested_items),
       'expiration_time' => 1 * 60 * 60, // 1 hour

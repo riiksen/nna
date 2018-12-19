@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Frontstage;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Modules\OPSkinsTradeAPI\ITrade;
 use App\Modules\OPSkinsTradeAPI\IUser;
@@ -12,12 +14,22 @@ use App\Modules\OPSkinsTradeAPI\IItem;
 use App\Models\Trade;
 use App\Models\User;
 
+use RobThree\Auth\TwoFactorAuth;
+
 class DepositController extends Controller {
   public function index() {
     return view('frontstage.deposit');
   }
 
-  public function handle(Request $request) { // TODO: Add slack logging
+  // TODO: Add slack logging
+  // TODO: Add bypass of in_trade? with permission
+  // TODO: Testing
+  public function handle(Request $request) {
+    if (is_array($request->input('items.*'))) {
+      $request->session()->flash('flash-warning', __('errors.withdraw.invalid_input'));
+      return view('frontstage.deposit');
+    }
+
     if (Auth::user()['in_trade?']) {
       $request->session()->flash('flash-warning', __('errors.withdraw.in-trade-error'));
       return view('frontstage.deposit');
@@ -72,8 +84,11 @@ class DepositController extends Controller {
 
     $secret_code = random_bytes(6);
 
+    $two_factor = new TwoFactorAuth();
+    $secret = env('STEAMBOT_TWOFACTOR_SECRET');
+
     $data = [
-      'twofactor_code' => '', // TODO: Write this
+      'twofactor_code' => $two_factor->getCode($secret), // TODO:
       'steam_id' => Auth::user()['steamid'],
       'items_to_receive' => implode(',', $requested_items),
       // 'expiration_time' => 2 * 60, // 2 minutes // don't need this here
@@ -96,5 +111,11 @@ class DepositController extends Controller {
     // Everything went ok, no errors... probably
     $request->session()->flash('flash-success', __('trades.sent-offer'));
     return view('frontstage.deposit');
+  }
+
+  private function shouldBypassSecurityChecks() {
+    return Auth::user()['is_admin?'] || // TODO: Permissions
+           Auth::user()->hasPermission('skip-deposit-checks') ||
+           App::environment() == 'production';
   }
 }
