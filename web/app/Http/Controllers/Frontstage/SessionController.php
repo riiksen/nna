@@ -8,6 +8,8 @@ use Invisnik\LaravelSteamAuth\SteamAuth;
 use App\Models\User;
 use Auth;
 
+use Curl\Curl;
+
 class SessionController extends Controller {
   /**
    * The SteamAuth instance
@@ -87,5 +89,20 @@ class SessionController extends Controller {
 
   public function logout() {
     
+  }
+  public function loginToSocket(Request $request) {
+    if(!$request->has('socketId')) return;
+
+    $curl = new Curl();
+
+    $data = array(
+      'steamid' => Auth::user()['steamid'],
+      'socketId' => $request->input('socketId'),
+    );
+    $curl->setHeader('Content-Type', 'application/json');
+    $curl->post('127.0.0.1:'.$_ENV['NODE_PORT'].'/loginToSocket', $data);
+    $curl->close();
+
+    return;
   }
 }

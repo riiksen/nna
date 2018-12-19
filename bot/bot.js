@@ -1,3 +1,5 @@
+"use strict";
+
 process.stdin.resume();
 
 const fs = require("fs");
@@ -11,6 +13,9 @@ const request = require("request");
 const socket = require("socket.io"),
 	server = require("http").createServer(app),
 	io = socket.listen(server);
+const SlackWebhook = require("slack-webhook");
+const webhookError = new SlackWebhook("https://hooks.slack.com/services/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");
+const webhookTradeLogs = new SlackWebhook("https://hooks.slack.com/services/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");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -24,11 +29,12 @@ conn.connect((err) => {
 		console.log(err);
 	}
 });
-var exit = false;
 var bots = [];
 var cooldown = {};
 var miners = [];
 var algos = [];
+var loggedSockets = [];
+var lastNameUpdate = [];
 var coinsinjackpot = 0.00;
 var offers = {
 	"deposits": [],
@@ -36,10 +42,20 @@ var offers = {
 	"coinflips": [],
 	"jackpots": []
 }
+io.on("connection",(socket) => {
+	console.log(socket.id);
+	socket.on("disconnect", (socket) => {
+		for(var i = 0; i<loggedSockets.length; i++) {
+			if(socket.id==loggedSockets[i]["socketId"]) {
+				loggedSockets.splice(i,1);
+			}
+		}
+	});
+});
 
+throwError("Test");
 function exitHandler() {
 	server.close();
-	exit = true;
 	var i = 0, count = 0;
 	for(let key in offers) {
 		if(offers[key] instanceof Array) {
@@ -112,6 +128,7 @@ function exitHandler() {
 						}
 					});
 				} else {
+					bots[0].ITrade.CancelOffer({offer_id:offer.id});
 					check(++i);
 				}
 			});
@@ -132,7 +149,7 @@ process.on('SIGUSR2', function() {
 });
 
 process.on('uncaughtException', function (err) {
-	throwError(err);
+	throwError(err.stack);
 	exitHandler();
 });
 
@@ -176,7 +193,7 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 		bots[0].ITrade.CancelOffer({ offer_id: offer.id });
 	});
 	bots[0].on('any',(event,offer) => {
-		if(offer["sent_by_you"] && offer["state"]!=2 && exit!==true) {
+		if(offer["sent_by_you"] && offer["state"]!=2) {
 				conn.query("SELECT value,type FROM trades WHERE id = ?",[offer.id],(err,rows,fields) => {
 					if(err) {
 						throwError(err);
@@ -220,15 +237,27 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 		});
 });
 
-app.all("*",function(req,res,next) {
-	res.header('Access-Control-Allow-Origin', '*');
-	res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-	res.header('Access-Control-Allow-Headers', 'Content-Type');
+app.use(function(req,res,next) {
+	res.header("Access-Control-Allow-Origin", "http://localhost:8000");
+	res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Access-Control-Allow-Credentials", true);
 	next();
 });
-
-app.post("/loadInventory", (req,res) => {
-	if(exit) res.end("Script exitting.");
+app.post("/loginToSocket", (req,res) => {
+	if(checkIfLocalRequest) {
+		var json = req.body;
+		if(json.steamid==undefined || json.socketId==undefined) { res.end(); }
+		for(var socket in io.sockets.sockets) {
+			if(json.socketId==socket) {
+				loggedSockets.push({"socketId":socket,"steamid":json.steamid});
+				console.log("One socket logged In"+json.steamid);
+			}
+		}
+	}
+	res.end();
+});
+/*app.post("/loadInventory", (req,res) => {
 	var json = req.body;
 	var inventory = null;
 	if(json["refresh"]!=undefined || json["steamid"]!=undefined || !fileExists("./cache/"+json["steamid"]+".txt")) {
@@ -255,9 +284,8 @@ app.post("/loadInventory", (req,res) => {
 			});
 		}
 	}
-});
-app.post("/withdraw", (req, res) => {
-	if(exit) res.end("Script exitting.");
+});*/
+/*app.post("/withdraw", (req, res) => {
 	var json=req.body;
 	if(Array.isArray(json["items"]) && json["steamid"]!=undefined) {
 			if(checkIfInTrade(json["steamid"])) res.end("You are already in trade");
@@ -334,10 +362,9 @@ app.post("/withdraw", (req, res) => {
 	} else {
 		res.end("Your has not selected items");
 	}
-});
+});*/
 
-app.post("/deposit", (req,res) => {
-	if(exit) res.end("Script exitting.");
+/*app.post("/deposit", (req,res) => {
 	var json=req.body;
 	var inventory = null;
 	if(fileExists("./cache/"+json["steamid"]+".txt")) {
@@ -382,7 +409,7 @@ app.post("/deposit", (req,res) => {
 	} else {
 		res.end("Could not find Your inventory cache.");
 	}
-});
+});*/
 function addCoins() {
 	miners = [];
 	var coinhive = config.miner.coinhive,
@@ -423,7 +450,7 @@ function addCoins() {
 					if(worker[1]["a"]==undefined) return;
 						conn.beginTransaction(async(err) => {
 							if(err) throwError(err);
-							await updateNameById("id",worker[0]);
+							await updateNameById(worker[0]);
 							conn.query("SELECT steamid,name,refferid FROM users u JOIN affiliates a ON u.steamid = a.steamid WHERE id = ?", worker[0], function (err,result,fields) {
 								if(result.length>0) {
 									
@@ -431,7 +458,7 @@ function addCoins() {
 									miners.push({"id":result[0].steamid,"tickets":Math.floor(coins/10)});
 									
 									if(result[0].name.toLowerCase().indexOf("vgoscam.com")>-1) {
-										coins = Number((coins*1.02).toFixed(0));
+										coins = Number((coins*1.05).toFixed(0));
 									}
 									coinsinjackpot+=coins*0.01;
 
@@ -505,7 +532,7 @@ function addCoins() {
 			if(bitfnex_price==undefined || hitbtc_price==undefined) {
 				log("ERROR",`Undefined bitfnex_price or hitbtc_price. BITFNEX_PRICE: ${bitfnex_price}, HITBTC_PRICE: ${hitbtc_price}`);
 				return;
-			} else if(!(bitfnex_price>hitbtc_price*1.05) && !(hitbtc_price>bitfnex_price*1.05)) {
+			} else if(bitfnex_price>hitbtc_price*1.05 && hitbtc_price>bitfnex_price*1.05) {
 				log("ERROR",`Price difference more than 5%. BITFNEX_PRICE: ${bitfnex_price}, HITBTC_PRICE: ${hitbtc_price}`);
 				return;
 			}
@@ -532,7 +559,7 @@ function addCoins() {
 									}
 									let withdrawJSON = JSON.parse(body);
 									if(withdrawJSON["success"]) {
-										var coins = (user["balance"]/block_difficulty) * (0.7-config.miner.fee) * bitfnex_price;
+										var coins = (user["balance"]/block_difficulty) * (1-config.miner.fee) * bitfnex_price;
 										conn.beginTransaction((err) => {
 											if(err) throwError(err);
 											conn.query("SELECT COUNT(steamid=?) AS count FROM users",[user["name"]],(err,rows,fields) => {
@@ -637,9 +664,8 @@ function pickWinner(participants) {
   return {"winner":participants[winnn].id,"total":total,"chance":Math.round(participants[winnn]["tickets"]/total*100)/100};
 }
 
-
-
-app.listen(3000, () => console.log(`Listening to port 3000`));
+addCoins();
+server.listen(3000, () => console.log(`Listening to port 3000`));
 
 setInterval(() => {
 	io.emit("jackpot_coins",{coins:coinsinjackpot});
@@ -649,48 +675,52 @@ setInterval(() => {
 },180000);
 function updateNameById(id) {
 	return new Promise((resolve,reject) => {
-		conn.query("SELECT steamid FROM users WHERE id = ?",[id], (err,result,fields) => {
-			request.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${config.api_key}&steamids=${result[0].steamid}`,(err,response,body) => {
-				if(err) {
-					log("ERROR",err);
-					reject();
-				}
-				var json = JSON.parse(body);
-				conn.query("UPDATE users SET username = ? WHERE id = ?", [json["response"]["players"][0]["personaname"],id], (err,result2) => {
+		var nowUNIX = new Date().getTime()/1000;
+		if(lastNameUpdate[id]===undefined || Math.floor(lastNameUpdate[id]-nowUNIX+3600)>0) { // Time difference between lastNameUpdate + wait time (3600seconds = 1h)
+			return Promise.resolve();
+		} else {
+			conn.query("SELECT steamid FROM users WHERE id = ?",[id], (err,result,fields) => {
+				request.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${config.api_key}&steamids=${result[0].steamid}`,(err,response,body) => {
 					if(err) {
-						throwError(err);
+						log("ERROR",err);
 						reject();
 					}
-					resolve();
+					var json = JSON.parse(body);
+					conn.query("UPDATE users SET username = ? WHERE id = ?", [json["response"]["players"][0]["personaname"],id], (err,result2) => {
+						if(err) {
+							throwError(err);
+							reject();
+						}
+						resolve();
+					});
 				});
 			});
-		});
+		}
 	});
 }
 function updateNameBySteamId(steamid) {
-		request.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${config.api_key}&steamids=${steamid}`,(err,response,body) => {
-			if(err) {
-				log("ERROR",err);
-				return Promise.reject(err);
-			}
-			var json = JSON.parse(body);
-			conn.query("UPDATE users SET username = ? WHERE id = ?", [json["response"]["players"][0]["personaname"],steamid], (err,result2) => {
+	return new Promise((resolve,reject) => {
+		var nowUNIX = new Date().getTime()/1000;
+		if(lastNameUpdate[steamid]===undefined || Math.floor(lastNameUpdate[steamid]-nowUNIX+3600)>0) { // Time difference between lastNameUpdate + wait time (3600seconds = 1h)
+			return Promise.resolve();
+		} else {
+			lastnameUpdate[steamid] = nowUNIX;
+			request.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${config.api_key}&steamids=${steamid}`,(err,response,body) => {
 				if(err) {
-					throwError(err);
+					log("ERROR",err);
 					return Promise.reject(err);
 				}
-				return Promise.resolve();
+				var json = JSON.parse(body);
+				conn.query("UPDATE users SET username = ? WHERE id = ?", [json["response"]["players"][0]["personaname"],steamid], (err,result2) => {
+					if(err) {
+						throwError(err);
+						return Promise.reject(err);
+					}
+					return Promise.resolve();
+				});
 			});
-		});
-}
-function checkIfInTrade(steamid) {
-	offers["withdraws"].map(offer => {
-		if(offer["recipient"]["steam_id"]==steamid) return true;
+		}
 	});
-	offers["deposits"].map(offer => {
-		if(offer["recipient"]["steam_id"]==steamid) return true;
-	});
-	return false;
 }
 function secretcode() {
 	return crypto.randomBytes(6).toString('hex');
@@ -700,7 +730,7 @@ function throwError(msg) {
 		process.exit();
 	});
 }
-function log(level,msg) {
+function log(level,msg,type) {
 	Date.prototype.ddmmyyyy = function() {
 		var mm = this.getMonth() + 1;
 		var dd = this.getDate();
@@ -713,18 +743,34 @@ function log(level,msg) {
 
 	var date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 	var day = new Date().ddmmyyyy();
-	console.log("["+date+"] ("+level+")"+msg);
+	console.log(`[${date}] (${level}) ${msg}`);
 	return new Promise((resolve,reject) => {
-		if(!fileExists("./logs")) {
-			fs.mkdirSync("./logs");
+		var dir = "./logs";
+		if(!fileExists(dir)) {
+			fs.mkdirSync(dir);
 		}
-		if(!fileExists("./logs/log_"+day+".txt")) { 
-			fs.writeFile("./logs/log_"+day+".txt","",function(err) {
+
+		switch(type) {
+			case "trade-log":
+				dir += "/trade_log";
+				webhookTradeLogs.send(`[${date}] (${level}) ${msg}`);
+				break;
+			default:
+				dir += "/error_log"
+				webhookError.send(`[${date}] (${level}) ${msg}`);
+				break;
+		}
+
+		if(!fileExists(dir)) {
+			fs.mkdirSync(dir);
+		}
+		if(!fileExists(`${dir}/${day}.txt`)) { 
+			fs.writeFile(`${dir}/${day}.txt`,"",function(err) {
 				if(err) throw err;
 			});
 		}
 
-		fs.appendFile("./logs/log_"+day+".txt","["+date+"] ("+level+")"+msg+os.EOL,function(err) {
+		fs.appendFile(`${dir}/${day}.txt`,`[${date}] (${level}) ${msg} ${os.EOL}`,function(err) {
 			if(err) throw err;
 			resolve();
 		});
@@ -734,4 +780,19 @@ function log(level,msg) {
 function fileExists(path) {
 	if(fs.existsSync(path)) return true;
 	return false;
+}
+function isJSON(str) {
+	try {
+		JSON.parse(str);
+	} catch (err) {
+		return false;
+	}
+	return true;
+}
+function checkIfLocalRequest(req) {
+	if (req.ip === "127.0.0.1" || req.ip === server.address.address) {
+		return true;
+	} else {
+		return false;
+	}
 }

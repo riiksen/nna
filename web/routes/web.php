@@ -31,13 +31,13 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
 
   Route::group(['middleware' => 'auth'], function() {
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::post('/loginToSocket','SessionController@loginToSocket');
+  });
 
-
-    // Limit the requests that are passed to the node worker to 20 requests per minute
-    Route::group(['middleware' => 'throttle:20,1'], function() {
-      Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
-      Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
-    });
+  // Limit trade requests to 2 requests per minute
+  Route::group(['middleware' => 'throttle:2,1'], function() {
+    Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
+    Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
   });
 });
 
