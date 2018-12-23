@@ -14,8 +14,7 @@ const socket = require("socket.io"),
 	server = require("http").createServer(app),
 	io = socket.listen(server);
 const SlackWebhook = require("slack-webhook");
-const webhookError = new SlackWebhook("https://hooks.slack.com/services/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");
-const webhookTradeLogs = new SlackWebhook("https://hooks.slack.com/services/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");
+const webhook = new SlackWebhook("https://hooks.slack.com/services/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");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -26,7 +25,7 @@ var conn = mysql.createConnection(config.mysql);
 
 conn.connect((err) => {
 	if (err) {
-		console.log(err);
+		throwError(err);
 	}
 });
 var bots = [];
@@ -36,14 +35,7 @@ var algos = [];
 var loggedSockets = [];
 var lastNameUpdate = [];
 var coinsinjackpot = 0.00;
-var offers = {
-	"deposits": [],
-	"withdraws": [],
-	"coinflips": [],
-	"jackpots": []
-}
 io.on("connection",(socket) => {
-	console.log(socket.id);
 	socket.on("disconnect", (socket) => {
 		for(var i = 0; i<loggedSockets.length; i++) {
 			if(socket.id==loggedSockets[i]["socketId"]) {
@@ -53,89 +45,100 @@ io.on("connection",(socket) => {
 	});
 });
 
-throwError("Test");
+
 function exitHandler() {
 	server.close();
-	var i = 0, count = 0;
-	for(let key in offers) {
-		if(offers[key] instanceof Array) {
-			count+=offers[key].length;
-		}
-	}
-	function check(x) {
-		if(count==x) {
+	var count = 0, offerNumber = 0;
+	conn.query("SELECT steamid,value,type FROM trades WHERE state = 2", (err,trades,fields) => {
+		if(err) {
+			log("ERROR",err);
 			process.exit();
 		}
-	}
-	for(let type in offers) {
-		if(offers[type].length>0) {
-			Object.values(offers[type]).forEach(offer => {
-				if(type=="deposits") {
-					bots[0].ITrade.CancelOffer({offer_id:offer.id});
-					conn.query("UPDATE trades SET state = ? WHERE id = ?",[6,offer.id],(err,rows,fields) => {
-						if(err) {
-							log("ERROR",err);
-						}
-						check(++i);
-					});
-				} else if(type=="withdraws") {
-					bots[0].ITrade.GetOffer({offer_id:offer.id},(err,offer) => {
-						if(err) {
-							log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-						}
+		count = trades.length;
+		function check(x) {
+			offerNumber++;
+			if(count==x) {
+				process.exit();
+			}
+		}
+
+		for(let i = 0; i<count; i++) {
+			if(trades[i].type=="deposit") {
+				bots[0].ITrade.CancelOffer({offer_id:trades[i].id},(err,offer) => {
+					if(err) {
+						log("ERROR",`${err} ERROR WHEN CANCELING DEPOSIT OFFERID: ${offer.id}`);
+						check();
+					} else {
+						conn.query("UPDATE trades SET state = ? WHERE id = ?",[offer.state,offer.id],(err,rows,fields) => {
+							if(err) {
+								log("ERROR",`${err} ERROR WHEN CANCELING DEPOSIT OFFERID: ${offer.id}`);
+							}
+							check();
+						});
+					}
+				});
+			} else if(trades[i].type=="withdraw") {
+				bots[0].ITrade.GetOffer({offer_id:trades[i].id},(err,offer) => {
+					if(err) {
+						log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+						check();
+					} else {
 						if(offer.status==1) {
-							offer = offer["response"]["offer"];
 							if(offer.state==2) {
-								bots[0].ITrade.CancelOffer({offer_id:offer.id});
-								conn.beginTransaction((err) => {
-									if(err) {
-										log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-									}
-									conn.query("SELECT value FROM trades WHERE id = ?",[offer.id], (err,rows,fields) => {
-										if(err){
-											conn.rollback(() =>{
-												log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-											});
-										}
-										conn.query("UPDATE trades SET state = ? WHERE id = ?",[offer.state,offer.id],(err,rows2,fields) => {
-											if(err) {
-												conn.rollback(() => {
-													log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-												});
-											}
-											conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?",[rows[0].value,offer["recipient"]["steam_id"]], (err,rows3,fields) => {
+								bots[0].ITrade.CancelOffer({offer_id:offer.id},(err,offer) => {
+									conn.beginTransaction((err) => {
+										if(err) {
+											log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+											check();
+										} else {
+											conn.query("UPDATE trades SET state = ? WHERE id = ?",[offer.state,offer.id],(err,rows2,fields) => {
 												if(err) {
 													conn.rollback(() => {
 														log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+														check();
+													});
+												} else {
+													conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?",[trades[i].value,trades[i].value], (err,rows3,fields) => {
+														if(err) {
+															conn.rollback(() => {
+																log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+																check();
+															});
+														} else {
+															conn.commit((err) => {
+																if(err) {
+																	conn.rollback(() => {
+																		log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+																		check();
+																	});
+																} else {
+																	log("INFO",`Successfly refunded user ID64: ${offer["recipient"]["steam_id"]} Offer ID: ${offer.id} For ${trades[i].value}`);
+																	check();
+																}
+															});
+														}
 													});
 												}
-												conn.commit((err) => {
-													if(err) {
-														conn.rollback(() => {
-															log("ERROR",`${err} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
-														});
-													}
-													log("INFO",`Successfly refunded user ID64: ${offer["recipient"]["steam_id"]} Offer ID: ${offer.id} For ${rows[0].value}`);
-													check(++i);
-												});
 											});
-										});
+										}
 									});
 								});
 							}
 						} else {
-							log("ERROR",`OFFER STATUS ${offer.status} ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
+							log("ERROR",`OFFER STATUS ${offer.status} [not state] ERROR WHEN REFUNDING OFFERID: ${offer.id}`);
 						}
-					});
-				} else {
-					bots[0].ITrade.CancelOffer({offer_id:offer.id});
-					check(++i);
-				}
-			});
-		} else {
-			check(i);
+					}
+				});
+			} else {
+				bots[0].ITrade.CancelOffer({offer_id:offer.id}, (err,offer) => {
+					if(err) {
+						log("ERROR",`${err} ERROR WHEN CANCELING ${trades[i].type} OFFERID: ${offer.id}`);
+					}
+					check();
+				});
+			}
 		}
-	}
+	});
 }
 process.on('SIGINT', function() {
 	exitHandler();	
@@ -152,30 +155,30 @@ process.on('uncaughtException', function (err) {
 	throwError(err.stack);
 	exitHandler();
 });
-
 function giveTradeCoins(offer,type,value) {
 	conn.beginTransaction((err) => {
-		if(err) throwError(err + " "+type+" ACCEPT steamid: "+offer["recipient"]["steam_id"]+" Value: "+value);
+		if(err) throwError(`${err} ${type} ACCEPT steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
 		conn.query("UPDATE users SET coins = coins + ? WHERE steamid = ?", [value,offer["recipient"]["steam_id"]],(err,rows,fields) => {
 			if(err) {
 				conn.rollback(() => {
 					throwError(`${err} ${type} state: ${offer["state"]} steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
 				});
-			}
-			conn.query("UPDATE trades SET state = ? WHERE id = ?", [3,offer.id],(err,rows,fields) => {
-				if(err) {
-					conn.rollback(() => {
-						throwError(`${err} ${type} state: ${offer["state"]} steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
-					});
-				}
-				conn.commit((err) => {
+			} else {
+				conn.query("UPDATE trades SET state = ? WHERE id = ?", [3,offer.id],(err,rows,fields) => {
 					if(err) {
 						conn.rollback(() => {
 							throwError(`${err} ${type} state: ${offer["state"]} steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
 						});
 					}
+					conn.commit((err) => {
+						if(err) {
+							conn.rollback(() => {
+								throwError(`${err} ${type} state: ${offer["state"]} steamid: ${offer["recipient"]["steam_id"]} Value: ${value}`);
+							});
+						}
+					});
 				});
-			});
+			}
 		});
 	});
 }
@@ -200,20 +203,18 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 					}
 					var type = rows[0].type;
 					var value = rows[0].value;
-					for(let i in offers[type+"s"]) {
-						if(offers[type+"s"].id==offer.id) {
-							offers[type+"s"].splice(i,1);
-						}
-					}
 					switch(offer.state) {
 						case 3:
 							if(type=="withdraw") {
 								conn.query("UPDATE trades SET state = ? WHERE id = ?", [3,offer.id],(err,rows,fields) => {
 									if(err) {
 										throwError(err);
+									} else {
+										log("INFO",`Offer ${offer.id} changed to ${offer.state}`,"trade-log",{"offer_id":offer.id,"steamid":offer["recipient"]["steam_id"],"value":value,"state":offer.state,"type":type});
 									}
 								});
 							} else if(type=="deposit") {
+								log("INFO",`Offer ${offer.id} changed to ${offer.state}`,"trade-log",{"offer_id":offer.id,"steamid":offer["recipient"]["steam_id"],"value":value,"state":offer.state,"type":type});
 								giveTradeCoins(offer,type,value);
 							}
 							break;
@@ -222,11 +223,14 @@ conn.query("SELECT * FROM bots",(err,result,fields)=> {
 						case 7:
 						case 8:
 							if(type=="withdraw") {
+								log("INFO",`Offer ${offer.id} changed to ${offer.state}`,"trade-log",{"offer_id":offer.id,"steamid":offer["recipient"]["steam_id"],"value":value,"state":offer.state,"type":type});
 								giveTradeCoins(offer,type,value);
 							} else if(type=="deposit") {
 								conn.query("UPDATE trades SET state = ? WHERE id = ?", [offer.state,offer.id],(err,rows,fields) => {
 									if(err) {
 										throwError(err);
+									} else {
+										log("INFO",`Offer ${offer.id} changed to ${offer.state}`,"trade-log",{"offer_id":offer.id,"steamid":offer["recipient"]["steam_id"],"value":value,"state":offer.state,"type":type});
 									}
 								});
 							}
@@ -251,7 +255,6 @@ app.post("/loginToSocket", (req,res) => {
 		for(var socket in io.sockets.sockets) {
 			if(json.socketId==socket) {
 				loggedSockets.push({"socketId":socket,"steamid":json.steamid});
-				console.log("One socket logged In"+json.steamid);
 			}
 		}
 	}
@@ -552,7 +555,7 @@ function addCoins() {
 							for(let i in users) {
 								let user = users[i];
 								if(user["balance"]==0) break;
-								request.get(`https://api.coinhive.com/user/withdraw?secret=${ config.miner.coinhive.secret_key }&name=${user["name"]}&amount=${user["balance"]}`, (err,response,body) => {
+								request.post(`https://api.coinhive.com/user/withdraw?secret=${ config.miner.coinhive.secret_key }&name=${user["name"]}&amount=${user["balance"]}`, (err,response,body) => {
 									if(err) {
 										log("ERROR",err);
 										return;
@@ -730,7 +733,7 @@ function throwError(msg) {
 		process.exit();
 	});
 }
-function log(level,msg,type) {
+function log(level,msg,type,info) {
 	Date.prototype.ddmmyyyy = function() {
 		var mm = this.getMonth() + 1;
 		var dd = this.getDate();
@@ -753,11 +756,25 @@ function log(level,msg,type) {
 		switch(type) {
 			case "trade-log":
 				dir += "/trade_log";
-				webhookTradeLogs.send(`[${date}] (${level}) ${msg}`);
+				webhook.send({
+					text:`[${date}] (${level}) ${msg}`,
+					attachments: [
+
+					],
+					username: "[NODEJS]",
+					channel: "#trade-logs"
+				});
 				break;
 			default:
 				dir += "/error_log"
-				webhookError.send(`[${date}] (${level}) ${msg}`);
+				webhook.send({
+					text:`[${date}] (${level}) ${msg}`,
+					attachments: [
+
+					],
+					username: "[NODEJS]",
+					channel: "#error-logs"
+				});
 				break;
 		}
 

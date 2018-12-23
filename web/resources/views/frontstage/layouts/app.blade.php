@@ -16,6 +16,7 @@
     <!-- Styles -->
     {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"> --}}
     <link rel="stylesheet" href="{{ asset('css/fs/app.css') }}">
+    @yield('pagestyles')
 
 
     {{-- <link rel="apple-touch-icon" href="/favicon.png"> --}}
@@ -65,5 +66,6 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="{{ asset('js/socket.js') }}"></script>
+    @yield('pagescripts')
   </body>
 </html>
