@@ -20,7 +20,7 @@ class IUser {
     $response = $client->request($method, $url, [
       'http_errors' => false,
       'headers' => [
-        'Authorization' => 'Basic ' . base64_encode($api_key)
+        'Authorization' => 'Basic ' . base64_encode($api_key . ':')
       ],
 
       $method == 'POST' ? 'form_params' : 'query' => $data
