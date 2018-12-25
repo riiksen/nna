@@ -8,15 +8,18 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @yield('meta')
+
     <title>{{ config('app.name', 'No chyba stronka hazardowa nie') }} - @yield('title')</title>
 
+    @yield('before-styles')
     <!-- Fonts -->
     {{-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> --}}
 
     <!-- Styles -->
     {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"> --}}
-    <link rel="stylesheet" href="{{ asset('css/fs/app.css') }}">
-    @yield('pagestyles')
+    <link rel="stylesheet" href="{{ mix('css/fs/app.css') }}">
+    @yield('after-styles')
 
 
     {{-- <link rel="apple-touch-icon" href="/favicon.png"> --}}
@@ -52,20 +55,10 @@
       </div>
     </div>
     <!-- Scripts -->
-    {{-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> --}}
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script> --}}
-    {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script> --}}
-    <script src="{{ asset('js/fs/app.js') }}"></script>
-
-    <script>
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-    </script>
+    @yield('before-scripts')
+    <script src="{{ mix('js/fs/app.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <script src="{{ asset('js/socket.js') }}"></script>
-    @yield('pagescripts')
+    <script src="{{ mix('js/fs/socket.js') }}"></script>
+    @yield('after-scripts')
   </body>
 </html>

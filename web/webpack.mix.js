@@ -14,6 +14,9 @@ let mix = require('laravel-mix');
 
    // Frontstage assets
 mix.js('resources/assets/js/frontstage/app.js', 'public/js/fs/app.js')
+   .js('resources/assets/js/frontstage/socket.js', 'public/js/fs/socket.js')
+   .js('resources/assets/js/frontstage/trade.js', 'public/js/fs/trade.js')
+
    .sass('resources/assets/sass/frontstage/app.scss', 'public/css/fs/app.css')
    // Backstage assets
    // TODO:
@@ -48,12 +51,12 @@ mix.js('resources/assets/js/frontstage/app.js', 'public/js/fs/app.js')
 
    // .js('resources/assets/js/backstage/app.js', 'public/js/backstage.js')
    .sass('resources/assets/sass/backstage/app.scss', 'public/css/bs/app.css')
-   // .version();
+   .version();
 
-// if (mix.config.inDevelpoment) {
-//   mix.sourceMaps();
-// }
-// 
-// if (mix.config.inProduction) {
-//   mix.minify();
-// }
+if (mix.config.inDevelpoment) {
+  mix.sourceMaps();
+}
+
+if (mix.config.inProduction) {
+  mix.minify();
+}

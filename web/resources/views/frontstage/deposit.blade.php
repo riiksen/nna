@@ -6,8 +6,8 @@
 
 @endsection
 
-@section('pagescripts')
-	<script src="{{ asset('js/fs/trade.js') }}"></script>
+@section('after-scripts')
+	<script src="{{ mix('js/fs/trade.js') }}"></script>
 @endsection
 
-@section('pagestyles','')
+@section('after-styles', '')
