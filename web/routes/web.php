@@ -19,7 +19,6 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
   Route::get('/login', 'SessionController@redirectToSteam')->name('login');
   Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
   // Route::get('/logout', 'SessionController@logout')->name('logout');
-  // Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
   // Route::get('/account', 'AccountController@index')->name('account');
 
@@ -30,7 +29,7 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
   // Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
 
   Route::group(['middleware' => 'auth'], function() {
-    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::post('/logout', 'SessionController@logout')->name('logout');
     Route::post('/loginToSocket','SessionController@loginToSocket');
   });
 

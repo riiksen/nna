@@ -82,16 +82,24 @@ class SessionController extends Controller {
       'steamid' => $info->steamID64
     ]);
   }
-  
-  public function login() {
 
+  // Took this function from Illuminate\Foundation\Auth\AuthenticatesUsers::logout()
+  /**
+   * Log the user out of the application
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function logout(Request $request) {
+    Auth::guard()->logout();
+
+    $request->session()->invalidate();
+
+    return redirect('/');
   }
 
-  public function logout() {
-    
-  }
   public function loginToSocket(Request $request) {
-    if(!$request->has('socketId')) return;
+    if (!$request->has('socketId')) return;
 
     $curl = new Curl();
 
@@ -99,8 +107,9 @@ class SessionController extends Controller {
       'steamid' => Auth::user()['steamid'],
       'socketId' => $request->input('socketId'),
     );
+
     $curl->setHeader('Content-Type', 'application/json');
-    $curl->post('127.0.0.1:'.$_ENV['NODE_PORT'].'/loginToSocket', $data);
+    $curl->post('127.0.0.1:' . $_ENV['NODE_PORT'] . '/loginToSocket', $data);
     $curl->close();
 
     return;
