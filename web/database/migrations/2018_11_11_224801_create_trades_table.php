@@ -14,6 +14,7 @@ class CreateTradesTable extends Migration {
     Schema::create('trades', function(Blueprint $table) {
       $table->increments('id');
       $table->integer('bot_id');
+      $table->string('user_steamid');
       $table->tinyInteger('state');
       $table->string('steamid', 17);
       $table->unsignedInteger('value');

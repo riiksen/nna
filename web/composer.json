@@ -13,6 +13,7 @@
         "laravel/tinker": "^1.0",
         "php-curl-class/php-curl-class": "^8.3",
         "pusher/pusher-php-server": "~3.0",
+        "robthree/twofactorauth": "^1.6",
         "tymon/jwt-auth": "^0.5.12"
     },
     "require-dev": {
