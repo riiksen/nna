@@ -1,7 +1,8 @@
 {
-    "/js/app.js": "/js/app.js?id=57b52178d86adc82bb5b",
-    "/js/trade.js": "/js/trade.js?id=1410180c7fe8b5618e12",
-    "/js/socket.js": "/js/socket.js?id=2c7b6c2643c426f32c88",
+    "/js/app.js": "/js/app.js?id=5b1ac5353ad67b32c8d7",
+    "/css/app.css": "/css/app.css?id=b8b7ca91c99b5249af5b",
+    "/css/admin/app.css": "/css/admin/app.css?id=e7cec003848961b0c731",
+    "/js/socket.js": "/js/socket.js?id=aa8c70ab1d479f610b1e",
     "/js/admin/adminlte.js": "/js/admin/adminlte.js?id=6173bc8b4e1c83dd2f18",
     "/js/admin/bootstrap-datepicker.js": "/js/admin/bootstrap-datepicker.js?id=62e534568c0dbec757f0",
     "/js/admin/bootstrap.js": "/js/admin/bootstrap.js?id=fb81549ee2896513a1ed",

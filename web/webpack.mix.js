@@ -15,7 +15,7 @@ let mix = require('laravel-mix');
    // Frontstage assets
 mix.js('resources/assets/js/app.js', 'public/js/app.js')
    .js('resources/assets/js/socket.js', 'public/js/socket.js')
-   .js('resources/assets/js/trade.js', 'public/js/trade.js')
+   // .js('resources/assets/js/trade.js', 'public/js/trade.js')
 
    .sass('resources/assets/sass/app.scss', 'public/css/app.css')
    // Admin assets

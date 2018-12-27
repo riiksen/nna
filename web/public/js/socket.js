@@ -63,13 +63,41 @@
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */,
-/* 1 */
+/******/ ({
+
+/***/ "./resources/assets/js/socket.js":
+/***/ (function(module, exports) {
+
+var id = '127.0.0.1:3000';
+var socket = io.connect(id);
+socket.on('connect', function () {
+  console.log(window.socket.id);
+  $.ajax({
+    url: '/loginToSocket',
+    method: 'POST',
+    data: {
+      "socketId": window.socket.id
+    },
+    dataType: "text",
+    success: function success(data) {
+      console.log(window.socket.id);
+    },
+    error: function error(a, b, c) {
+      console.log(a);
+      console.log(b);
+      console.log(c);
+    }
+  });
+});
+
+/***/ }),
+
+/***/ 1:
 /***/ (function(module, exports, __webpack_require__) {
 
-(function webpackMissingModule() { throw new Error("Cannot find module \"/home/mike/code/projects/vgoscam/web/resources/assets/js/socket.js\""); }());
+module.exports = __webpack_require__("./resources/assets/js/socket.js");
 
 
 /***/ })
-/******/ ]);
+
+/******/ });
