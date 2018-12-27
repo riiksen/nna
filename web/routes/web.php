@@ -13,35 +13,33 @@
 
 // Route::get('lang/{lang}', 'LanguageController@swap');
 
-Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
-  Route::get('/', 'HomeController@index')->name('index');
+Route::get('/', 'HomeController@index')->name('index');
 
-  Route::get('/login', 'SessionController@redirectToSteam')->name('login');
-  Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
-  // Route::get('/logout', 'SessionController@logout')->name('logout');
+Route::get('/login', 'SessionController@redirectToSteam')->name('login');
+Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
+// Route::get('/logout', 'SessionController@logout')->name('logout');
 
-  // Route::get('/account', 'AccountController@index')->name('account');
+// Route::get('/account', 'AccountController@index')->name('account');
 
-  Route::get('/withdraw', 'WithdrawController@index')->name('withdraw');
-  // Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
+Route::get('/withdraw', 'WithdrawController@index')->name('withdraw');
+// Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
 
-  Route::get('/deposit', 'DepositController@index')->name('deposit');
-  // Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
+Route::get('/deposit', 'DepositController@index')->name('deposit');
+// Route::post('/deposit', 'DepositsController@handle')->name('deposit.handle');
 
-  Route::group(['middleware' => 'auth'], function() {
-    Route::post('/logout', 'SessionController@logout')->name('logout');
-    Route::post('/loginToSocket','SessionController@loginToSocket');
-  });
+Route::group(['middleware' => 'auth'], function() {
+  Route::post('/logout', 'SessionController@logout')->name('logout');
+  Route::post('/loginToSocket','SessionController@loginToSocket');
+});
 
-  // Limit trade requests to 2 requests per minute
-  Route::group(['middleware' => 'throttle:2,1'], function() {
-    Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
-    Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
-  });
+// Limit trade requests to 2 requests per minute
+Route::group(['middleware' => 'throttle:2,1'], function() {
+  Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
+  Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
 });
 
 /** 
- * Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'backstage.', 'middleware' => 'admin'], function() {
+ * Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function() {
  *  Route::get('/', 'HomeController@dashboard')->name('dashboard');
  *
  *  Route::resource('deposits', 'DepositsController')->only(['index', 'show']);
@@ -53,9 +51,9 @@ Route::group(['namespace' => 'Frontstage', 'as' => 'frontstage.'], function() {
  * });
  */
 
-// TODO: Make the backstage routes use permission
+// TODO: Make the admin routes use permission
 
-Route::group(['namespace' => 'Backstage', 'prefix' => 'backstage', 'as' => 'backstage.', 'middleware' => 'permission:access-backstage'], function() {
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'permission:access-backstage'], function() {
   Route::get('/', 'HomeController@dashboard')->name('dashboard');
 
   Route::resource('deposits', 'DepositsController')->only(['index', 'show']);

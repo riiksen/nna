@@ -40,6 +40,6 @@ class RouteNeedsPermission {
 
     // TODO: Flash error
     $request->session()->flash('flash-error', __('route.no-permission-error'));
-    return redirect()->route('frontstage.index');
+    return redirect()->route('index');
   }
 }
