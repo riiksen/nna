@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d571ef9decd431af238e253b9543c08",
+    "content-hash": "c35eb8eb96112359bd38202c138c3493",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1475,6 +1475,49 @@
             "time": "2018-12-19T16:35:45+00:00"
         },
         {
+            "name": "phpgangsta/googleauthenticator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPGangsta/GoogleAuthenticator.git",
+                "reference": "3baa997f399d4afd5d6a81d42244ec9cc3eeb080"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPGangsta/GoogleAuthenticator/zipball/3baa997f399d4afd5d6a81d42244ec9cc3eeb080",
+                "reference": "3baa997f399d4afd5d6a81d42244ec9cc3eeb080",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "PHPGangsta/GoogleAuthenticator.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-4-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Kliewe",
+                    "email": "info@phpgangsta.de",
+                    "homepage": "http://www.phpgangsta.de/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Google Authenticator 2-factor authentication",
+            "keywords": [
+                "googleauthenticator",
+                "rfc6238",
+                "totp"
+            ],
+            "time": "2016-10-08T16:35:34+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -1917,57 +1960,6 @@
                 "uuid"
             ],
             "time": "2018-07-19T23:38:55+00:00"
-        },
-        {
-            "name": "robthree/twofactorauth",
-            "version": "1.6.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/RobThree/TwoFactorAuth.git",
-                "reference": "f5f58a4c62d0336a0e6175856894a51f3565dad2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/RobThree/TwoFactorAuth/zipball/f5f58a4c62d0336a0e6175856894a51f3565dad2",
-                "reference": "f5f58a4c62d0336a0e6175856894a51f3565dad2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "@stable"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RobThree\\Auth\\": "lib"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rob Janssen",
-                    "homepage": "http://robiii.me",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Two Factor Authentication",
-            "homepage": "https://github.com/RobThree/TwoFactorAuth",
-            "keywords": [
-                "Authentication",
-                "MFA",
-                "Multi Factor Authentication",
-                "Two Factor Authentication",
-                "authenticator",
-                "authy",
-                "php",
-                "tfa"
-            ],
-            "time": "2018-06-09T10:09:59+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4945,7 +4937,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "phpgangsta/googleauthenticator": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

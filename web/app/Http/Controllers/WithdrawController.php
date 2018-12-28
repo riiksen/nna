@@ -9,12 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Modules\OPSkinsTradeAPI\ITrade;
 use App\Modules\OPSkinsTradeAPI\IUser;
-use App\Modules\OPSkinsTradeAPI\IItem;
 
 use App\Models\Trade;
 use App\Models\User;
-
-use RobThree\Auth\TwoFactorAuth;
 
 class WithdrawController extends Controller {
   public function index() {
@@ -22,9 +19,17 @@ class WithdrawController extends Controller {
   }
 
   // TODO: Add slack logging
+  // TODO: Better error api error handling
   // TODO: Add bypass of in_trade? with permission
   // TODO: Testing
+  // TODO: Localization
   public function handle(Request $request) {
+    $validator = $request->validate([
+      'items' => 'required|array|max:100',
+      'items.*' => 'unique',
+      'items.*.id' => 'distinct|numeric' // TODO: Finish the validation rules for input
+    ]);
+
     if (is_array($request->input('items.*'))) {
       $request->session()->flash('flash-warning', __('errors.withdraw.invalid_input'));
       return view('withdraw');
@@ -48,13 +53,15 @@ class WithdrawController extends Controller {
       return view('withdraw');
     }
 
-    // TODO: See if i can replace this with /IItem/GetItemsById/v1/ endpoint
-    // TODO: See exactly if tradable in IItem object means if it's currently in trade
-
     $data = ['app_id' => 1, 'filter_in_trade' => true]; // data for a request, 1 stands for vgo skins
 
-    $inventory = IUser::getInventory(env('OPSKINS_API_KEY'), $data);
+    $inventory = IUser::getInventory(config('opskins.api_key'), $data);
     $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
+
+    if ($inventory['status'] != 1) {
+      $request->session()->flash('flash-warning', __('errors.withdraw.unknown_error')); // TODO:
+      return view('withdraw');
+    }
 
     array_filter($inventory['response']['items'], function ($item) use ($requested_items) {
       foreach ($requested_items as $requested_item) {
@@ -85,24 +92,30 @@ class WithdrawController extends Controller {
     $user = Auth::user();
 
     $user->coins = $user['coins'] - $value;
-
+    $user['in_trade?'] = true; // TODO: 
+      
     $user->save();
 
     $secret_code = random_bytes(6);
 
-    $two_factor = new TwoFactorAuth();
-    $secret = env('STEAMBOT_TWOFACTOR_SECRET');
+    $two_factor = new PHPGangsta_GoogleAuthenticator;
+    $secret = config('opskins.2fa_secret');
 
     $data = [
-      'twofactor_code' => $two_factor->getCode($secret), // TODO:
+      'twofactor_code' => $two_factor->getCode($secret),
       'steam_id' => Auth::user()['steamid'],
       'items_to_send' => implode(',', $requested_items),
       'expiration_time' => 1 * 60 * 60, // 1 hour
       'message' => 'Withdrawal from XXX, total value: ' . $value . 'secret: ' . $sercret_code // TODO:
     ];
 
-    $offer = ITrade::sendOfferToSteamId(env('OPSKINS_API_KEY'), $data);
+    $offer = ITrade::sendOfferToSteamId(config('opskins.api_key'), $data);
     $offer = json_decode($offer, true);
+
+    if ($offer['status'] != 1) {
+      $request->session()->flash('flash-warning', __('errors.withdraw.unknown_error')); // TODO:
+      return view('withdraw');
+    }
 
     Trade::create([
       'offer_id' => $offer['result']['offer']['id'],
@@ -115,7 +128,7 @@ class WithdrawController extends Controller {
     ]);
 
     // Everything went ok, no errors... probably
-    $request->session()->flash('flash-success', __('trades.sent-offer'));
+    $request->session()->flash('flash-success', __('trades.offer-sent'));
     return view('withdraw');
   }
 }
