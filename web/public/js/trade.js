@@ -65,10 +65,17 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./resources/assets/js/trade.js":
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ 2:
 /***/ (function(module, exports, __webpack_require__) {
 
-(function webpackMissingModule() { throw new Error("Cannot find module \"/home/mike/code/projects/vgoscam/web/resources/assets/js/trade.js\""); }());
+module.exports = __webpack_require__("./resources/assets/js/trade.js");
 
 
 /***/ })

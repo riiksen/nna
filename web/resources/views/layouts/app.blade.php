@@ -18,7 +18,7 @@
 
     <!-- Styles -->
     {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"> --}}
-    <link rel="stylesheet" href="{{ mix('css/fs/app.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @yield('after-styles')
 
 
@@ -56,9 +56,9 @@
     </div>
     <!-- Scripts -->
     @yield('before-scripts')
-    <script src="{{ mix('js/fs/app.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <script src="{{ mix('js/fs/socket.js') }}"></script>
+    <script src="{{ mix('js/socket.js') }}"></script>
     @yield('after-scripts')
   </body>
 </html>
