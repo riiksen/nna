@@ -42,13 +42,13 @@ class DepositController extends Controller {
 
     $data = ['steam_id' => Auth::user()['steamid'], 'app_id' => 1]; // data for a request, 1 stands for vgo skins
 
+    $inventory = ITrade::getUserInventoryFromSteamId(config('trading.api_key'), $data);
+    $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
+
     if ($inventory['status'] != 1) {
       $request->session()->flash('flash-warning', __('errors.withdraw.unknown_error')); // TODO:
       return view('deposit');
     }
-
-    $inventory = ITrade::getUserInventoryFromSteamId(config('opskins.api_key'), $data);
-    $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
 
     array_filter($inventory['response']['items'], function ($item) use ($requested_items) {
       foreach ($requested_items as $requested_item) {
@@ -74,20 +74,20 @@ class DepositController extends Controller {
     $secret_code = random_bytes(6);
 
     $two_factor = new PHPGangsta_GoogleAuthenticator;
-    $secret = config('opskins.2fa_secret');
+    $secret = config('trading.2fa_secret');
 
     $data = [
       'twofactor_code' => $two_factor->getCode($secret),
       'steam_id' => Auth::user()['steamid'],
       'items_to_receive' => implode(',', $requested_items),
-      // 'expiration_time' => 2 * 60, // 2 minutes // don't need this here
       'message' => 'Deposit to XXX, total value: ' . $value . 'secret: ' . $sercret_code // TODO:
     ];
 
-    $offer = ITrade::sendOfferToSteamId(config('opskins.api_key'), $data);
+    $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
     $offer = json_decode($offer, true);
 
     if ($offer['status'] != 1) { // TODO: Better error handling
+      // TODO: Log error
       $request->session()->flash('flash-warning', __('errors.deposit.unknown_error')); // TODO:
       return view('deposit');
     }

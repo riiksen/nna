@@ -55,7 +55,7 @@ class WithdrawController extends Controller {
 
     $data = ['app_id' => 1, 'filter_in_trade' => true]; // data for a request, 1 stands for vgo skins
 
-    $inventory = IUser::getInventory(config('opskins.api_key'), $data);
+    $inventory = IUser::getInventory(config('trading.api_key'), $data);
     $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
 
     if ($inventory['status'] != 1) {
@@ -99,7 +99,7 @@ class WithdrawController extends Controller {
     $secret_code = random_bytes(6);
 
     $two_factor = new PHPGangsta_GoogleAuthenticator;
-    $secret = config('opskins.2fa_secret');
+    $secret = config('trading.2fa_secret');
 
     $data = [
       'twofactor_code' => $two_factor->getCode($secret),
@@ -109,10 +109,11 @@ class WithdrawController extends Controller {
       'message' => 'Withdrawal from XXX, total value: ' . $value . 'secret: ' . $sercret_code // TODO:
     ];
 
-    $offer = ITrade::sendOfferToSteamId(config('opskins.api_key'), $data);
+    $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
     $offer = json_decode($offer, true);
 
     if ($offer['status'] != 1) {
+      // TODO: Log error
       $request->session()->flash('flash-warning', __('errors.withdraw.unknown_error')); // TODO:
       return view('withdraw');
     }
