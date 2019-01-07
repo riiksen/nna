@@ -22,34 +22,33 @@ class WithdrawController extends Controller {
   // TODO: Better error api error handling
   // TODO: Add bypass of in_trade? with permission
   // TODO: Testing
-  // TODO: Localization
   public function handle(Request $request) {
     $validator = $request->validate([
       'items' => 'required|array|max:100',
       'items.*' => 'unique',
-      'items.*.id' => 'distinct|numeric' // TODO: Finish the validation rules for input
+      'items.*.id' => 'distinct|numeric' // TODO: Finish validation rules for input
     ]);
 
     if (is_array($request->input('items.*'))) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.invalid_input'));
+      $request->session()->flash('flash-warning', __('trades.errors.invalid_input'));
       return view('withdraw');
     }
 
     if (Auth::user()['in_trade?']) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.in-trade-error'));
+      $request->session()->flash('flash-warning', __('trades.errors.in_trade'));
       return view('withdraw');
     }
 
     if (Auth::user()['locked?']) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.user-locked-error'));
+      $request->session()->flash('flash-warning', __('trades.errors.user_locked'));
       return view('withdraw');
     }
 
     $requested_items = $request->input('items.*'); // NOTE: items have to be passed as an array
 
-    // If user selected more that 100 items which is the limit for trade
+    // If user selected more that 100 items which is the limit for opskins trading
     if (count($requested_items) > 100) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.to_much_selected_items-error'));
+      $request->session()->flash('flash-warning', __('trades.errors.selected_more_than_100_items'));
       return view('withdraw');
     }
 
@@ -59,7 +58,7 @@ class WithdrawController extends Controller {
     $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
 
     if ($inventory['status'] != 1) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.unknown_error')); // TODO:
+      $request->session()->flash('flash-warning', __('trades.errors.unknown_error'));
       return view('withdraw');
     }
 
@@ -74,7 +73,7 @@ class WithdrawController extends Controller {
     });
 
     if (count($inventory['response']['items']) != count($requested_items)) { // User requested items that are not present in our inventory or are in trade
-      $request->session()->flash('flash-warning', __('errors.withdraw.items-error'));
+      $request->session()->flash('flash-warning', __('trades.errors.items_not_available'));
       return view('withdraw');
     }
 
@@ -85,17 +84,19 @@ class WithdrawController extends Controller {
     }
 
     if (Auth::user()['coins'] < $value) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.not-enough-coins'));
+      $request->session()->flash('flash-warning', __('trades.errors.not_enough_coins'));
       return view('withdraw');
     }
 
     $user = Auth::user();
 
     $user->coins = $user['coins'] - $value;
-    $user['in_trade?'] = true; // TODO: 
+    $user['in_trade?'] = true; 
       
     $user->save();
 
+    // TODO: Change name of this to be more reasonable
+    // TODO: Change this to some HMAC or smth
     $secret_code = random_bytes(6);
 
     $two_factor = new PHPGangsta_GoogleAuthenticator;
@@ -106,15 +107,16 @@ class WithdrawController extends Controller {
       'steam_id' => Auth::user()['steamid'],
       'items_to_send' => implode(',', $requested_items),
       'expiration_time' => 1 * 60 * 60, // 1 hour
-      'message' => 'Withdrawal from XXX, total value: ' . $value . 'secret: ' . $sercret_code // TODO:
+      'message' => __('trades.withdraw.trade_message', ['value' => $value, 'secret' => $secret_code]),
     ];
 
     $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
     $offer = json_decode($offer, true);
 
     if ($offer['status'] != 1) {
+      // TODO: Return coins
       // TODO: Log error
-      $request->session()->flash('flash-warning', __('errors.withdraw.unknown_error')); // TODO:
+      $request->session()->flash('flash-warning', __('trades.errors.could_not_send_trade'));
       return view('withdraw');
     }
 
@@ -129,7 +131,7 @@ class WithdrawController extends Controller {
     ]);
 
     // Everything went ok, no errors... probably
-    $request->session()->flash('flash-success', __('trades.offer-sent'));
+    $request->session()->flash('flash-success', __('trades.offer_sent'));
     return view('withdraw');
   }
 }

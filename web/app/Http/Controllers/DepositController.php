@@ -23,12 +23,12 @@ class DepositController extends Controller {
   // TODO: Testing
   public function handle(Request $request) {
     if (is_array($request->input('items.*'))) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.invalid_input'));
+      $request->session()->flash('flash-warning', __('trades.errors.invalid_input'));
       return view('deposit');
     }
 
     if (Auth::user()['locked?']) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.user-locked-error'));
+      $request->session()->flash('flash-warning', __('trades.errors.user_locked'));
       return view('deposit');
     }
 
@@ -36,7 +36,7 @@ class DepositController extends Controller {
 
     // If user selected more that 100 items which is the limit for trade
     if (count($requested_items) > 100) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.to_much_selected_items-error'));
+      $request->session()->flash('flash-warning', __('trades.errors.selected_more_than_100_items'));
       return view('deposit');
     }
 
@@ -46,7 +46,7 @@ class DepositController extends Controller {
     $inventory = json_decode($inventory->getBody(), true); // With true parameter so it wil be an assocation table
 
     if ($inventory['status'] != 1) {
-      $request->session()->flash('flash-warning', __('errors.withdraw.unknown_error')); // TODO:
+      $request->session()->flash('flash-warning', __('trades.errors.unknown_error'));
       return view('deposit');
     }
 
@@ -60,8 +60,9 @@ class DepositController extends Controller {
       return false;
     });
 
-    if (count($inventory['response']['items']) != count($requested_items)) { // User requested items that are not present in his inventory
-      $request->session()->flash('flash-warning', __('errors.withdraw.items-error'));
+    // User requested items that are not present in his inventory
+    if (count($inventory['response']['items']) != count($requested_items)) {
+      $request->session()->flash('flash-warning', __('trades.errors.items_not_available'));
       return view('deposit');
     }
 
@@ -71,6 +72,8 @@ class DepositController extends Controller {
       $value += $item['suggested_price'] * 10; // * 10 because on this site 1$ == 1000 coins
     }
 
+    // TODO: Change name of this to be more reasonable
+    // TODO: And change this to some HMAC
     $secret_code = random_bytes(6);
 
     $two_factor = new PHPGangsta_GoogleAuthenticator;
@@ -80,15 +83,16 @@ class DepositController extends Controller {
       'twofactor_code' => $two_factor->getCode($secret),
       'steam_id' => Auth::user()['steamid'],
       'items_to_receive' => implode(',', $requested_items),
-      'message' => 'Deposit to XXX, total value: ' . $value . 'secret: ' . $sercret_code // TODO:
+      'message' => __('trades.deposit.trade_message', ['value' => $value, 'secret' => $secret_code]),
     ];
 
     $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
     $offer = json_decode($offer, true);
 
-    if ($offer['status'] != 1) { // TODO: Better error handling
+    if ($offer['status'] != 1) {
+      // TODO: Better error handling
       // TODO: Log error
-      $request->session()->flash('flash-warning', __('errors.deposit.unknown_error')); // TODO:
+      $request->session()->flash('flash-warning', __('trades.errors.could_not_send_trade'));
       return view('deposit');
     }
 
