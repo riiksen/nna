@@ -23,7 +23,7 @@ class WithdrawController extends Controller {
   // TODO: Add bypass of in_trade? with permission
   // TODO: Testing
   public function handle(Request $request) {
-    $validator = $request->validate([
+    $validated_input = $request->validate([
       'items' => 'required|array|max:100',
       'items.*' => 'unique',
       'items.*.id' => 'distinct|numeric' // TODO: Finish validation rules for input
@@ -45,6 +45,7 @@ class WithdrawController extends Controller {
     }
 
     $requested_items = $request->input('items.*'); // NOTE: items have to be passed as an array
+    $requested_items_ids = $request->input('items.*.id'); // TODO: Use tihs instead of $requested_items
 
     // If user selected more that 100 items which is the limit for opskins trading
     if (count($requested_items) > 100) {
@@ -80,7 +81,7 @@ class WithdrawController extends Controller {
     $value = 0;
 
     foreach ($inventory['response']['items'] as $item) {
-      $value += $item['suggested_price'] * 10; // * 10 because on this site 1$ == 1000 coins
+      $value += $item['suggested_price'] * 10; // * 10 because on this site 1$ == 1000 coins and the suggested price is in cents
     }
 
     if (Auth::user()['coins'] < $value) {
@@ -95,9 +96,9 @@ class WithdrawController extends Controller {
       
     $user->save();
 
-    // TODO: Change name of this to be more reasonable
-    // TODO: Change this to some HMAC or smth
-    $secret_code = random_bytes(6);
+    // TODO: Make this a hmac of actually smth
+    // TODO: Maybe trim this to like 6 chars
+    $trade_signature = hash_hmac('sha256', '', config('trading.signing_key'));
 
     $two_factor = new PHPGangsta_GoogleAuthenticator;
     $secret = config('trading.2fa_secret');
@@ -107,7 +108,7 @@ class WithdrawController extends Controller {
       'steam_id' => Auth::user()['steamid'],
       'items_to_send' => implode(',', $requested_items),
       'expiration_time' => 1 * 60 * 60, // 1 hour
-      'message' => __('trades.withdraw.trade_message', ['value' => $value, 'secret' => $secret_code]),
+      'message' => __('trades.withdraw.trade_message', ['value' => $value, 'secret' => $trade_signature]),
     ];
 
     $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
@@ -122,11 +123,11 @@ class WithdrawController extends Controller {
 
     Trade::create([
       'offer_id' => $offer['result']['offer']['id'],
-      'bot_id' => 0, // TODO: Support for multiple bots accounts
+      /* 'bot_id' => 0, // TODO: Support for multiple bots accounts */
       'state' => 2, // STATE_ACTIVE
       'steamid' => $offer['result']['offer']['recipent']['steam_id'],
       'value' => $value,
-      'secretcode' => $secret_code,
+      'secretcode' => $trade_signature, // NOTE: No need to store this in database cause we can calculate it any time for given trade... guess what... that's how hmac's works
       'type' => 'withdraw',
     ]);
 

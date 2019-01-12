@@ -19,9 +19,14 @@ class DepositController extends Controller {
   }
 
   // TODO: Add slack logging
-  // TODO: Add bypass of in_trade? with permission
   // TODO: Testing
   public function handle(Request $request) {
+    $validated_input = $request->validate([
+      'items' => 'required|array|max:100',
+      'items.*' => 'unique',
+      'items.*.id' => 'required|distinct|numeric' // TODO: Finish validation rules for input
+    ]);
+
     if (is_array($request->input('items.*'))) {
       $request->session()->flash('flash-warning', __('trades.errors.invalid_input'));
       return view('deposit');
@@ -69,12 +74,10 @@ class DepositController extends Controller {
     $value = 0;
 
     foreach ($inventory['response']['items'] as $item) {
-      $value += $item['suggested_price'] * 10; // * 10 because on this site 1$ == 1000 coins
+      $value += $item['suggested_price'] * 10; // * 10 because on this site 1$ == 1000 coins and the suggested price is in cents
     }
 
-    // TODO: Change name of this to be more reasonable
-    // TODO: And change this to some HMAC
-    $secret_code = random_bytes(6);
+    $trade_signature = hash_hmac('sha256', '', config('trading.signing_key'));
 
     $two_factor = new PHPGangsta_GoogleAuthenticator;
     $secret = config('trading.2fa_secret');
@@ -83,7 +86,7 @@ class DepositController extends Controller {
       'twofactor_code' => $two_factor->getCode($secret),
       'steam_id' => Auth::user()['steamid'],
       'items_to_receive' => implode(',', $requested_items),
-      'message' => __('trades.deposit.trade_message', ['value' => $value, 'secret' => $secret_code]),
+      'message' => __('trades.deposit.trade_message', ['value' => $value, 'secret' => $trade_signature]),
     ];
 
     $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
@@ -102,18 +105,12 @@ class DepositController extends Controller {
       'state' => 2, // STATE_ACTIVE
       'steamid' => $offer['result']['offer']['recipent']['steam_id'],
       'value' => $value,
-      'secretcode' => $secret_code,
+      'secretcode' => $trade_signature, // NOTE: We don't need to store this in database cause we can calculate it any time for given trade... guess what... that's how hmac's works
       'type' => 'deposit',
     ]);
 
     // Everything went ok, no errors... probably
     $request->session()->flash('flash-success', __('trades.sent-offer'));
     return view('deposit');
-  }
-
-  private function shouldBypassSecurityChecks() {
-    return Auth::user()['is_admin?'] || // TODO: Permissions
-           Auth::user()->hasPermission('skip-deposit-checks') ||
-           App::environment() == 'production';
   }
 }
