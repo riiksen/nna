@@ -100,7 +100,7 @@ class DepositController extends Controller {
     }
 
     Trade::create([
-      'offer_id' => $offer['result']['offer']['id'],
+      'opskins_offer_id' => $offer['result']['offer']['id'],
       'bot_id' => 0, // TODO: Support for multiple bots accounts
       'state' => 2, // STATE_ACTIVE
       'steamid' => $offer['result']['offer']['recipent']['steam_id'],
