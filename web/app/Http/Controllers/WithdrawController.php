@@ -133,7 +133,7 @@ class WithdrawController extends Controller {
       'opskins_offer_id' => $offer['result']['offer']['id'],
       /* 'bot_id' => 0, // TODO: Support for multiple bots accounts */
       'state' => 2, // STATE_ACTIVE
-      'steamid' => $offer['result']['offer']['recipent']['steam_id'],
+      'recipent_steam_id' => $offer['result']['offer']['recipent']['steam_id'],
       'value' => $value,
       'secretcode' => $trade_signature, // NOTE: No need to store this in database cause we can calculate it any time for given trade... guess what... that's how hmac's works
       'type' => 'withdraw',

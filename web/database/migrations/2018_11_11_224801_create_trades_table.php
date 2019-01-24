@@ -19,8 +19,7 @@ class CreateTradesTable extends Migration {
       $table->string('steamid', 17);
       $table->unsignedInteger('value');
       $table->string('secretcode', 12);
-      $table->string('type'); // TODO: Make everything compatible with enum type
-      // $table->enum('type', ['deposit', 'withdraw']);
+      $table->enum('type', ['deposit', 'withdraw']);
 
       $table->timestamps();
       $table->softDeletes();

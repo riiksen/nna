@@ -35,7 +35,7 @@ return [
   'channels' => [
     'stack' => [
       'driver' => 'stack',
-      'channels' => ['single', 'slack'],
+      'channels' => ['single'], // ['single', 'slack'], // just for dev
     ],
 
     'single' => [
