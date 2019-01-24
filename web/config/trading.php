@@ -15,7 +15,12 @@ return [
   /**
    * Minimum value that trade needs to be worth to be logged to slack
    */
-  'min_slack_log_value' => env('TTRADE_MINIMUM_VALUE_FOR_SLACK_LOGGING', 0),
+  'min_slack_log_val' => env('TRADE_MINIMUM_VALUE_FOR_SLACK_LOGGING', 0),
+
+  /**
+   * Slack channel where trades will be logged on
+   */
+  'slack_log_channel' => env('TRADE_SLACK_CHANNEL_FOR_LOGGING', '#trades'),
 
   /**
    * Key used to create trade signatures

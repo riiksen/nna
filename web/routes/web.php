@@ -21,6 +21,15 @@ Route::get('/login/handle', 'SessionController@handle')->name('login.handle');
 
 // Route::get('/account', 'AccountController@index')->name('account');
 
+Route::resource('withdraws', 'WithdrawController')->only(['index, show']);
+Route::resource('deposits', 'DepositController')->only(['index, show']);
+
+// Limit trade requests to 2 requests per minute
+Route::group(['middleware' => 'throttle:2,1'], function() {
+  Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
+  Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
+});
+
 Route::get('/withdraw', 'WithdrawController@index')->name('withdraw');
 // Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
 
@@ -30,12 +39,6 @@ Route::get('/deposit', 'DepositController@index')->name('deposit');
 Route::group(['middleware' => 'auth'], function() {
   Route::post('/logout', 'SessionController@logout')->name('logout');
   Route::post('/loginToSocket','SessionController@loginToSocket');
-});
-
-// Limit trade requests to 2 requests per minute
-Route::group(['middleware' => 'throttle:2,1'], function() {
-  Route::post('/withdraw', 'WithdrawController@handle')->name('withdraw.handle');
-  Route::post('/deposit', 'DepositController@handle')->name('deposit.handle');
 });
 
 /** 

@@ -13,6 +13,8 @@ use App\Modules\OPSkinsTradeAPI\IUser;
 use App\Models\Trade;
 use App\Models\User;
 
+use Maknz\Slack\Client as SlackClient;
+
 class WithdrawController extends Controller {
   public function index() {
     return view('withdraw');
@@ -45,7 +47,7 @@ class WithdrawController extends Controller {
     }
 
     $requested_items = $request->input('items.*'); // NOTE: items have to be passed as an array
-    $requested_items_ids = $request->input('items.*.id'); // TODO: Use tihs instead of $requested_items
+    /* $requested_items_ids = $request->input('items.*.id'); // TODO: Use tihs instead of $requested_items */
 
     // If user selected more that 100 items which is the limit for opskins trading
     if (count($requested_items) > 100) {
@@ -121,6 +123,12 @@ class WithdrawController extends Controller {
       return view('withdraw');
     }
 
+    // TODO: Make this a job
+    // Log trade to the slack channel if value >= trade minimum value for slack logging
+    /* if ($value >= config('trading.min_slack_log_val')) { */
+    /*   notifyViaSlack(, $value); */
+    /* } */
+
     Trade::create([
       'offer_id' => $offer['result']['offer']['id'],
       /* 'bot_id' => 0, // TODO: Support for multiple bots accounts */
@@ -134,5 +142,33 @@ class WithdrawController extends Controller {
     // Everything went ok, no errors... probably
     $request->session()->flash('flash-success', __('trades.offer_sent'));
     return view('withdraw');
+  }
+
+  private function notifyViaSlack($trade_id, $trade_value) {
+    $url = url();
+
+    $client = new SlackClient(config('logging.slack_webhook_url'));
+
+    $message = $client->createMessage();
+
+    $attachments = [
+      'title' => '',
+      'title_link' => '',
+      'fields' => [
+        [
+          'title' => '' . Auth::user()['steamid'],
+          'title_link' => route('admin.users.show', ['user' => Auth::user()['steamid']]),
+          'value' => Auth::user()['steamid'],
+        ],
+        [
+          'title' => 'Total value of trade',
+          'value' => $trade_value,
+        ],
+      ],
+    ];
+
+    $message->attach($attachments);
+
+    $message->send();
   }
 }
