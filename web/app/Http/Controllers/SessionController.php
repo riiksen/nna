@@ -103,10 +103,10 @@ class SessionController extends Controller {
 
     $curl = new Curl();
 
-    $data = array(
+    $data = [
       'steamid' => Auth::user()['steamid'],
       'socketId' => $request->input('socketId'),
-    );
+    ];
 
     $curl->setHeader('Content-Type', 'application/json');
     $curl->post('127.0.0.1:' . $_ENV['NODE_PORT'] . '/loginToSocket', $data);
