@@ -11,4 +11,13 @@ class Trade extends Model {
    * @var string
    */
   protected $table = 'trades';
+
+  protected $fillable = [
+    'opskins_offer_id',
+    'state',
+    'recipent_steam_id',
+    'value',
+    'trade_signature',
+    'type'
+  ];
 }

@@ -86,7 +86,7 @@ class DepositController extends Controller {
       'twofactor_code' => $two_factor->getCode($secret),
       'steam_id' => Auth::user()['steamid'],
       'items_to_receive' => implode(',', $requested_items),
-      'message' => __('trades.deposit.trade_message', ['value' => $value, 'secret' => $trade_signature]),
+      'message' => __('trades.deposit.trade_message', ['value' => $value, 'signature' => $trade_signature]),
     ];
 
     $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
@@ -99,13 +99,12 @@ class DepositController extends Controller {
       return view('deposit');
     }
 
-    Trade::create([
+    $trade = Trade::create([
       'opskins_offer_id' => $offer['result']['offer']['id'],
-      /* 'bot_id' => 0, // TODO: Support for multiple bots accounts */
       'state' => 2, // STATE_ACTIVE
       'recipent_steam_id' => $offer['result']['offer']['recipent']['steam_id'],
       'value' => $value,
-      'secretcode' => $trade_signature, // NOTE: We don't need to store this in database cause we can calculate it any time for given trade... guess what... that's how hmac's works
+      'trade_signature' => $trade_signature, // NOTE: We don't need to store this in database cause we can calculate it any time for given trade... guess what... that's how hmac's works
       'type' => 'deposit',
     ]);
 
