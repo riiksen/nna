@@ -12,48 +12,51 @@ let mix = require('laravel-mix');
  |
  */
 
-   // Frontstage assets
-mix.js('resources/assets/js/frontstage/app.js', 'public/js/fs/app.js')
-   .sass('resources/assets/sass/frontstage/app.scss', 'public/css/fs/app.css')
-   // Backstage assets
+mix.js('resources/assets/js/app.js', 'public/js/app.js')
+   .js('resources/assets/js/socket.js', 'public/js/socket.js')
+   .js('resources/assets/js/trade.js', 'public/js/trade.js')
+
+   .sass('resources/assets/sass/app.scss', 'public/css/app.css')
+
+   // Admin assets
    // TODO:
-   .copy('resources/assets/js/backstage/libs/adminlte.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/bootstrap-datepicker.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/bootstrap.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/bootstrap3-wysihtml5.all.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/daterangepicker.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/fastclick.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/jquery-jvectormap-1.2.2.min.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/jquery-jvectormap-world-mill-en.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/jquery-ui.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/jquery.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/jquery.knob.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/jquery.slimscroll.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/jquery.sparkline.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/moment.min.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/morris.js', 'public/js/bs')
-   .copy('resources/assets/js/backstage/libs/raphael.js', 'public/js/bs')
+   .copy('resources/assets/js/admin/libs/adminlte.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/bootstrap-datepicker.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/bootstrap.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/bootstrap3-wysihtml5.all.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/daterangepicker.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/fastclick.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/jquery-jvectormap-1.2.2.min.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/jquery-jvectormap-world-mill-en.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/jquery-ui.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/jquery.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/jquery.knob.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/jquery.slimscroll.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/jquery.sparkline.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/moment.min.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/morris.js', 'public/js/admin')
+   .copy('resources/assets/js/admin/libs/raphael.js', 'public/js/admin')
 
-   .copy('resources/assets/sass/backstage/libs/AdminLTE.css', 'public/css/bs')
-   .copy('resources/assets/sass/backstage/libs/bootstrap-datepicker.css', 'public/css/bs')
-   // .copy('resources/assets/sass/backstage/libs/bootstrap.css', 'public/css/bs')
-   .copy('resources/assets/sass/backstage/libs/bootstrap3-wysihtml5.css', 'public/css/bs')
-   .copy('resources/assets/sass/backstage/libs/daterangepicker.css', 'public/css/bs')
-   // .copy('resources/assets/sass/backstage/libs/font-awesome.css', 'public/css/bs')
-   // .copy('resources/assets/sass/backstage/libs/ionicons.css', 'public/css/bs')
-   .copy('resources/assets/sass/backstage/libs/jquery-jvectormap.css', 'public/css/bs')
-   .copy('resources/assets/sass/backstage/libs/morris.css', 'public/css/bs')
-   .copy('resources/assets/sass/backstage/skins/_all-skins.css', 'public/css/bs')
+   .copy('resources/assets/sass/admin/libs/AdminLTE.css', 'public/css/admin')
+   .copy('resources/assets/sass/admin/libs/bootstrap-datepicker.css', 'public/css/admin')
+   // .copy('resources/assets/sass/admin/libs/bootstrap.css', 'public/css/admin')
+   .copy('resources/assets/sass/admin/libs/bootstrap3-wysihtml5.css', 'public/css/admin')
+   .copy('resources/assets/sass/admin/libs/daterangepicker.css', 'public/css/admin')
+   // .copy('resources/assets/sass/admin/libs/font-awesome.css', 'public/css/admin')
+   // .copy('resources/assets/sass/admin/libs/ionicons.css', 'public/css/admin')
+   .copy('resources/assets/sass/admin/libs/jquery-jvectormap.css', 'public/css/admin')
+   .copy('resources/assets/sass/admin/libs/morris.css', 'public/css/admin')
+   .copy('resources/assets/sass/admin/skins/_all-skins.css', 'public/css/admin')
 
 
-   // .js('resources/assets/js/backstage/app.js', 'public/js/backstage.js')
-   .sass('resources/assets/sass/backstage/app.scss', 'public/css/bs/app.css')
-   // .version();
+   // .js('resources/assets/js/admin/app.js', 'public/js/admin.js')
+   .sass('resources/assets/sass/admin/app.scss', 'public/css/admin/app.css')
+   .version();
 
-// if (mix.config.inDevelpoment) {
-//   mix.sourceMaps();
-// }
-// 
-// if (mix.config.inProduction) {
-//   mix.minify();
-// }
+if (mix.config.inDevelpoment) {
+  mix.sourceMaps();
+}
+
+if (mix.config.inProduction) {
+  mix.minify();
+}

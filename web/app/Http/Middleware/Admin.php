@@ -18,6 +18,6 @@ class Admin {
     // if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->isAdmin())
     //   return $next($request);
     
-    return redirect()->route('frontstage.index');
+    return redirect()->route('index');
   }
 }

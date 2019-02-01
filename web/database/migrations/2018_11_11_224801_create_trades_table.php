@@ -14,12 +14,12 @@ class CreateTradesTable extends Migration {
     Schema::create('trades', function(Blueprint $table) {
       $table->increments('id');
       $table->integer('bot_id');
+      $table->string('user_steamid');
       $table->tinyInteger('state');
       $table->string('steamid', 17);
       $table->unsignedInteger('value');
       $table->string('secretcode', 12);
-      $table->string('type'); // TODO: Make everything compatible with enum type
-      // $table->enum('type', ['deposit', 'withdraw']);
+      $table->enum('type', ['deposit', 'withdraw']);
 
       $table->timestamps();
       $table->softDeletes();
