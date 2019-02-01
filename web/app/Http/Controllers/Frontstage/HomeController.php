@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller {
   public function index() {
-  	afwfwafaw;
     return view('frontstage.jackpot');
   }
 }
