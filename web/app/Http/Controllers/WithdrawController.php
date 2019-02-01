@@ -17,14 +17,24 @@ use Maknz\Slack\Client as SlackClient;
 
 class WithdrawController extends Controller {
   public function index() {
-    return view('withdraw');
+    $withdraws = Auth::user()->withdraws();
+
+    return view('withdraw.index');
+  }
+  
+  public function show() {
+    return view('withdraw.show');
+  }
+
+  public function create() {
+    return view('withdraw.create');
   }
 
   // TODO: Add slack logging
   // TODO: Better error api error handling
   // TODO: Add bypass of in_trade? with permission
   // TODO: Testing
-  public function handle(Request $request) {
+  public function store(Request $request) {
     $validated_input = $request->validate([
       'items' => 'required|array|max:100',
       'items.*' => 'unique',
