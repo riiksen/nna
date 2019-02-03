@@ -1,0 +1,25 @@
+{
+  "name": "vgoscam-web",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "dependencies": {
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.3",
+    "dotenv": "^6.0.0",
+    "joi": "^13.3.0",
+    "webpack": "^4.26.1"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.21",
+    "concurrently": "^3.5.1",
+    "ts-node": "~6.1.0",
+    "tslint": "~5.10.0",
+    "typescript": ">=2.7.0 <2.8.0"
+  }
+}
