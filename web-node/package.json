@@ -3,16 +3,29 @@
   "version": "1.0.0",
   "license": "MIT",
   "description": "Web",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "ng": "ng",
+    "serve": "node server",
+    "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"nodemon server\" \"ng build --watch\"",
+    "build": "ng build --prod",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "compression": "^1.7.2",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
-    "dotenv": "^6.0.0",
+    "helmet": "^3.12.0",
+    "http-errors": "^1.6.3",
     "joi": "^13.3.0",
+    "method-override": "^2.3.10",
+    "morgan": "^1.9.1",
     "webpack": "^4.26.1"
   },
   "devDependencies": {

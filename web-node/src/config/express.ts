@@ -1,12 +1,13 @@
-import path from "path";
+import bodyParser from "body-parser";
+import compress from "compression";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
+import helmet from "helmet";
 import httpError from "http-errors";
 import logger from "morgan";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
-import compress from "compression";
-import cors from "cors";
-import helmet from "helmet";
+import methodOverride from "method-override";
+import * as path from "path";
 
 import routes from "./routes";
 import config from "./config";
@@ -16,6 +17,14 @@ const app = express();
 if (config.env === "development") {
   app.use(logger("dev"));
 }
+
+var distDir = "../../dist/";
+
+// Set up static folder and send index.html for all requests that don't have api in it
+app.use(express.static(path.join(__dirname, distDir)));
+app.use(/^((?!(api)).)*/, (req, res) => {
+  res.sendFile(path.join(__dirname, distDir + "index.html"));
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
