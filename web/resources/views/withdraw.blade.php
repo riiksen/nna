@@ -9,5 +9,3 @@
 @section('after-scripts')
 	<script src="{{ mix('js/trade.js') }}"></script>
 @endsection
-
-@section('after-styles', '')

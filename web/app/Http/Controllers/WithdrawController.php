@@ -17,14 +17,24 @@ use Maknz\Slack\Client as SlackClient;
 
 class WithdrawController extends Controller {
   public function index() {
-    return view('withdraw');
+    $withdraws = Auth::user()->withdraws();
+
+    return view('withdraw.index');
+  }
+  
+  public function show() {
+    return view('withdraw.show');
+  }
+
+  public function create() {
+    return view('withdraw.create');
   }
 
   // TODO: Add slack logging
   // TODO: Better error api error handling
   // TODO: Add bypass of in_trade? with permission
   // TODO: Testing
-  public function handle(Request $request) {
+  public function store(Request $request) {
     $validated_input = $request->validate([
       'items' => 'required|array|max:100',
       'items.*' => 'unique',
@@ -110,7 +120,7 @@ class WithdrawController extends Controller {
       'steam_id' => Auth::user()['steamid'],
       'items_to_send' => implode(',', $requested_items),
       'expiration_time' => 1 * 60 * 60, // 1 hour
-      'message' => __('trades.withdraw.trade_message', ['value' => $value, 'secret' => $trade_signature]),
+      'message' => __('trades.withdraw.trade_message', ['value' => $value, 'signature' => $trade_signature]),
     ];
 
     $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
@@ -123,13 +133,7 @@ class WithdrawController extends Controller {
       return view('withdraw');
     }
 
-    // TODO: Make this a job
-    // Log trade to the slack channel if value >= trade minimum value for slack logging
-    /* if ($value >= config('trading.min_slack_log_val')) { */
-    /*   notifyViaSlack(, $value); */
-    /* } */
-
-    Trade::create([
+    $trade = Trade::create([
       'opskins_offer_id' => $offer['result']['offer']['id'],
       /* 'bot_id' => 0, // TODO: Support for multiple bots accounts */
       'state' => 2, // STATE_ACTIVE
@@ -139,13 +143,22 @@ class WithdrawController extends Controller {
       'type' => 'withdraw',
     ]);
 
+    // TODO: Make this a job
+    // Log trade to the slack channel if value >= trade minimum value for slack logging
+    if ($value >= config('trading.min_slack_log_val')) {
+      notifyViaSlack($trade);
+    }
+
+    // TODO: Log it to a file
+
     // Everything went ok, no errors... probably
     $request->session()->flash('flash-success', __('trades.offer_sent'));
     return view('withdraw');
   }
 
-  private function notifyViaSlack($trade_id, $trade_value) {
-    $url = url();
+  private function notifyViaSlack($trade) {
+    $trade_url = route('admin.withdraws.show', ['withdraw' => $trade['id']]);
+    $user_url = route('admin.users.show', ['user' => Auth::user()['id']]);
 
     $client = new SlackClient(config('logging.slack_webhook_url'));
 
@@ -162,11 +175,12 @@ class WithdrawController extends Controller {
         ],
         [
           'title' => 'Total value of trade',
-          'value' => $trade_value,
+          'value' => $trade['value'],
         ],
       ],
     ];
 
+    $message->to(config('trading.slack_log_channel'));
     $message->attach($attachments);
 
     $message->send();

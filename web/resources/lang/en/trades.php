@@ -15,11 +15,11 @@ return [
   ],
 
   'withdraw' => [
-    'trade_message' => 'Withdraw from XXX, total value: :value secret: :secret', // TODO
+    'trade_message' => 'Withdraw from XXX, total value: :value signature: :signature', // TODO
   ],
 
   'deposit' => [
-    'trade_message' => 'Deposit to XXX, total value :value secret: :secret', // TODO
+    'trade_message' => 'Deposit to XXX, total value :value signature: :signature', // TODO
   ],
 
   'offer_sent' => '',

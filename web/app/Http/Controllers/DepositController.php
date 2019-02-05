@@ -15,12 +15,20 @@ use App\Models\User;
 
 class DepositController extends Controller {
   public function index() {
-    return view('deposit');
+    return view('deposit.index');
+  }
+
+  public function show(Request $request) {
+    return view('deposit.show');
+  }
+
+  public function create() {
+    return view('deposit.create');
   }
 
   // TODO: Add slack logging
   // TODO: Testing
-  public function handle(Request $request) {
+  public function store(Request $request) {
     $validated_input = $request->validate([
       'items' => 'required|array|max:100',
       'items.*' => 'unique',
@@ -29,12 +37,12 @@ class DepositController extends Controller {
 
     if (is_array($request->input('items.*'))) {
       $request->session()->flash('flash-warning', __('trades.errors.invalid_input'));
-      return view('deposit');
+      return view('deposit.create');
     }
 
     if (Auth::user()['locked?']) {
       $request->session()->flash('flash-warning', __('trades.errors.user_locked'));
-      return view('deposit');
+      return view('deposit.create');
     }
 
     $requested_items = $request->input('items.*'); //NOTE: items have to be passed as an array
@@ -42,7 +50,7 @@ class DepositController extends Controller {
     // If user selected more that 100 items which is the limit for trade
     if (count($requested_items) > 100) {
       $request->session()->flash('flash-warning', __('trades.errors.selected_more_than_100_items'));
-      return view('deposit');
+      return view('deposit.create');
     }
 
     $data = ['steam_id' => Auth::user()['steamid'], 'app_id' => 1]; // data for a request, 1 stands for vgo skins
@@ -52,7 +60,7 @@ class DepositController extends Controller {
 
     if ($inventory['status'] != 1) {
       $request->session()->flash('flash-warning', __('trades.errors.unknown_error'));
-      return view('deposit');
+      return view('deposit.create');
     }
 
     array_filter($inventory['response']['items'], function ($item) use ($requested_items) {
@@ -68,7 +76,7 @@ class DepositController extends Controller {
     // User requested items that are not present in his inventory
     if (count($inventory['response']['items']) != count($requested_items)) {
       $request->session()->flash('flash-warning', __('trades.errors.items_not_available'));
-      return view('deposit');
+      return view('deposit.create');
     }
 
     $value = 0;
@@ -86,7 +94,7 @@ class DepositController extends Controller {
       'twofactor_code' => $two_factor->getCode($secret),
       'steam_id' => Auth::user()['steamid'],
       'items_to_receive' => implode(',', $requested_items),
-      'message' => __('trades.deposit.trade_message', ['value' => $value, 'secret' => $trade_signature]),
+      'message' => __('trades.deposit.trade_message', ['value' => $value, 'signature' => $trade_signature]),
     ];
 
     $offer = ITrade::sendOfferToSteamId(config('trading.api_key'), $data);
@@ -96,21 +104,20 @@ class DepositController extends Controller {
       // TODO: Better error handling
       // TODO: Log error
       $request->session()->flash('flash-warning', __('trades.errors.could_not_send_trade'));
-      return view('deposit');
+      return view('deposit.create');
     }
 
-    Trade::create([
+    $trade = Trade::create([
       'opskins_offer_id' => $offer['result']['offer']['id'],
-      /* 'bot_id' => 0, // TODO: Support for multiple bots accounts */
       'state' => 2, // STATE_ACTIVE
       'recipent_steam_id' => $offer['result']['offer']['recipent']['steam_id'],
       'value' => $value,
-      'secretcode' => $trade_signature, // NOTE: We don't need to store this in database cause we can calculate it any time for given trade... guess what... that's how hmac's works
+      'trade_signature' => $trade_signature, // NOTE: We don't need to store this in database cause we can calculate it any time for given trade... guess what... that's how hmac's works
       'type' => 'deposit',
     ]);
 
     // Everything went ok, no errors... probably
     $request->session()->flash('flash-success', __('trades.sent-offer'));
-    return view('deposit');
+    return view('deposit.show'); // TODO: Show to current trade
   }
 }
