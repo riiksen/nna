@@ -8,10 +8,10 @@ export async function index(req: Request, res: Response) {
 
 }
 
-export async function show() {
+export async function show(req: Request, res: Response) {
 
 }
 
-export async function make() {
+export async function make(req: Request, res: Response) {
 
 }

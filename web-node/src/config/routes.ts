@@ -1,5 +1,5 @@
 import express from "express";
-import asyncHandler from "express-async-handler";
+import * as asyncHandler from "express-async-handler";
 
 import * as depositController from "../controllers/deposit.controller";
 import * as withdrawController from "../controllers/withdraw.controller";
