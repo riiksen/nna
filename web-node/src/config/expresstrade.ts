@@ -3,8 +3,8 @@ const ExpressTrade = require("expresstrade");
 import config from "./config";
 
 const tradeManager = new ExpressTrade({
-  apikey: '',
-  twofactorsecret: '',
+  apikey: config.opSkinsApiKey,
+  twofactorsecret: config.opSkinsTwoFactorSecret,
   pollInterval: 5000
 });
 

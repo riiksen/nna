@@ -8,8 +8,10 @@ import httpError from "http-errors";
 import logger from "morgan";
 import methodOverride from "method-override";
 import * as path from "path";
+import session from "express-session";
 
 import routes from "./routes";
+import passport from "./passport"
 import config from "./config";
 
 const app = express();
@@ -18,12 +20,22 @@ if (config.env === "development") {
   app.use(logger("dev"));
 }
 
-var distDir = "../../dist/";
+var publicDir = "../../public/";
+
+app.use(session({
+  secret: config.sessionSecret,
+  resave: true,
+  saveUninitialized: true,
+}));
+
+// Load passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Set up static folder and send index.html for all requests that don't have api in it
-app.use(express.static(path.join(__dirname, distDir)));
+app.use(express.static(path.join(__dirname, publicDir)));
 app.use(/^((?!(api)).)*/, (req, res) => {
-  res.sendFile(path.join(__dirname, distDir + "index.html"));
+  res.sendFile(path.join(__dirname, publicDir + "index.html"));
 });
 
 app.use(bodyParser.json());

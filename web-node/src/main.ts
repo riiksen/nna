@@ -6,7 +6,7 @@ if (!module.parent) {
   /**
    * Start Express server.
    */
-  const server = app.listen(app.get("port"), () => {
+  const server = app.listen(config.port, () => {
     console.log(
       "  App is running at http://localhost:%d in %s mode",
       config.port,
