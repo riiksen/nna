@@ -1,30 +1,29 @@
 version: '3'
 
 services:
-  web:
+  api:
     restart: always
     build: .
     ports:
       - "3000:3000"
-      - "5858:5858"
-      - "8080:8080"
-      - "35729:35729"
     environment:
       - NODE_ENV=development
     depends_on:
       - db
-    volumes_from:
-      - web-data
 
-  web-data:
+  web:
+    restart: always
     build: .
-    entrypoint: /bin/true
-    volumes:
+    ports:
+    environment:
+      - NODE_ENV=development
 
   db:
-    image: mongo:3.6
+    image: postgres:11
 
   db-data:
 
+
   redis:
+    image: redis
 

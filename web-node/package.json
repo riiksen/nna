@@ -4,14 +4,12 @@
   "license": "MIT",
   "description": "Web",
   "scripts": {
-    "ng": "ng",
     "serve": "node server",
     "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"nodemon server\" \"ng build --watch\"",
-    "build": "ng build --prod",
-    "build-server": "tsc",
-    "watch-server": "tsc - w",
-    "test": "ng test",
-    "lint": "ng lint"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "",
+    "lint": ""
   },
   "private": true,
   "dependencies": {
