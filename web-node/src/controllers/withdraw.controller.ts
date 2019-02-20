@@ -19,8 +19,16 @@ export async function make(req: Request, res: Response) {
   }).unknown()
     .required();
 
-  const { error, value: input } = Joi.validate(process.env, inputSchema);
+  const { error, value: items } = Joi.validate(process.env, inputSchema);
   if (error) {
     throw new Error(`Config validation error: ${error.message}`);
   }
+
+  var totalValue = 0;
+
+  var inventory = tradeManager.IUser.getInventory();
+
+  items.forEach(await (item) => {
+
+  });
 }
