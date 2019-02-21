@@ -32,7 +32,7 @@ tradeManager.on('any', async (event: any, offer: any) => {
       }
     }
   }
-});
+})
 
-export default tradeManager;
+export default tradeManager
 
