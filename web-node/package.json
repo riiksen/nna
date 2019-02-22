@@ -6,6 +6,7 @@
   "scripts": {
     "serve": "node dist/main.js",
     "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"nodemon server\" \"ng build --watch\"",
+    "sequelize": "sequelize",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",

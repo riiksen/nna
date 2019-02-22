@@ -23,7 +23,7 @@ tradeManager.on('any', async (event: any, offer: any) => {
     switch (offer.state) {
       case 3: { // STATE_ACCEPTED
         // log() // TODO(mike)
-        // trade.finalaize()
+        trade.finalize()
       }
       case 5: // STATE_EXPIRED
       case 6: // STATE_CANCELED

@@ -48,6 +48,11 @@ export default class Trade extends Model<Trade> {
   // user: User
 
   finalize(): void {
+    const user = this.user
+    user.coins = user.coins + this.value
+    user.save()
 
+    this.state = 3
+    this.save()
   }
 }
