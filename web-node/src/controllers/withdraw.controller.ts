@@ -5,13 +5,17 @@ import { Request, Response, NextFunction } from "express";
 
 import config from "../config/config";
 
+import Trade from '../models/trade'
+
 export async function index(req: Request, res: Response) {
   // const withdraws = req.session.user.withdraws;
   res.json({ ok: "ok" });
 }
 
 export async function show(req: Request, res: Response) {
+  const trade = await Trade.findByPk<Trade>(7)
 
+  res.json(trade)
 }
 
 export async function make(req: Request, res: Response) {

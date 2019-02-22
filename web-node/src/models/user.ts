@@ -8,10 +8,14 @@ import {
   ForeignKey,
   HasOne,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript'
 
+import Trade from './trade'
+
 @Table({
-  timestamps: true,
+  // timestamps: true,
+  tableName: 'users',
 })
 export default class User extends Model<User> {
   @PrimaryKey
@@ -42,4 +46,7 @@ export default class User extends Model<User> {
 
   @Column
   in_trade?: boolean;
+
+  // @HasMany(() => Trade)
+  // trades: Trade[]
 }

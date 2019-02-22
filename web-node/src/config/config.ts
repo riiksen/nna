@@ -16,6 +16,12 @@ const envVarsSchema = Joi.object({
   OPSKINS_API_KEY: Joi.string(),
   OPSKINS_TWOFACTOR_SECRET: Joi.string(),
   SESSION_SECRET: Joi.string(),
+  DB_USERNAME: Joi.string(),
+  DB_PASSWORD: Joi.string(),
+  DB_DATABASE: Joi.string(),
+  DB_HOST: Joi.string(),
+  DB_PORT: Joi.number(),
+  DB_DIALECT: Joi.string(),
 }).unknown()
   .required();
 
@@ -32,6 +38,14 @@ const config = {
   steamApiKey: envVars.STEAM_API_KEY,
   opSkinsApiKey: envVars.OPSKINS_API_KEY,
   opSkinsTwoFactorSecret: envVars.OPSKINS_TWOFACTOR_SECRET,
+  db: {
+    database: envVars.DB_DATABASE,
+    username: envVars.DB_USERNAME,
+    password: envVars.DB_PASSWORD,
+    host: envVars.DB_HOST,
+    port: envVars.DB_PORT,
+    dialect: envVars.DB_DIALECT,
+  }
 }
 
 export default config;
