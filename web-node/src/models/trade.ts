@@ -1,16 +1,23 @@
 import {
+  Table,
+  Column,
   Model,
-  DataTypes,
-} from 'sequelize'
-import connection from '../config/sequelize'
-import { Options, Attribute } from 'sequelize-decorators'
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  ForeignKey,
+  HasOne,
+  BelongsTo,
+} from 'sequelize-typescript'
 
-@Options({ connection })
-export default class Trade extends Model {
-  static associations: {}
-
-  @Attribute({ type: DataTypes.INTEGER, primaryKey: true })
-  public id: number
+@Table({
+  timestamps: true,
+})
+export default class Trade extends Model<Trade> {
+  @PrimaryKey
+  @AutoIncrement
+  @Column
+  id: number
 
   finalize(): void {
 

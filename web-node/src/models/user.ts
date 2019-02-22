@@ -1,31 +1,45 @@
-import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  ForeignKey,
+  HasOne,
+  BelongsTo,
+} from 'sequelize-typescript'
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Table({
+  timestamps: true,
+})
+export default class User extends Model<User> {
+  @PrimaryKey
+  @AutoIncrement
+  @Column
+  id: number
 
-  @Column()
+  @Column
   username: string;
 
-  @Column()
+  @Column
   steamid: string;
 
-  @Column()
+  @Column
   opskins_id: number;
 
-  @Column()
+  @Column
   avatar: string;
 
-  @Column()
+  @Column
   coins: number;
 
-  @Column()
+  @Column
   locked?: boolean;
 
-  @Column()
+  @Column
   admin?: boolean;
 
-  @Column()
+  @Column
   in_trade?: boolean;
 }

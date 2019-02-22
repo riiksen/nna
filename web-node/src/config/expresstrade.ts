@@ -1,6 +1,6 @@
 import config from "./config"
-import { getConnection } from "typeorm"
-import Trade from "../entities/trade"
+import connection from "./sequelize"
+import Trade from "../models/trade"
 
 const ExpressTrade = require("expresstrade")
 
@@ -18,11 +18,11 @@ tradeManager.on('offerReceived', (offer: any) => {
 
 tradeManager.on('any', async (event: any, offer: any) => {
   if (offer["sent_by_you"] && offer["state"] != 2) {
-    const trade = await connection.getRepository(Trade).findOne({ id: offer.id })
-    switch (offert.state) {
+    // const trade = await connection.getRepository(Trade).findOne({ id: offer.id })
+    switch (offer.state) {
       case 3: { // STATE_ACCEPTED
-        log() // TODO(mike)
-        trade.finalaize()
+        // log() // TODO(mike)
+        // trade.finalaize()
       }
       case 5: // STATE_EXPIRED
       case 6: // STATE_CANCELED
