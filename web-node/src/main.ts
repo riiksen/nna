@@ -1,6 +1,6 @@
-import config from "./config/config";
+import config from './config/config'
 
-import app from "./config/express";
+import app from './config/express'
 import './config/sequelize'
 
 if (!module.parent) {
@@ -9,12 +9,12 @@ if (!module.parent) {
    */
   const server = app.listen(config.port, () => {
     console.log(
-      "  App is running at http://localhost:%d in %s mode",
+      '  App is running at http://localhost:%d in %s mode',
       config.port,
       config.env,
-    );
-    console.log(" Press CTRL-C to stop\n")
-  });
+    )
+    console.log(' Press CTRL-C to stop\n')
+  })
 }
 
-export default app;
+export default app

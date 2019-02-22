@@ -1,7 +1,7 @@
-import crypto from "crypto";
-import { Request, Response, NextFunction } from "express";
+import crypto from 'crypto'
+import { Request, Response, NextFunction } from 'express'
 
-import config from "../config/config";
+import config from '../config/config'
 
 
 export async function index(req: Request, res: Response) {

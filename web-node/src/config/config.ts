@@ -1,8 +1,8 @@
-import Joi from "joi";
+import Joi from 'joi'
 
-import dotenv from "dotenv";
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
@@ -23,11 +23,11 @@ const envVarsSchema = Joi.object({
   DB_PORT: Joi.number(),
   DB_DIALECT: Joi.string(),
 }).unknown()
-  .required();
+  .required()
 
-const { error, value: envVars } = Joi.validate(process.env, envVarsSchema);
+const { error, value: envVars } = Joi.validate(process.env, envVarsSchema)
 if (error) {
-  throw new Error(`Config validation error: ${error.message}`);
+  throw new Error(`Config validation error: ${error.message}`)
 }
 
 const config = {
@@ -48,4 +48,4 @@ const config = {
   }
 }
 
-export default config;
+export default config

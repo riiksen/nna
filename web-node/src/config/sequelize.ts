@@ -10,4 +10,4 @@ const connection = new Sequelize({
   modelPaths: [__dirname + '/../models/*']
 })
 
-export default connection;
+export default connection
