@@ -6,6 +6,7 @@
   "scripts": {
     "serve": "node dist/main.js",
     "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"nodemon server\" \"ng build --watch\"",
+    "start2": "concurrently -c \"yellow.bold,green.bold\" \"npm:watch\" \"nodemon dist/main.js\" ",
     "sequelize": "sequelize",
     "build": "tsc",
     "watch": "tsc -w",
@@ -62,6 +63,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
     "concurrently": "^3.5.1",
+    "knex": "^0.18.3",
     "mocha": "^6.0.0",
     "ts-node": "~6.1.0",
     "tslint": "~5.10.0",
