@@ -25,8 +25,12 @@ export default class Trade extends Model<Trade> {
   @Column
   state: number
 
+  @ForeignKey(() => User)
   @Column
   user_id: number
+
+  @BelongsTo(() => User)
+  user: User
 
   @Column
   value: number
@@ -39,13 +43,6 @@ export default class Trade extends Model<Trade> {
 
   @Column
   trade_signature: string
-
-  // @ForeignKey(() => User)
-  // @Column
-  // userId: number
-
-  // @BelongsTo(() => User)
-  // user: User
 
   finalize(): void {
     const user = this.user
