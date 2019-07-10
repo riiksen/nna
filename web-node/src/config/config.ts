@@ -22,6 +22,7 @@ const envVarsSchema = Joi.object({
   DB_HOST: Joi.string(),
   DB_PORT: Joi.number(),
   DB_DIALECT: Joi.string(),
+  DB_DRIVER: Joi.string(),
 }).unknown()
   .required()
 
@@ -45,6 +46,7 @@ const config = {
     host: envVars.DB_HOST,
     port: envVars.DB_PORT,
     dialect: envVars.DB_DIALECT,
+    driver: envVars.DB_DRIVER,
   }
 }
 
