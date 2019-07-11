@@ -11,7 +11,14 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "lint": ""
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check"
   },
   "private": true,
   "dependencies": {
@@ -62,10 +69,11 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
     "concurrently": "^3.5.1",
+    "gts": "^1.0.0",
     "knex": "^0.18.3",
     "mocha": "^6.0.0",
     "ts-node": "~6.1.0",
-    "tslint": "~5.10.0",
-    "typescript": ">=2.7.0 <2.8.0"
+    "tslint": "~5.18.0",
+    "typescript": "~3.4.0"
   }
 }
