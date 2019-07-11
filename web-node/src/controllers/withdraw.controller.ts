@@ -1,21 +1,21 @@
-import crypto from 'crypto'
-import tradeManager from '../config/expresstrade'
-import Joi from 'joi'
-import { Request, Response, NextFunction } from 'express'
+import * as crypto from 'crypto';
+import * as tradeManager from '../config/expresstrade';
+import * as Joi from 'joi';
+import { Request, Response, NextFunction } from 'express';
 
-import config from '../config/config'
+import config from '../config/config';
 
-import Trade from '../models/trade'
+import Trade from '../models/trade';
 
 export async function index(req: Request, res: Response) {
   // const withdraws = req.session.user.withdraws
-  res.json({ ok: 'ok' })
+  res.json({ ok: 'ok' });
 }
 
 export async function show(req: Request, res: Response) {
-  const trade = await Trade.findByPk<Trade>(7)
+  const trade = await Trade.findByPk<Trade>(7);
 
-  res.json(trade)
+  res.json(trade);
 }
 
 export async function make(req: Request, res: Response) {

@@ -9,9 +9,9 @@ import {
   HasOne,
   BelongsTo,
   HasMany,
-} from 'sequelize-typescript'
+} from 'sequelize-typescript';
 
-import Trade from './trade'
+import Trade from './trade';
 
 @Table({
   // timestamps: true,
@@ -21,31 +21,31 @@ export default class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number
+  id: number;
 
   @Column
-  username: string
+  username: string;
 
   @Column
-  steamid: string
+  steamid: string;
 
   @Column
-  opskins_id: number
+  opskins_id: number;
 
   @Column
-  avatar: string
+  avatar: string;
 
   @Column
-  coins: number
+  coins: number;
 
   @Column
-  locked?: boolean
+  locked?: boolean;
 
   @Column
-  admin?: boolean
+  admin?: boolean;
 
   @Column
-  in_trade?: boolean
+  in_trade?: boolean;
 
   // @HasMany(() => Trade)
   // trades: Trade[]

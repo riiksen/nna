@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-  return Promise.all([  
+  return Promise.all([
     knex.schema.createTable('trades', function(table) {
       table.increments();
       table.integer('state');

@@ -8,9 +8,9 @@ import {
   ForeignKey,
   HasOne,
   BelongsTo,
-} from 'sequelize-typescript'
+} from 'sequelize-typescript';
 
-import User from './user'
+import User from './user';
 
 @Table({
   // timestamps: true,
@@ -20,36 +20,36 @@ export default class Trade extends Model<Trade> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number
+  id: number;
 
   @Column
-  state: number
+  state: number;
 
   @ForeignKey(() => User)
   @Column
-  user_id: number
+  user_id: number;
 
   @BelongsTo(() => User)
-  user: User
+  user: User;
 
   @Column
-  value: number
+  value: number;
 
   @Column
-  type: string
+  type: string;
 
   @Column
-  offer_id: number
+  offer_id: number;
 
   @Column
-  trade_signature: string
+  trade_signature: string;
 
   finalize(): void {
-    const user = this.user
-    user.coins = user.coins + this.value
-    user.save()
+    const user = this.user;
+    user.coins = user.coins + this.value;
+    user.save();
 
-    this.state = 3
-    this.save()
+    this.state = 3;
+    this.save();
   }
 }
