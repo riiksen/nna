@@ -1,6 +1,6 @@
 import config from './src/config/config';
 
-export default {
+const knexConfig = {
   client: config.db.driver,
   connection: {
     host: config.db.host,
@@ -16,4 +16,6 @@ export default {
   seeds: {
     directory: './db/seeds/'
   }
-};
+}
+
+export {knexConfig}
