@@ -1,11 +1,9 @@
-import passport from 'passport';
-import passportSteam from 'passport-steam';
+import * as passport from 'passport';
+import { Strategy as SteamStrategy } from 'passport-steam';
 
 import config from './config';
 
 import User from '../models/user';
-
-const SteamStrategy = passportSteam.Strategy;
 
 passport.serializeUser<any, any>((user, done) => {
   done(null, user.id);

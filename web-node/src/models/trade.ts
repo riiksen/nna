@@ -20,29 +20,29 @@ export default class Trade extends Model<Trade> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+  id!: number;
 
   @Column
-  state: number;
+  state!: number;
 
   @ForeignKey(() => User)
   @Column
-  user_id: number;
+  userId!: number;
 
   @BelongsTo(() => User)
-  user: User;
+  user!: User;
 
   @Column
-  value: number;
+  value!: number;
 
   @Column
-  type: string;
+  type!: string;
 
   @Column
-  offer_id: number;
+  offerId!: number;
 
   @Column
-  trade_signature: string;
+  tradeSignature!: string;
 
   finalize(): void {
     const user = this.user;
