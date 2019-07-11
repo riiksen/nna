@@ -1,9 +1,9 @@
 import * as passport from 'passport';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
-import config from './config';
+import { config } from './config';
 
-import User from '../models/user';
+import { User } from '../models/user';
 
 passport.serializeUser<any, any>((user, done) => {
   done(null, user.id);
@@ -36,4 +36,4 @@ passport.use(new SteamStrategy({
   done(null, profile);
 }));
 
-export default passport;
+export { passport };

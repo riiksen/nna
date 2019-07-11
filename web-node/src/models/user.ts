@@ -11,13 +11,13 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 
-import Trade from './trade';
+import { Trade } from './trade';
 
 @Table({
   // timestamps: true,
   tableName: 'users',
 })
-export default class User extends Model<User> {
+export class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
   @Column

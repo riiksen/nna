@@ -3,9 +3,9 @@ import * as tradeManager from '../config/expresstrade';
 import * as Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
-import config from '../config/config';
+import { config } from '../config/config';
 
-import Trade from '../models/trade';
+import { Trade } from '../models/trade';
 
 export async function index(req: Request, res: Response) {
   // const withdraws = req.session.user.withdraws

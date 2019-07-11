@@ -1,7 +1,7 @@
-import config from './config';
-import connection from './sequelize';
+import { config } from './config';
+import { connection } from './sequelize';
 
-import Trade from '../models/trade';
+import { Trade } from '../models/trade';
 
 const ExpressTrade = require('expresstrade');
 
@@ -35,5 +35,4 @@ tradeManager.on('any', async (event: any, offer: any) => {
   }
 });
 
-export default tradeManager;
-
+export { tradeManager };

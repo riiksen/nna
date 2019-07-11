@@ -10,13 +10,13 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 
-import User from './user';
+import { User } from './user';
 
 @Table({
   // timestamps: true,
   tableName: 'trades',
 })
-export default class Trade extends Model<Trade> {
+export class Trade extends Model<Trade> {
   @PrimaryKey
   @AutoIncrement
   @Column

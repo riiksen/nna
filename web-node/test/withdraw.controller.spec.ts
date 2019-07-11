@@ -1,6 +1,6 @@
 import { expect, request } from './utils';
 
-import app from '../src/main';
+import { app } from '../src/main';
 
 describe('Withdraw', () => {
   it('/withdraw should return ok', async () => {

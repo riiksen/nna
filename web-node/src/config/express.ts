@@ -10,9 +10,9 @@ import * as methodOverride from 'method-override';
 import * as path from 'path';
 import * as session from 'express-session';
 
-import routes from './routes';
-import passport from './passport';
-import config from './config';
+import { router as routes } from './routes';
+import { passport } from './passport';
+import { config } from './config';
 
 const app = express();
 
@@ -54,4 +54,4 @@ app.use(cors());
 // API router
 app.use('/api/', routes);
 
-export default app;
+export { app };

@@ -1,6 +1,6 @@
-import config from './config/config';
+import { config } from './config/config';
 
-import app from './config/express';
+import { app } from './config/express';
 import './config/sequelize';
 
 if (!module.parent) {
@@ -17,4 +17,4 @@ if (!module.parent) {
   });
 }
 
-export default app;
+export { app };

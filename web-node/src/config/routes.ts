@@ -4,7 +4,7 @@ import * as express from 'express';
 import * as depositController from '../controllers/deposit.controller';
 import * as withdrawController from '../controllers/withdraw.controller';
 import * as sessionController from '../controllers/session.controller';
-import config from '../config/config';
+import { config } from '../config/config';
 
 const router = express.Router();
 
@@ -23,4 +23,4 @@ router.get('/deposit', depositController.index);
 router.get('/deposit/:id', depositController.show);
 router.post('/deposit', depositController.make);
 
-export default router;
+export { router };
