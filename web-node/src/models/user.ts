@@ -47,6 +47,6 @@ export class User extends Model<User> {
   @Column
   inTrade!: boolean;
 
-  // @HasMany(() => Trade)
-  // trades: Trade[]
+  @HasMany(() => Trade)
+  trades!: Trade[]
 }
