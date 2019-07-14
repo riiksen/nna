@@ -9,7 +9,7 @@
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "outDir": "build",
+    "outDir": "dist",
     "pretty": true,
     "rootDir": ".",
     "sourceMap": true,
