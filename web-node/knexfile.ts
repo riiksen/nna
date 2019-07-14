@@ -1,4 +1,4 @@
-import { config } from './src/config/config';
+import config from './src/config/config';
 
 export = {
   client: config.db.driver,
@@ -11,9 +11,9 @@ export = {
   },
   migrations: {
     table: 'migrations',
-    directory: './db/migrations/'
+    directory: './db/migrations/',
   },
   seeds: {
-    directory: './db/seeds/'
-  }
+    directory: './db/seeds/',
+  },
 };
