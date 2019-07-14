@@ -11,7 +11,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "lint": "eslint --ext ts src test",
+    "lint": "eslint --ext .js,.ts src test",
     "compile": "tsc -p ."
   },
   "private": true,
