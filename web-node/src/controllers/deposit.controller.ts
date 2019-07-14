@@ -1,16 +1,19 @@
-import * as crypto from 'crypto';
-import { Request, Response, NextFunction } from 'express';
+// import * as crypto from 'crypto';
+import { Request, Response } from 'express';
 
-import { config } from '../config/config';
+// import config from '../config/config';
 
-export async function index(req: Request, res: Response) {
-
-}
-
-export async function show() {
+// eslint-disable-next-line
+export async function index(req: Request, res: Response): Promise<void> {
 
 }
 
-export async function make() {
+// eslint-disable-next-line
+export async function show(): Promise<void> {
+
+}
+
+// eslint-disable-next-line
+export async function make(): Promise<void> {
 
 }

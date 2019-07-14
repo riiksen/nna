@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { config } from './config';
+import config from './config';
 
 const connection = new Sequelize({
   database: config.db.database,
@@ -7,7 +7,7 @@ const connection = new Sequelize({
   username: config.db.username,
   password: '', // config.db.password,
   storage: ':memory:',
-  modelPaths: [__dirname + '/../models/*'],
+  modelPaths: [`${__dirname}/../models/*`],
 });
 
-export { connection };
+export default connection;

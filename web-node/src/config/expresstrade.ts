@@ -1,15 +1,15 @@
-import { config } from './config';
-import { connection } from './sequelize';
+// import config from './config';
+// import { connection } from './sequelize';
 
-import { Trade } from '../models/trade';
+// import { Trade } from '../models/trade';
 
-const ExpressTrade = require('expresstrade');
+// const ExpressTrade = require('expresstrade');
 
-const tradeManager = new ExpressTrade({
-  apikey: config.opSkinsApiKey,
-  twofactorsecret: config.opSkinsTwoFactorSecret,
-  pollInterval: 5000,
-});
+// const tradeManager = new ExpressTrade({
+//   apikey: config.opSkinsApiKey,
+//   twofactorsecret: config.opSkinsTwoFactorSecret,
+//   pollInterval: 5000,
+// });
 
 // tradeManager.on('offerReceived', (offer: any) => {
 //   tradeManager.ITrade.CancelOffer({ offer_id: offer.id });
@@ -35,4 +35,4 @@ const tradeManager = new ExpressTrade({
 //   }
 // });
 
-export { tradeManager };
+// export { tradeManager };

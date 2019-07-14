@@ -1,16 +1,17 @@
 import * as passport from 'passport';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
-import { config } from './config';
+import config from './config';
 
-import { User } from '../models/user';
+import User from '../models/user';
 
-passport.serializeUser<any, any>((user, done) => {
+// eslint-disable-next-line
+passport.serializeUser((user: User, done: (err: any, id?: number) => void): void => {
   done(null, user.id);
 });
 
 // TODO(mike): type of id normally was number | string
-passport.deserializeUser(async (id: number, done) => {
+passport.deserializeUser(async (id: number, done): Promise<void> => {
   try {
     const user = User.findByPk<User>(id);
     if (!user) {
@@ -30,10 +31,12 @@ passport.use(new SteamStrategy({
   returnURL: '/login/handle',
   realm: '',
   apiKey: config.steamApiKey,
-}, (identifier: any, profile: any, done: any) => {
+  // eslint-disable-next-line
+}, (identifier: any, profile: any, done: any): void => {
+  // eslint-disable-next-line
   profile.identifier = identifier;
 
   done(null, profile);
 }));
 
-export { passport };
+export default passport;
