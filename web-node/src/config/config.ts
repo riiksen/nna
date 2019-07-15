@@ -4,6 +4,27 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+// boilerplate cause joi does not automatically infer a typescript type from a
+// joi schema
+interface ConfigSchema {
+  env: 'development' | 'production' | 'test';
+  port: number;
+  sessionSecret: string;
+  loginReturnURL: string;
+  steamApiKey: string;
+  opSkinsApiKey: string;
+  opSkinsTwoFactorSecret: string;
+  db: {
+    database: string;
+    username: string;
+    password: string;
+    host: string;
+    port: number;
+    dialect: string;
+    driver: string;
+  };
+}
+
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
@@ -31,7 +52,23 @@ if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
 
-const config = {
+// boilerplate to convert a Joi schema to a typescript type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function convertToConfigSchema(config: any): ConfigSchema {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function validate(x: any): x is ConfigSchema {
+    return envVarsSchema.validate(x).error === null;
+  }
+
+  if (validate(config)) {
+    return config;
+  }
+
+  // This should never happen
+  throw new Error('Error happened while convering config to typescript object');
+}
+
+const joiObjectConfig = {
   env: envVars.NODE_ENV,
   port: envVars.SERVER_PORT,
   sessionSecret: envVars.SESSION_SECRET,
@@ -49,5 +86,7 @@ const config = {
     driver: envVars.DB_DRIVER,
   },
 };
+
+const config = convertToConfigSchema(joiObjectConfig);
 
 export default config;
