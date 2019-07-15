@@ -1,6 +1,6 @@
 import config from './src/config/config';
 
-export default {
+export = {
   client: config.db.driver,
   connection: {
     host: config.db.host,
@@ -11,9 +11,9 @@ export default {
   },
   migrations: {
     table: 'migrations',
-    directory: './db/migrations/'
+    directory: './db/migrations/',
   },
   seeds: {
-    directory: './db/seeds/'
-  }
+    directory: './db/seeds/',
+  },
 };

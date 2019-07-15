@@ -1,6 +1,7 @@
-import * as chai from 'chai'
-import chaiHttp = require('chai-http')
+import * as chai from 'chai';
 
-chai.use(chaiHttp)
+import chaiHttp = require('chai-http');
 
-export { request, expect } from 'chai'
+chai.use(chaiHttp);
+
+export { request, expect } from 'chai';
