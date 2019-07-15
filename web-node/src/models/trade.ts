@@ -42,13 +42,4 @@ export default class Trade extends Model<Trade> {
 
   @Column
   public tradeSignature!: string;
-
-  public finalize(): void {
-    const { user } = this;
-    user.coins += this.value;
-    user.save();
-
-    this.state = 3;
-    this.save();
-  }
 }
