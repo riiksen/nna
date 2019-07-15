@@ -34,9 +34,9 @@
     "passport-steam": "^1.0.10",
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^4.44.2",
+    "sequelize": "^5.10.1",
     "sequelize-cli": "^5.4.0",
-    "sequelize-typescript": "^0.6.7",
+    "sequelize-typescript": "^1.0.0-beta.3",
     "webpack": "^4.26.1"
   },
   "devDependencies": {

@@ -11,8 +11,9 @@ import {
 import User from './user';
 
 @Table({
-  // timestamps: true,
   tableName: 'trades',
+  timestamps: true,
+  underscored: true,
 })
 export default class Trade extends Model<Trade> {
   @PrimaryKey

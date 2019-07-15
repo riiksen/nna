@@ -20,7 +20,7 @@ interface ConfigSchema {
     password: string;
     host: string;
     port: number;
-    dialect: string;
+    dialect: 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql';
     driver: string;
   };
 }
@@ -42,7 +42,8 @@ const envVarsSchema = Joi.object({
   DB_DATABASE: Joi.string(),
   DB_HOST: Joi.string(),
   DB_PORT: Joi.number(),
-  DB_DIALECT: Joi.string(),
+  DB_DIALECT: Joi.string()
+    .allow(['mysql', 'postgres', 'sqlite', 'mariadb', 'mssql']),
   DB_DRIVER: Joi.string(),
 }).unknown()
   .required();
