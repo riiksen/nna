@@ -5,13 +5,12 @@
   "description": "Web",
   "scripts": {
     "serve": "node dist/main.js",
-    "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"nodemon server\" \"ng build --watch\"",
-    "start2": "concurrently -c \"yellow.bold,green.bold\" \"npm:watch\" \"nodemon dist/main.js\" ",
+    "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"watch\" \"nodemon dist/main.js\"",
     "sequelize": "sequelize",
-    "build": "tsc",
-    "watch": "tsc -w",
+    "watch": "tsc -w -p .",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "lint": ""
+    "lint": "eslint --ext .js,.ts db src test knexfile.ts",
+    "build": "tsc -p ."
   },
   "private": true,
   "dependencies": {
@@ -35,14 +34,13 @@
     "passport-steam": "^1.0.10",
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^4.42.0",
+    "sequelize": "^5.10.1",
     "sequelize-cli": "^5.4.0",
-    "sequelize-typescript": "^0.6.7",
+    "sequelize-typescript": "^1.0.0-beta.3",
     "webpack": "^4.26.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/chai-http": "^3.0.5",
     "@types/compression": "0.0.36",
     "@types/cookie-parser": "^1.4.1",
     "@types/cors": "^2.8.4",
@@ -58,14 +56,24 @@
     "@types/node": "^10.12.21",
     "@types/passport": "^1.0.0",
     "@types/passport-steam": "^1.0.1",
-    "@types/sequelize": "^4.27.37",
+    "@types/sequelize": "^4.28.3",
+    "@typescript-eslint/eslint-plugin": "^1.12.0",
+    "@typescript-eslint/parser": "^1.12.0",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
     "concurrently": "^3.5.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.14.2",
     "knex": "^0.18.3",
     "mocha": "^6.0.0",
     "ts-node": "~6.1.0",
-    "tslint": "~5.10.0",
-    "typescript": ">=2.7.0 <2.8.0"
+    "tslint": "~5.18.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "~3.4.0"
   }
 }

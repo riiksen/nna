@@ -2,51 +2,48 @@ import {
   Table,
   Column,
   Model,
-  DataType,
   PrimaryKey,
   AutoIncrement,
-  ForeignKey,
-  HasOne,
-  BelongsTo,
   HasMany,
-} from 'sequelize-typescript'
+} from 'sequelize-typescript';
 
-import Trade from './trade'
+import Trade from './trade';
 
 @Table({
-  // timestamps: true,
   tableName: 'users',
+  timestamps: true,
+  underscored: true,
 })
 export default class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number
+  public id!: number;
 
   @Column
-  username: string
+  public username!: string;
 
   @Column
-  steamid: string
+  public steamid!: string;
 
   @Column
-  opskins_id: number
+  public opskinsId!: number;
 
   @Column
-  avatar: string
+  public avatar!: string;
 
   @Column
-  coins: number
+  public coins!: number;
 
   @Column
-  locked?: boolean
+  public locked!: boolean;
 
   @Column
-  admin?: boolean
+  public admin!: boolean;
 
   @Column
-  in_trade?: boolean
+  public inTrade!: boolean;
 
-  // @HasMany(() => Trade)
-  // trades: Trade[]
+  @HasMany((): typeof Trade => Trade)
+  public trades!: Trade[]
 }
