@@ -16,17 +16,18 @@ import User from './user';
 @Table({
   timestamps: true,
   tableName: 'roles',
+  underscored: true,
 })
 export default class Role extends Model<Role> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+  id!: number;
 
   @Column
-  name: string;
+  name!: string;
 
   @HasMany(() => User)
-  users: User[];
+  users!: User[];
 
 }

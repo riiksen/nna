@@ -14,17 +14,18 @@ import {
 @Table({
   timestamps: true,
   tableName: 'roles_permissions',
+  underscored: true,
 })
 export default class RolePermission extends Model<RolePermission> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+  id!: number;
 
   @Column
-  role_id: number;
+  roleId!: number;
 
   @Column
-  permission_id: number;
+  permissionId!: number;
 
 }

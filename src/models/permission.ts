@@ -14,14 +14,15 @@ import {
 @Table({
   timestamps: true,
   tableName: 'permissions',
+  underscored: true,
 })
 export default class Permission extends Model<Permission> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+  id!: number;
 
   @Column
-  name: string;
+  name!: string;
 
 }
