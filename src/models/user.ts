@@ -41,7 +41,7 @@ export default class User extends Model<User> {
 
   @Column
   @ForeignKey(() => Role)
-  public role_id!: number;
+  public roleId!: number;
 
   @Column
   public inTrade!: boolean;
@@ -59,6 +59,6 @@ export default class User extends Model<User> {
     return false;
   }
   hasPermission(permission:string):boolean {
-
+    return true;
   }
 }
