@@ -15,7 +15,7 @@ import {
   timestamps: true,
   tableName: 'permissions',
 })
-export default class Permission extends Model<RolePermission> {
+export default class Permission extends Model<Permission> {
   @PrimaryKey
   @AutoIncrement
   @Column
