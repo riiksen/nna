@@ -5,7 +5,7 @@
   "description": "Web",
   "scripts": {
     "serve": "node dist/main.js",
-    "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"watch\" \"nodemon dist/main.js\"",
+    "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"npm:watch\" \"nodemon dist/main.js\"",
     "sequelize": "sequelize",
     "watch": "tsc -w -p .",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
