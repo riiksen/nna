@@ -14,7 +14,6 @@ passport.serializeUser((user: User, done: (err: any, id?: number) => void): void
 passport.deserializeUser(async (id: number, done): Promise<void> => {
   try {
     const user = await User.findByPk<User>(id)
-
     if (!user) {
       done(new Error('user not found'));
     }
