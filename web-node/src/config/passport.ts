@@ -14,7 +14,7 @@ passport.serializeUser<any, any>((user, done) => {
 // TODO(mike): type of id normally was number | string
 passport.deserializeUser(async (id: number, done) => {
   try {
-    const user = User.findByPk<User>(id)
+    const user = await User.findByPk<User>(id)
     if (!user) {
       done(new Error('user not found'))
     }

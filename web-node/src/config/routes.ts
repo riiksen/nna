@@ -24,4 +24,7 @@ router.get('/deposit', depositController.index);
 router.get('/deposit/:id', depositController.show);
 router.post('/deposit', depositController.make);
 
+// Example to test role middleware
+router.get('/admin',[middlewares.role('admin')], withdrawController.index);
+
 export default router;

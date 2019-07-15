@@ -13,7 +13,7 @@ import {
 import User from './user'
 
 @Table({
-  // timestamps: true,
+  timestamps: true,
   tableName: 'trades',
 })
 export default class Trade extends Model<Trade> {

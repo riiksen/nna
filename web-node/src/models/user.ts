@@ -9,44 +9,59 @@ import {
   HasOne,
   BelongsTo,
   HasMany,
-} from 'sequelize-typescript'
+} from 'sequelize-typescript';
 
-import Trade from './trade'
+import Trade from './trade';
+import Role from './role';
 
 @Table({
-  // timestamps: true,
+  timestamps: true,
   tableName: 'users',
 })
 export default class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number
+  id: number;
 
   @Column
-  username: string
+  username: string;
 
   @Column
-  steamid: string
+  steamid: string;
 
   @Column
-  opskins_id: number
+  opskins_id: number;
 
   @Column
-  avatar: string
+  avatar: string;
 
   @Column
-  coins: number
+  coins: number;
 
   @Column
-  locked?: boolean
+  locked?: boolean;
 
   @Column
-  admin?: boolean
+  @ForeignKey(() => Role)
+  role_id?: number;
 
   @Column
-  in_trade?: boolean
+  in_trade?: boolean;
+
+  @BelongsTo(() => Role)
+  role: Role;
 
   // @HasMany(() => Trade)
   // trades: Trade[]
+
+  isRole(role:string):boolean {
+    if(this.role && this.role.name === role) {
+      return true;
+    }
+    return false;
+  }
+  hasPermission(permission:string):boolean {
+
+  }
 }

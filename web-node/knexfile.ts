@@ -1,6 +1,6 @@
 import config from './src/config/config';
 
-const knexConfig = {
+module.exports = {
   client: config.db.driver,
   connection: {
     host: config.db.host,
@@ -17,5 +17,3 @@ const knexConfig = {
     directory: './db/seeds/'
   }
 }
-
-export {knexConfig}

@@ -1,6 +1,8 @@
-exports.up = function(knex) {
+import * as Knex from 'knex';
+
+export async function up(knex: Knex): Promise<any> {
   return Promise.all([  
-    knex.schema.createTable('trades', function(table) {
+    knex.schema.createTable('trades', (table:any) => {
       table.increments();
       table.integer('state');
       table.integer('user_id').unsigned();
@@ -13,10 +15,10 @@ exports.up = function(knex) {
       table.foreign('user_id').references('id').inTable('users');
     })
   ]);
-};
+}
 
-exports.down = function(knex) {
+export async function down(knex: Knex): Promise<any> {
   return Promise.all([
     knex.schema.dropTable('trades')
   ]);
-};
+}

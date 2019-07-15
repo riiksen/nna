@@ -17,7 +17,7 @@ const envVarsSchema = Joi.object({
   OPSKINS_TWOFACTOR_SECRET: Joi.string(),
   SESSION_SECRET: Joi.string(),
   DB_USERNAME: Joi.string(),
-  DB_PASSWORD: Joi.string(),
+  DB_PASSWORD: Joi.string().allow(''),
   DB_DATABASE: Joi.string(),
   DB_HOST: Joi.string(),
   DB_PORT: Joi.number(),
