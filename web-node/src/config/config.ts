@@ -1,8 +1,29 @@
-import Joi from 'joi'
+import * as Joi from 'joi';
 
-import dotenv from 'dotenv'
+import * as dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
+
+// boilerplate cause joi does not automatically infer a typescript type from a
+// joi schema
+interface ConfigSchema {
+  env: 'development' | 'production' | 'test';
+  port: number;
+  sessionSecret: string;
+  loginReturnURL: string;
+  steamApiKey: string;
+  opSkinsApiKey: string;
+  opSkinsTwoFactorSecret: string;
+  db: {
+    database: string;
+    username: string;
+    password: string;
+    host: string;
+    port: number;
+    dialect: 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql';
+    driver: string;
+  };
+}
 
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
@@ -21,17 +42,34 @@ const envVarsSchema = Joi.object({
   DB_DATABASE: Joi.string(),
   DB_HOST: Joi.string(),
   DB_PORT: Joi.number(),
-  DB_DIALECT: Joi.string(),
+  DB_DIALECT: Joi.string()
+    .allow(['mysql', 'postgres', 'sqlite', 'mariadb', 'mssql']),
   DB_DRIVER: Joi.string(),
 }).unknown()
-  .required()
+  .required();
 
-const { error, value: envVars } = Joi.validate(process.env, envVarsSchema)
+const { error, value: envVars } = Joi.validate(process.env, envVarsSchema);
 if (error) {
-  throw new Error(`Config validation error: ${error.message}`)
+  throw new Error(`Config validation error: ${error.message}`);
 }
 
-const config = {
+// boilerplate to convert a Joi schema to a typescript type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function convertToConfigSchema(config: any): ConfigSchema {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function validate(x: any): x is ConfigSchema {
+    return envVarsSchema.validate(x).error === null;
+  }
+
+  if (validate(config)) {
+    return config;
+  }
+
+  // This should never happen
+  throw new Error('Error happened while convering config to typescript object');
+}
+
+const joiObjectConfig = {
   env: envVars.NODE_ENV,
   port: envVars.SERVER_PORT,
   sessionSecret: envVars.SESSION_SECRET,
@@ -47,7 +85,9 @@ const config = {
     port: envVars.DB_PORT,
     dialect: envVars.DB_DIALECT,
     driver: envVars.DB_DRIVER,
-  }
-}
+  },
+};
 
-export default config
+const config = convertToConfigSchema(joiObjectConfig);
+
+export default config;

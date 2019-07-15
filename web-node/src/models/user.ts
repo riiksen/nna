@@ -2,13 +2,11 @@ import {
   Table,
   Column,
   Model,
-  DataType,
   PrimaryKey,
   AutoIncrement,
-  ForeignKey,
-  HasOne,
-  BelongsTo,
   HasMany,
+  BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
 
 import Trade from './trade';
@@ -17,43 +15,42 @@ import Role from './role';
 @Table({
   timestamps: true,
   tableName: 'users',
+  underscored: true,
 })
 export default class User extends Model<User> {
-  @PrimaryKey
-  @AutoIncrement
-  @Column
-  id: number;
+
+  public id!: number;
 
   @Column
-  username: string;
+  public username!: string;
 
   @Column
-  steamid: string;
+  public steamid!: string;
 
   @Column
-  opskins_id: number;
+  public opskinsId!: number;
 
   @Column
-  avatar: string;
+  public avatar!: string;
 
   @Column
-  coins: number;
+  public coins!: number;
 
   @Column
-  locked?: boolean;
+  public locked!: boolean;
 
   @Column
   @ForeignKey(() => Role)
-  role_id?: number;
+  public role_id!: number;
 
   @Column
-  in_trade?: boolean;
+  public inTrade!: boolean;
+
+  @HasMany((): typeof Trade => Trade)
+  public trades!: Trade[]
 
   @BelongsTo(() => Role)
-  role: Role;
-
-  // @HasMany(() => Trade)
-  // trades: Trade[]
+  public role!: Role;
 
   isRole(role:string):boolean {
     if(this.role && this.role.name === role) {

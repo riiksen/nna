@@ -1,14 +1,14 @@
-import bodyParser from 'body-parser';
-import compress from 'compression';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
-import httpError from 'http-errors';
-import logger from 'morgan';
-import methodOverride from 'method-override';
+import * as bodyParser from 'body-parser';
+import * as compress from 'compression';
+import * as cookieParser from 'cookie-parser';
+import * as cors from 'cors';
+import * as express from 'express';
+import * as helmet from 'helmet';
+// import * as httpError from 'http-errors';
+import * as logger from 'morgan';
+import * as methodOverride from 'method-override';
 import * as path from 'path';
-import session from 'express-session';
+import * as session from 'express-session';
 
 import routes from './routes';
 import passport from './passport';
@@ -20,7 +20,7 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 };
 
-var publicDir = '../../public/';
+const publicDir = '../../public/';
 
 app.use(session({
   secret: config.sessionSecret,
@@ -34,9 +34,9 @@ app.use(passport.session());
 
 // Set up static folder and send index.html for all requests that don't have api in it
 app.use(express.static(path.join(__dirname, publicDir)));
-app.use(/^((?!(api)).)*/, (req, res) => {
-  res.sendFile(path.join(__dirname, publicDir + 'index.html'));
-})
+app.use(/^((?!(api)).)*/, (req: express.Request, res: express.Response): void => {
+  res.sendFile(path.join(__dirname, `${publicDir}index.html`));
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
