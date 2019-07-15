@@ -9,7 +9,7 @@
     "sequelize": "sequelize",
     "watch": "tsc -w -p .",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "lint": "eslint --ext .js,.ts src test knexfile.ts",
+    "lint": "eslint --ext .js,.ts db src test knexfile.ts",
     "build": "tsc -p ."
   },
   "private": true,
