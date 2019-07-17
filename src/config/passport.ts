@@ -1,4 +1,5 @@
 import * as passport from 'passport';
+import { Strategy as OPSkinsStrategy } from 'passport-opskins';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
 import config from './config';
@@ -24,6 +25,18 @@ passport.deserializeUser(async (id: number, done): Promise<void> => {
     done(e);
   }
 });
+
+/**
+ * Sign in with OPSkins
+ */
+passport.use(new OPSkinsStrategy({
+  apiKey: config.opSkinsApiKey,
+  returnURL: '/login/handle/opskins',
+  scopes: 'identity_basic',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}, (user: any, done: any): void => {
+  done(null, user);
+}));
 
 /**
  * Sign in with Steam
