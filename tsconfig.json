@@ -11,6 +11,12 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "outDir": "dist",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "src/types/*"
+      ]
+    },
     "pretty": true,
     "sourceMap": true,
     "strict": true,
