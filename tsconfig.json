@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -11,13 +12,11 @@
     "noImplicitReturns": true,
     "outDir": "dist",
     "pretty": true,
-    "rootDir": ".",
     "sourceMap": true,
     "strict": true,
     "target": "es2017"
   },
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
+    "src/**/*.ts"
   ]
 }
