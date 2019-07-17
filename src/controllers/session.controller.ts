@@ -3,14 +3,28 @@
 import { Request, Response } from 'express';
 // import { Request, Response, NextFunction } from 'express';
 
-// eslint-disable-next-line
-export function login(req: Request, res: Response) {
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function login(req: Request, res: Response): void {
+  const { provider } = req.params;
+  switch (provider) {
+    case 'opskins':
+      break;
+    case 'steam':
+      break;
+    default:
+  }
 }
 
-// eslint-disable-next-line
-export function handle(req: Request, res: Response) {
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function handle(req: Request, res: Response): void {
+  const { provider } = req.params;
+  switch (provider) {
+    case 'opskins':
+      break;
+    case 'steam':
+      break;
+    default:
+  }
 }
 
 // eslint-disable-next-line

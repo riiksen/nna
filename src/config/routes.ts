@@ -9,8 +9,8 @@ import * as sessionController from '../controllers/session.controller';
 const router = express.Router();
 
 // Session routes
-router.get('/login', sessionController.login);
-router.get('/login/hanlde', sessionController.handle);
+router.get('/login/:provider', sessionController.login);
+router.get('/login/hanlde/:provider', sessionController.handle);
 router.post('/logout', sessionController.logout);
 
 // Withdraw routes
