@@ -1,5 +1,6 @@
 // import * as asyncHandler from 'express-async-handler';
 import * as express from 'express';
+import * as passport from 'passport';
 
 import * as depositController from '../controllers/deposit.controller';
 import * as withdrawController from '../controllers/withdraw.controller';
@@ -12,8 +13,8 @@ import middlewares from '../config/middleware';
 const router = express.Router();
 
 // Session routes
-router.get('/login', sessionController.login);
-router.get('/login/hanlde', sessionController.handle);
+router.get('/login/steam', sessionController.login);
+router.get('/login/steam/handle', sessionController.handle);
 router.post('/logout', sessionController.logout);
 
 // Withdraw routes
@@ -27,6 +28,13 @@ router.get('/deposit/:id', depositController.show);
 router.post('/deposit', depositController.make);
 
 // Example to test role middleware
-router.get('/admin',[middlewares.role('admin')], withdrawController.index);
+router.get('/admin', [middlewares.role('admin')], withdrawController.index);
+
+if(config.env == 'development') {
+  router.get('/login/mock', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    
+  }, passport.authenticate('mock'));
+  router.get('/login/mock/handle', passport.authenticate('mock', {failureRedirect: '/' }));
+}
 
 export default router;
