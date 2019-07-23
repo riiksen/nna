@@ -14,7 +14,6 @@ passport.serializeUser((user: User, done: (err: any, id?: number) => void): void
 // TODO(mike): type of id normally was number | string
 passport.deserializeUser(async (id: number, done: (err: any, user?: User | null) => void): Promise<void> => {
   try {
-    console.log(id);
     const user = await User.findByPk<User>(id);
     if (!user) {
       done(new Error('user not found'));
@@ -34,7 +33,7 @@ passport.use(new SteamStrategy({
   realm: `http://localhost:${config.port}/`,
   apiKey: config.steamApiKey,
   // eslint-disable-next-line
-}, (identifier: any, profile: any, done: any): void => {
+}, (identifier: any, profile: any, done: (err: any, user: User) => void): void => {
   // eslint-disable-next-line
   profile.identifier = identifier;
   User.findOne({where: {steamid: profile._json.steamid}}).then(user => {
@@ -44,15 +43,14 @@ passport.use(new SteamStrategy({
         username: profile._json.personaname,
         avatar: profile._json.avatar,
       }).then(user => {
-        done(null, user);
+        return done(null, user);
       });
     } else {
       user.update({
         username: profile._json.personaname,
         avatar: profile._json.avatar,
       }).then(user => {
-        console.log('user updated!');
-        done(null, user);
+        return done(null, user);
       });
     }
   });
@@ -63,7 +61,13 @@ if(config.env == 'development') {
   passport.use(new MockStrategy({
     name: 'mock',
     callbackURL: `http://localhost:${config.port}/login/mock/handle`,
-  }));
+  }, (accessToken:any, refreshToken:any, profile:any, done: (err: any, profile: object) => void) => {
+    profile.accessToken = accessToken;
+    profile.refreshToken = refreshToken;
+
+    return done(null,profile);
+  })
+  );
 }
 
 export default passport;
