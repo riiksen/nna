@@ -35,7 +35,8 @@ app.use(passport.session());
 // Set up static folder and send index.html for all requests that don't have api in it
 app.use(express.static(path.join(__dirname, publicDir)));
 app.use(/^((?!(api)).)*/, (req: express.Request, res: express.Response): void => {
-  res.sendFile(path.join(__dirname, `${publicDir}index.html`));
+  res.send(`${req.isAuthenticated()} <br/><br/>d ${JSON.stringify(req.user)}`);
+  //res.sendFile(path.join(__dirname, `${publicDir}index.html`));
 });
 
 app.use(bodyParser.json());
