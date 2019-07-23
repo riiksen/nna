@@ -13,11 +13,18 @@
     "pretty": true,
     "rootDir": ".",
     "sourceMap": true,
+    "sourceRoot": "root",
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+      "typeRoots": [
+        "src/types",
+        "node_modules/@types"
+      ],
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts"
+  ],
+  "exclude": [
+    "src/types"
   ]
 }
