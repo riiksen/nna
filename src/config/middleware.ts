@@ -1,10 +1,11 @@
 import * as express from 'express';
 
+import role from '../middlewares/role';
+
 const router = express.Router(); 
-const middlewares_path = '../middlewares/';
 
 var middlewares = {
-  role: require(middlewares_path+'role'),
+  role: role,
 };
 
 export default middlewares;
