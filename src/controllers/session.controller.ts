@@ -12,7 +12,7 @@ export function login(req: Request, res: Response) {
 
 // eslint-disable-next-line
 export function handle(req: Request, res: Response) {
-  passport.authenticate('steam', {failureRedirect: '/'}, () => {
+  passport.authenticate('steam', {failureRedirect: '/login/steam'}, () => {
     res.redirect('/');
   })(req,res);
 }
