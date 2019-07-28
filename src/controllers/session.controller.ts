@@ -22,6 +22,7 @@ export function handle(req: Request, res: Response): void {
     case 'opskins':
       break;
     case 'steam':
+      passport.authenticate('steam')(req, res, (): void => {});
       break;
     default:
   }
