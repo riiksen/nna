@@ -1,10 +1,10 @@
 import {
-  Table,
+  AutoIncrement,
   Column,
+  HasMany,
   Model,
   PrimaryKey,
-  AutoIncrement,
-  HasMany,
+  Table,
   Unique,
 } from 'sequelize-typescript';
 
