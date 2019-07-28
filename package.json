@@ -31,7 +31,6 @@
     "method-override": "^2.3.10",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
-    "passport-opskins": "^1.1.5",
     "passport-steam": "^1.0.10",
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.13",
