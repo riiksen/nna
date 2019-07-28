@@ -13,18 +13,18 @@ export function rootUrlWithPort(): string {
   return `${rootUrl()}:${config.port}`;
 }
 
-export function urlFor(address: string): string {
-  return `${rootUrl()}${address}`;
+export function urlFor(path: string): string {
+  return `${rootUrl()}${path}`;
 }
 
-export function apiUrlFor(address: string): string {
-  return `${rootUrl()}/api${address}`;
+export function apiUrlFor(path: string): string {
+  return `${rootUrl()}/api${path}`;
 }
 
-export function urlWithPortFor(address: string): string {
-  return `${rootUrlWithPort()}${address}`;
+export function urlWithPortFor(path: string): string {
+  return `${rootUrlWithPort()}${path}`;
 }
 
-export function apiUrlWithPortFor(address: string): string {
-  return `${rootUrlWithPort()}/api${address}`;
+export function apiUrlWithPortFor(path: string): string {
+  return `${rootUrlWithPort()}/api${path}`;
 }
