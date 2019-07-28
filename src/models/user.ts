@@ -24,8 +24,8 @@ export default class User extends Model<User> {
   @Column
   public username!: string;
 
-  @Column
   @Unique
+  @Column
   public steamid!: string;
 
   @Column

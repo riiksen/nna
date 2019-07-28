@@ -46,11 +46,19 @@ passport.use(new SteamStrategy({
   realm: '',
   apiKey: config.steamApiKey,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-}, (identifier: any, profile: any, done: any): void => {
-  // eslint-disable-next-line
-  profile.identifier = identifier;
-
-  done(null, profile);
+}, async (identifier: any, profile: any, done: any): Promise<void> => {
+  try {
+    const [user] = await User.upsert({
+      steamid: profile.id,
+      username: profile.displayName,
+      avatar: profile.photos[0].value,
+    }, {
+      returning: true,
+    });
+    done(null, user);
+  } catch (e) {
+    done(e);
+  }
 }));
 
 export default passport;
