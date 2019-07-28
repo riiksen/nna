@@ -6,7 +6,7 @@ import config from './config';
 
 import User from '../models/user';
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.serializeUser((user: User, done: (err: any, id?: number) => void): void => {
   done(null, user.id);
 });
@@ -45,7 +45,7 @@ passport.use(new SteamStrategy({
   returnURL: '/login/handle',
   realm: '',
   apiKey: config.steamApiKey,
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }, (identifier: any, profile: any, done: any): void => {
   // eslint-disable-next-line
   profile.identifier = identifier;
