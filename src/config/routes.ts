@@ -10,7 +10,7 @@ const router = express.Router();
 
 // Session routes
 router.get('/login/:provider', sessionController.login);
-router.get('/login/hanlde/:provider', sessionController.handle);
+router.get('/login/handle/:provider', sessionController.handle);
 router.post('/logout', sessionController.logout);
 
 // Withdraw routes
