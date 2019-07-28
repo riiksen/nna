@@ -1,7 +1,6 @@
-// import * as passport from 'passport';
-// import * as SteamStrategy from 'passport-steam';
 import { Request, Response } from 'express';
-// import { Request, Response, NextFunction } from 'express';
+
+import passport from '../config/passport';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function login(req: Request, res: Response): void {
@@ -10,6 +9,7 @@ export function login(req: Request, res: Response): void {
     case 'opskins':
       break;
     case 'steam':
+      passport.authenticate('steam')(req, res, (): void => {});
       break;
     default:
   }
