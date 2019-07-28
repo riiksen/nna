@@ -4,6 +4,8 @@ import { Strategy as SteamStrategy } from 'passport-steam';
 
 import config from './config';
 
+import * as appHelpers from '../helpers/application_helper';
+
 import User from '../models/user';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,10 +42,11 @@ passport.deserializeUser(async (id: number, done): Promise<void> => {
 
 /**
  * Sign in with Steam
+ * TODO(mike): Automatically detect if port is needed to pass in helpers
  */
 passport.use(new SteamStrategy({
-  returnURL: '/login/handle',
-  realm: '',
+  returnURL: appHelpers.apiUrlWithPortFor('/login/handle/steam'),
+  realm: appHelpers.rootUrlWithPort(),
   apiKey: config.steamApiKey,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }, async (identifier: any, profile: any, done: any): Promise<void> => {
