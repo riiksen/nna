@@ -29,9 +29,6 @@ export default class User extends Model<User> {
   public steamid!: string;
 
   @Column
-  public opskinsId!: number;
-
-  @Column
   public avatar!: string;
 
   @Column
