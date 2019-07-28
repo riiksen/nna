@@ -5,6 +5,7 @@ import {
   PrimaryKey,
   AutoIncrement,
   HasMany,
+  Unique,
 } from 'sequelize-typescript';
 
 import Trade from './trade';
@@ -24,6 +25,7 @@ export default class User extends Model<User> {
   public username!: string;
 
   @Column
+  @Unique
   public steamid!: string;
 
   @Column
