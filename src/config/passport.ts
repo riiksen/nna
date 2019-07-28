@@ -43,6 +43,7 @@ passport.deserializeUser(async (id: number, done): Promise<void> => {
 /**
  * Sign in with Steam
  * TODO(mike): Automatically detect if port is needed to pass in helpers
+ * TODO(mike): Change withPort helpers to their equivalents without port
  */
 passport.use(new SteamStrategy({
   returnURL: appHelpers.apiUrlWithPortFor('/login/handle/steam'),
