@@ -1,6 +1,5 @@
 import * as passport from 'passport';
 import { Strategy as SteamStrategy } from 'passport-steam';
-import { Strategy as MockStrategy } from 'passport-mocked';
 
 import config from './config';
 
@@ -55,17 +54,5 @@ passport.use(new SteamStrategy({
 
 }));
 
-if(config.env == 'development') {
-  passport.use(new MockStrategy({
-    name: 'mock',
-    callbackURL: `http://localhost:${config.port}/api/login/mock/handle`,
-  }, (accessToken:any, refreshToken:any, profile:any, done: (err: any, profile: object) => void) => {
-    profile.accessToken = accessToken;
-    profile.refreshToken = refreshToken;
-
-    return done(null,profile);
-  })
-  );
-}
 
 export default passport;
