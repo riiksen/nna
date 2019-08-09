@@ -5,16 +5,12 @@ import { Request, Response } from 'express';
 
 // eslint-disable-next-line
 export function login(req: Request, res: Response) {
-  passport.authenticate('steam', () => {
-
-  })(req,res);
+  passport.authenticate('steam')(req, res, (): void => {});
 }
 
 // eslint-disable-next-line
 export function handle(req: Request, res: Response) {
-  passport.authenticate('steam', {failureRedirect: '/login/steam'}, () => {
-    res.redirect('/');
-  })(req,res);
+  passport.authenticate('steam')(req, res, (): void => res.redirect('/'));
 }
 
 // eslint-disable-next-line
