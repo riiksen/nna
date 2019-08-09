@@ -30,11 +30,4 @@ router.post('/deposit', depositController.make);
 // Example to test role middleware
 router.get('/admin', [middlewares.role('admin')], withdrawController.index);
 
-if(config.env == 'development') {
-  router.get('/login/mock', (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    
-  }, passport.authenticate('mock'));
-  router.get('/login/mock/handle', passport.authenticate('mock', {failureRedirect: '/' }));
-}
-
 export default router;
