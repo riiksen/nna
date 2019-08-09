@@ -6,4 +6,4 @@ import * as chaiStrategy from 'chai-passport-strategy';
 chai.use(chaiHttp);
 chai.use(chaiStrategy);
 
-export { expect } from 'chai';
+export { request, expect } from 'chai';
