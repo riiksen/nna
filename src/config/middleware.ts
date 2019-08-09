@@ -2,7 +2,7 @@ import * as express from 'express';
 
 import role from '../middlewares/role';
 
-const router = express.Router(); 
+const router = express.Router();
 
 var middlewares = {
   role: role,
