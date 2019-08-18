@@ -2,10 +2,12 @@
   "name": "vgoscam",
   "version": "1.0.0",
   "scripts": {
-    "build:all": "build:api && build:app",
-    "build:api": "",
-    "build:app": "",
+    "build:all": "yarn build:api && yarn build:app",
+    "build:api": "cd packages/api && yarn build",
+    "build:app": "cd packages/app && yarn build",
     "lint": "eslint --ext",
+    "serve:all": "",
+    "serve:api": "",
     "test:all": "test:api && test:app",
     "test:api": "",
     "test:app": ""
