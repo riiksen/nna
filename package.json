@@ -5,12 +5,15 @@
     "build:all": "yarn build:api && yarn build:app",
     "build:api": "cd packages/api && yarn build",
     "build:app": "cd packages/app && yarn build",
-    "lint": "eslint --ext",
+    "lint:all": "yarn lint && yarn lint:api && yarn lint:app",
+    "lint": "eslint --ext .js,.ts db knexfile.ts",
+    "lint:api": "cd packages/api && yarn lint",
+    "lint:app": "cd packages/app && yarn lint",
     "serve:all": "",
     "serve:api": "",
-    "test:all": "test:api && test:app",
-    "test:api": "",
-    "test:app": ""
+    "test:all": "yarn test:api && yarn test:app",
+    "test:api": "cd packages/api && yarn test",
+    "test:app": "cd packages/app && yarn test"
   },
   "private": true,
   "devDependencies": {
