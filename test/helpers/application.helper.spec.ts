@@ -1,10 +1,11 @@
 import { expect } from '../utils';
 
-import * as applicationHelper from '../../src/helpers/application_helper';
+import * as applicationHelper from '../../src/helpers/application.helper';
 
 import config from '../../src/config/config';
 
 describe('Application Helper', (): void => {
+  // TODO(mike): Implement this
   describe('#appProtocol', (): void => {
     it('it returns https if supported otherwise http', async (): Promise<void> => {
 

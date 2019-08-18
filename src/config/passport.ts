@@ -3,7 +3,7 @@ import { Strategy as SteamStrategy } from 'passport-steam';
 
 import config from './config';
 
-import * as appHelpers from '../helpers/application_helper';
+import * as appHelpers from '../helpers/application.helper';
 
 import User from '../models/user';
 
