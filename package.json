@@ -1,0 +1,19 @@
+{
+  "name": "vgoscam",
+  "version": "1.0.0",
+  "scripts": {
+    "build:all": "build:api && build:app",
+    "build:api": "",
+    "build:app": "",
+    "lint": "eslint --ext",
+    "test:all": "test:api && test:app",
+    "test:api": "",
+    "test:app": ""
+  },
+  "private": true,
+  "devDependencies": {
+    "knex": "^0.18.3",
+    "ts-node": "~6.1.0",
+    "typescript": "~3.4.0"
+  }
+}
