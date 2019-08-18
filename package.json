@@ -15,5 +15,8 @@
     "knex": "^0.18.3",
     "ts-node": "~6.1.0",
     "typescript": "~3.4.0"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
