@@ -10,7 +10,7 @@
     "sequelize": "sequelize",
     "watch": "tsc -w -p .",
     "test": "jest",
-    "lint": "eslint --ext .js,.ts db src test knexfile.ts",
+    "lint": "eslint --ext .js,.ts db src test jest.config.js knexfile.ts",
     "build": "tsc -p ."
   },
   "private": true,
