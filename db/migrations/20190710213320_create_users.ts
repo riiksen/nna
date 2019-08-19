@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 
-export function up(knex: Knex): any {
-  return knex.schema.createTable('users', (t): void => {
+export async function up(knex: Knex): Promise<void> {
+  await knex.schema.createTable('users', (t): void => {
     t.increments();
     t.string('username');
     t.string('steamid');
@@ -15,6 +15,6 @@ export function up(knex: Knex): any {
   });
 }
 
-export function down(knex: Knex): any {
-  return knex.schema.dropTable('users');
+export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTable('users');
 }
