@@ -49,6 +49,7 @@
     "@types/express-session": "^1.15.11",
     "@types/helmet": "0.0.42",
     "@types/http-errors": "^1.6.1",
+    "@types/jest": "^24.0.17",
     "@types/joi": "^14.3.1",
     "@types/method-override": "0.0.31",
     "@types/mocha": "^5.2.6",
