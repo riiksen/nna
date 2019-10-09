@@ -21,7 +21,6 @@ import RolePermission from './role_permission';
   underscored: true,
 })
 export default class User extends Model<User> {
-
   public id!: number;
 
   @Column
@@ -56,16 +55,17 @@ export default class User extends Model<User> {
   @BelongsToMany((): typeof Permission => Permission, (): typeof RolePermission => RolePermission)
   public permissions!: Permission[];
 
-  isRole(role:string):boolean {
-    if(this.role && this.role.name === role) {
+  isRole(role: string): boolean {
+    if (this.role && this.role.name === role) {
       return true;
     }
     return false;
   }
-  hasPermission(permission:string):boolean {
-    if(this.permissions) {
-      for(var i in this.permissions) {
-        if(this.permissions[i].name == permission) {
+
+  hasPermission(permission: string): boolean {
+    if (this.permissions) {
+      for (const i in this.permissions) {
+        if (this.permissions[i].name == permission) {
           return true;
         }
       }

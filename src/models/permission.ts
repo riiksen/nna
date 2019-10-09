@@ -24,5 +24,4 @@ export default class Permission extends Model<Permission> {
 
   @Column
   name!: string;
-
 }

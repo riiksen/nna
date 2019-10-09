@@ -12,13 +12,13 @@ passport.serializeUser((user: User, done: (err: any, id?: number) => void) => {
 
 // TODO(mike): type of id normally was number | string
 passport.deserializeUser((id: number, done: (err: any, user?: User | null) => void) => {
-    User.findByPk<User>(id).then(user => {
-      if (!user) {
-        done(new Error('user not found'));
-      }
+  User.findByPk<User>(id).then((user) => {
+    if (!user) {
+      done(new Error('user not found'));
+    }
 
-      done(null, user);
-    });
+    done(null, user);
+  });
 });
 
 /**
@@ -33,26 +33,20 @@ passport.use(new SteamStrategy({
 }, (identifier: any, profile: any, done: (err: any, user: User) => void): void => {
   // eslint-disable-next-line
   profile.identifier = identifier;
-  User.findOne({where: {steamid: profile._json.steamid}}).then(user => {
-    if(!user) {
+  User.findOne({ where: { steamid: profile._json.steamid } }).then((user) => {
+    if (!user) {
       User.create({
         steamid: profile._json.steamid,
         username: profile._json.personaname,
         avatar: profile._json.avatar,
-      }).then(user => {
-        return done(null, user);
-      });
+      }).then(user => done(null, user));
     } else {
       user.update({
         username: profile._json.personaname,
         avatar: profile._json.avatar,
-      }).then(user => {
-        return done(null, user);
-      });
+      }).then(user => done(null, user));
     }
   });
-
 }));
-
 
 export default passport;

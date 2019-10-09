@@ -5,8 +5,8 @@ import * as passport from 'passport';
 import * as depositController from '../controllers/deposit.controller';
 import * as withdrawController from '../controllers/withdraw.controller';
 import * as sessionController from '../controllers/session.controller';
-import config from '../config/config';
-import middlewares from '../config/middleware';
+import config from './config';
+import middlewares from './middleware';
 
 // import { config } from './config';
 

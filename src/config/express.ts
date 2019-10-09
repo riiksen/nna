@@ -20,7 +20,7 @@ const app = express();
 
 if (config.env === 'development') {
   app.use(logger('dev'));
-};
+}
 
 const publicDir = '../../public/';
 
@@ -28,7 +28,9 @@ app.use(session({
   secret: config.sessionSecret,
   resave: true,
   saveUninitialized: true,
-  cookie: {path: '/', httpOnly: false, secure: false, maxAge:7*24*60*60*1000 },
+  cookie: {
+    path: '/', httpOnly: false, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000,
+  },
 }));
 
 // Load passport middleware

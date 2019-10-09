@@ -21,7 +21,6 @@ import User from './user';
   underscored: true,
 })
 export default class RolePermission extends Model<RolePermission> {
-
   @PrimaryKey
   @Column
   @ForeignKey((): typeof Role => Role)
@@ -32,5 +31,4 @@ export default class RolePermission extends Model<RolePermission> {
   @Column
   @ForeignKey((): typeof Permission => Permission)
   permissionId!: number;
-
 }

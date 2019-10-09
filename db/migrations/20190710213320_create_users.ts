@@ -2,7 +2,7 @@ import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
   return Promise.all([
-    knex.schema.createTable('users', (table:any) => {
+    knex.schema.createTable('users', (table: any) => {
       table.increments();
       table.string('username');
       table.string('steamid');
@@ -15,12 +15,12 @@ export async function up(knex: Knex): Promise<any> {
       table.timestamps();
 
       table.index('id');
-    })
+    }),
   ]);
 }
 
 export async function down(knex: Knex): Promise<any> {
   return Promise.all([
-    knex.schema.dropTable('users')
+    knex.schema.dropTable('users'),
   ]);
 }

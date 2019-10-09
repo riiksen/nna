@@ -4,8 +4,8 @@ import role from '../middlewares/role';
 
 const router = express.Router();
 
-var middlewares = {
-  role: role,
+const middlewares = {
+  role,
 };
 
 export default middlewares;

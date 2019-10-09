@@ -29,5 +29,4 @@ export default class Role extends Model<Role> {
 
   @HasMany((): typeof User => User)
   users!: User[];
-
 }
