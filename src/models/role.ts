@@ -27,7 +27,7 @@ export default class Role extends Model<Role> {
   @Column
   name!: string;
 
-  @HasMany(() => User)
+  @HasMany((): typeof User => User)
   users!: User[];
 
 }
