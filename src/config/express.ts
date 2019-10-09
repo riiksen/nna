@@ -14,6 +14,8 @@ import routes from './routes';
 import passport from './passport';
 import config from './config';
 
+import User from '../models/user';
+
 const app = express();
 
 if (config.env === 'development') {
@@ -36,8 +38,7 @@ app.use(passport.session());
 // Set up static folder and send index.html for all requests that don't have api in it
 app.use(express.static(path.join(__dirname, publicDir)));
 app.use(/^((?!(api)).)*/, (req: express.Request, res: express.Response): void => {
-  res.send(`${req.isAuthenticated()} <br/><br/>${JSON.stringify(req.user)}`);
-  //res.sendFile(path.join(__dirname, `${publicDir}index.html`));
+  res.sendFile(path.join(__dirname, `${publicDir}index.html`));
 });
 
 app.use(bodyParser.json());
