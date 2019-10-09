@@ -8,6 +8,8 @@ export async function up(knex: Knex): Promise<any> {
       table.string('name').notNullable().unique();
 
       table.timestamps();
+
+      table.index('id');
     })
   ]);
 }

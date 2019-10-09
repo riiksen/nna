@@ -13,6 +13,8 @@ export async function up(knex: Knex): Promise<any> {
       table.timestamps();
 
       table.foreign('user_id').references('id').inTable('users');
+
+      table.index('id');
     })
   ]);
 }

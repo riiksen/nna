@@ -7,6 +7,8 @@ export async function up(knex: Knex): Promise<any> {
       table.increments();
       table.string('name').unique();
       table.timestamps();
+
+      table.index('id');
     })
   ]);
 }

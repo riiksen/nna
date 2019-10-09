@@ -10,10 +10,12 @@ export async function up(knex: Knex): Promise<any> {
       table.foreign('role_id').references('id').inTable('roles').onDelete('cascade');
       table.foreign('permission_id').references('id').inTable('permissions').onDelete('cascade');
 
-      table.unique(['role_id','permission_id']);
-      table.primary(['role_id','permission_id']);
+      table.unique(['role_id', 'permission_id']);
+      table.primary(['role_id', 'permission_id']);
 
       table.timestamps();
+
+      table.index(['role_id', 'permission_id']);
     })
   ]);
 }

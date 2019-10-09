@@ -13,6 +13,8 @@ export async function up(knex: Knex): Promise<any> {
       table.integer('role_id').unsigned();
       table.boolean('in_trade');
       table.timestamps();
+
+      table.index('id');
     })
   ]);
 }
