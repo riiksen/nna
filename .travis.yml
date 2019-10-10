@@ -10,6 +10,9 @@ before_script:
 env:
   global:
     - NODE_ENV=test
+    - SERVER_HOST=localhost
+    - SERVER_PORT=3000
+    - SESSION_SECRET=alamakota
     - DB_USERNAME=postgres
     - DB_DATABASE=vgoscam_test
     - DB_HOST=localhost
