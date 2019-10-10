@@ -26,6 +26,7 @@ interface ConfigSchema {
 }
 
 // define validation for all the env vars
+// TODO: Redesign this validation cause it is not the best and could be better
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
     .allow(['development', 'production', 'test'])
@@ -38,7 +39,7 @@ const envVarsSchema = Joi.object({
   OPSKINS_TWOFACTOR_SECRET: Joi.string(),
   SESSION_SECRET: Joi.string(),
   DB_USERNAME: Joi.string(),
-  DB_PASSWORD: Joi.string(),
+  DB_PASSWORD: Joi.string().allow(''),
   DB_DATABASE: Joi.string(),
   DB_HOST: Joi.string(),
   DB_PORT: Joi.number(),
