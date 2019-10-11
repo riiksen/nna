@@ -7,7 +7,6 @@ export async function up(knex: Knex): Promise<void> {
 
     table.timestamps();
 
-    table.index('id');
   });
 }
 

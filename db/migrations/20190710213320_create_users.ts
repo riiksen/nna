@@ -13,7 +13,6 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('in_trade');
     table.timestamps();
 
-    table.index('id');
   });
 }
 

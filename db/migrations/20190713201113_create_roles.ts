@@ -6,7 +6,6 @@ export async function up(knex: Knex): Promise<void> {
     table.string('name').unique();
     table.timestamps();
 
-    table.index('id');
   });
 }
 
