@@ -16,8 +16,8 @@ import Permission from './permission';
 import RolePermission from './role_permission';
 
 @Table({
-  timestamps: true,
   tableName: 'users',
+  timestamps: true,
   underscored: true,
 })
 export default class User extends Model<User> {
