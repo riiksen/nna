@@ -11,6 +11,7 @@ passport.serializeUser((user: User, done: (err: any, id?: number) => void): void
 });
 
 // TODO(mike): type of id normally was number | string
+// eslint-disable-next-line
 passport.deserializeUser((id: number, done: (err: any, user?: User | null) => void): void => {
   User.findByPk<User>(id).then((user): void => {
     if (!user) {
