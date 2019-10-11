@@ -26,7 +26,8 @@
   "rules": {
     "import/prefer-default-export": "off",
     "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
-    "@typescript-eslint/indent": ["error", 2]
+    "@typescript-eslint/indent": ["error", 2],
+    "no-underscore-dangle": "off",
   },
   "settings": {
     "import/resolver": {
