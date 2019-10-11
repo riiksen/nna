@@ -33,8 +33,11 @@ passport.use(new SteamStrategy({
 }, async(identifier: any, profile: any, done: (err: any, user?: User | null) => void): Promise<void> => {
   try {
     const [user] = await User.upsert({
+      // eslint-disable-next-line no-underscore-dangle
       steamid: profile._json.steamid,
+      // eslint-disable-next-line no-underscore-dangle
       username: profile._json.personaname,
+      // eslint-disable-next-line no-underscore-dangle
       avatar: profile._json.avatar,
     }, {
       returning: true,
