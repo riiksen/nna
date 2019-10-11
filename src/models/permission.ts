@@ -1,7 +1,6 @@
 import {
   AutoIncrement,
   Column,
-  ForeignKey,
   Model,
   PrimaryKey,
   Table,
