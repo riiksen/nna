@@ -58,21 +58,22 @@ export default class User extends Model<User> {
   @BelongsToMany((): typeof Permission => Permission, (): typeof RolePermission => RolePermission)
   public permissions!: Permission[];
 
-  isRole(role: string): boolean {
+  public isRole(role: string): boolean {
     if (this.role && this.role.name === role) {
       return true;
     }
     return false;
   }
 
-  hasPermission(permission: string): boolean {
+  public hasPermission(permission: string): boolean {
+    let userHasPermission = false;
     if (this.permissions) {
-      for (const i in this.permissions) {
-        if (this.permissions[i].name == permission) {
-          return true;
+      this.permissions.forEach((currPermission: Permission): void => {
+        if (currPermission.name === permission) {
+          userHasPermission = true;
         }
-      }
+      });
     }
-    return false;
+    return userHasPermission;
   }
 }
