@@ -30,23 +30,19 @@ passport.use(new SteamStrategy({
   realm: `http://localhost:${config.port}/`,
   apiKey: config.steamApiKey,
   // eslint-disable-next-line
-}, (identifier: any, profile: any, done: (err: any, user: User) => void): void => {
-  // eslint-disable-next-line
-  profile.identifier = identifier;
-  User.findOne({ where: { steamid: profile._json.steamid } }).then((user) => {
-    if (!user) {
-      User.create({
-        steamid: profile._json.steamid,
-        username: profile._json.personaname,
-        avatar: profile._json.avatar,
-      }).then(user => done(null, user));
-    } else {
-      user.update({
-        username: profile._json.personaname,
-        avatar: profile._json.avatar,
-      }).then(user => done(null, user));
-    }
-  });
+}, async(identifier: any, profile: any, done: (err: any, user?: User | null) => void): Promise<void> => {
+  try {
+    const [user] = await User.upsert({
+      steamid: profile._json.steamid,
+      username: profile._json.personaname,
+      avatar: profile._json.avatar,
+    }, {
+      returning: true,
+    });
+    done(null, user);
+  } catch(err) {
+    done(err);
+  }
 }));
 
 export default passport;
