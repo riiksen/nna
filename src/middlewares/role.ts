@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/user';
 import Role from '../models/role';
 
-export default function (role: string): void => {
+export default function (role: string) {
   return function (req: Request, res: Response, next: NextFunction) {
-    User.findOne<User>({ where: { id: req.user.id }, include: [Role] }).then((user): void => {
+    User.findOne<User>({ where: { id: req.user.id }, include: [Role] }).then((user): (Response | void) => {
       if (user && user.isRole(role)) {
         return next();
       }
