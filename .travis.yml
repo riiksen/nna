@@ -1,0 +1,28 @@
+language: node_js
+cache: yarn
+node_js:
+  - 11
+  - 12
+
+before_script:
+  - psql -c 'create database vgoscam_test;' -U postgres
+
+env:
+  global:
+    - NODE_ENV=test
+    - SERVER_HOST=localhost
+    - SERVER_PORT=3000
+    - SESSION_SECRET=alamakota
+    - DB_USERNAME=postgres
+    - DB_DATABASE=vgoscam_test
+    - DB_HOST=localhost
+    - DB_PORT=5432
+    - DB_DIALECT=postgres
+    - DB_DRIVER=pg
+
+script:
+  - yarn run lint
+  - yarn test
+
+services:
+  - postgresql
