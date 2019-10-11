@@ -1,9 +1,9 @@
 import {
-  Table,
   Column,
+  ForeignKey,
   Model,
   PrimaryKey,
-  ForeignKey,
+  Table,
 } from 'sequelize-typescript';
 
 import Role from './role';
