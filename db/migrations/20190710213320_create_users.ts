@@ -9,7 +9,6 @@ export async function up(knex: Knex): Promise<void> {
     table.string('avatar');
     table.integer('coins').unsigned();
     table.boolean('locked');
-    table.integer('role_id').unsigned();
     table.boolean('in_trade');
     table.timestamps();
   });
