@@ -6,12 +6,12 @@ import config from './config';
 import User from '../models/user';
 
 // eslint-disable-next-line
-passport.serializeUser((user: User, done: (err: any, id?: number) => void) => {
+passport.serializeUser((user: User, done: (err: any, id?: number) => void): void => {
   done(null, user.id);
 });
 
 // TODO(mike): type of id normally was number | string
-passport.deserializeUser((id: number, done: (err: any, user?: User | null) => void) => {
+passport.deserializeUser((id: number, done: (err: any, user?: User | null) => void): void => {
   User.findByPk<User>(id).then((user) => {
     if (!user) {
       done(new Error('user not found'));
