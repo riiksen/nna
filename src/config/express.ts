@@ -14,8 +14,6 @@ import routes from './routes';
 import passport from './passport';
 import config from './config';
 
-import User from '../models/user';
-
 const app = express();
 
 if (config.env === 'development') {
