@@ -21,6 +21,9 @@ import RolePermission from './role_permission';
   underscored: true,
 })
 export default class User extends Model<User> {
+  @PrimaryKey
+  @AutoIncrement
+  @Column
   public id!: number;
 
   @Column
