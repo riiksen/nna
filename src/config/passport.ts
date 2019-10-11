@@ -40,7 +40,7 @@ passport.use(new SteamStrategy({
       returning: true,
     });
     done(null, user);
-  } catch(err) {
+  } catch (err) {
     done(err);
   }
 }));
