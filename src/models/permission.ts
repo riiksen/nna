@@ -15,8 +15,8 @@ export default class Permission extends Model<Permission> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id!: number;
+  public id!: number;
 
   @Column
-  name!: string;
+  public name!: string;
 }
