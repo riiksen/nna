@@ -18,11 +18,11 @@ export default class Role extends Model<Role> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id!: number;
+  public id!: number;
 
   @Column
-  name!: string;
+  public name!: string;
 
   @HasMany((): typeof User => User)
-  users!: User[];
+  public users!: User[];
 }

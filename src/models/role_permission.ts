@@ -21,10 +21,10 @@ export default class RolePermission extends Model<RolePermission> {
   @Column
   @ForeignKey((): typeof Role => Role)
   @ForeignKey((): typeof User => User)
-  roleId!: number;
+  public roleId!: number;
 
   @PrimaryKey
   @Column
   @ForeignKey((): typeof Permission => Permission)
-  permissionId!: number;
+  public permissionId!: number;
 }
