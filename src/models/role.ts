@@ -13,7 +13,8 @@ import User from './user';
   timestamps: true,
   tableName: 'roles',
   underscored: true,
-})
+});
+
 export default class Role extends Model<Role> {
   @PrimaryKey
   @AutoIncrement
