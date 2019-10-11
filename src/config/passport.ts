@@ -12,7 +12,7 @@ passport.serializeUser((user: User, done: (err: any, id?: number) => void): void
 
 // TODO(mike): type of id normally was number | string
 passport.deserializeUser((id: number, done: (err: any, user?: User | null) => void): void => {
-  User.findByPk<User>(id).then((user) => {
+  User.findByPk<User>(id).then((user): void => {
     if (!user) {
       done(new Error('user not found'));
     }
