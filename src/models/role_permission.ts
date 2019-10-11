@@ -11,8 +11,8 @@ import Permission from './permission';
 import User from './user';
 
 @Table({
-  timestamps: true,
   tableName: 'role_permissions',
+  timestamps: true,
   underscored: true,
 })
 
