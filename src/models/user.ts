@@ -1,13 +1,13 @@
 import {
-  Table,
-  Column,
-  Model,
-  PrimaryKey,
   AutoIncrement,
-  HasMany,
   BelongsTo,
   BelongsToMany,
+  Column,
   ForeignKey,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
 } from 'sequelize-typescript';
 
 import Trade from './trade';
