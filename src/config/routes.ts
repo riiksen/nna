@@ -4,13 +4,15 @@ import * as express from 'express';
 import * as depositController from '../controllers/deposit.controller';
 import * as withdrawController from '../controllers/withdraw.controller';
 import * as sessionController from '../controllers/session.controller';
+
+// import middlewares from './middleware';
 // import { config } from './config';
 
 const router = express.Router();
 
 // Session routes
-router.get('/login', sessionController.login);
-router.get('/login/hanlde', sessionController.handle);
+router.get('/login/steam', sessionController.login);
+router.get('/login/steam/handle', sessionController.handle);
 router.post('/logout', sessionController.logout);
 
 // Withdraw routes
