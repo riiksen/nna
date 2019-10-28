@@ -11,32 +11,41 @@ passport.serializeUser((user: User, done: (err: any, id?: number) => void): void
 });
 
 // TODO(mike): type of id normally was number | string
-passport.deserializeUser(async (id: number, done): Promise<void> => {
-  try {
-    const user = User.findByPk<User>(id);
+// eslint-disable-next-line
+passport.deserializeUser((id: number, done: (err: any, user?: User | null) => void): void => {
+  User.findByPk<User>(id).then((user): void => {
     if (!user) {
       done(new Error('user not found'));
     }
 
     done(null, user);
-  } catch (e) {
-    done(e);
-  }
+  });
 });
 
 /**
  * Sign in with Steam
  */
+
 passport.use(new SteamStrategy({
-  returnURL: '/login/handle',
-  realm: '',
+  returnURL: `http://localhost:${config.port}/api/login/steam/handle`,
+  realm: `http://localhost:${config.port}/`,
   apiKey: config.steamApiKey,
   // eslint-disable-next-line
-}, (identifier: any, profile: any, done: any): void => {
-  // eslint-disable-next-line
-  profile.identifier = identifier;
-
-  done(null, profile);
+}, async(identifier: any, profile: any, done: (err: any, user?: User | null) => void): Promise<void> => {
+  try {
+    /* eslint-disable no-underscore-dangle */
+    const [user] = await User.upsert({
+      steamid: profile._json.steamid,
+      username: profile._json.personaname,
+      avatar: profile._json.avatar,
+    }, {
+      returning: true,
+    });
+    /* eslint-enable no-underscore-dangle */
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
 }));
 
 export default passport;

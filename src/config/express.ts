@@ -26,6 +26,9 @@ app.use(session({
   secret: config.sessionSecret,
   resave: true,
   saveUninitialized: true,
+  cookie: {
+    path: '/', httpOnly: false, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000,
+  },
 }));
 
 // Load passport middleware
@@ -41,7 +44,7 @@ app.use(/^((?!(api)).)*/, (req: express.Request, res: express.Response): void =>
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser());
+app.use(cookieParser(config.sessionSecret));
 app.use(compress());
 app.use(methodOverride());
 
