@@ -7,16 +7,10 @@ import * as appHelpers from '../helpers/application.helper';
 
 import User from '../models/user';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-passport.serializeUser((user: User, done: (err: any, id?: number) => void): void => {
-  done(null, user.id);
-});
+type DoneFunction<T> = (err?: Error | null, subject?: T | null) => void;
 
-// TODO(mike): type of id normally was number | string
-passport.deserializeUser(async (
-  id: number,
-  done: (err?: Error | null, user?: User) => void,
-): Promise<void> => {
+const userSerializer = (user: User, done: DoneFunction<number>): void => done(null, user.id);
+const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<void> => {
   try {
     const user = await User.findByPk<User>(id);
     if (user) {
@@ -28,7 +22,10 @@ passport.deserializeUser(async (
   } catch (e) {
     done(e);
   }
-});
+};
+
+passport.serializeUser(userSerializer);
+passport.deserializeUser(userDeserializer);
 
 /**
  * Sign in with Steam
@@ -43,7 +40,7 @@ passport.use(new SteamStrategy({
 }, async (
   identifier: any,
   profile: any,
-  done: (err?: Error | null, user?: User | null) => void,
+  done: DoneFunction<User>,
   /* eslint-enable @typescript-eslint/no-explicit-any */
 ): Promise<void> => {
   try {
