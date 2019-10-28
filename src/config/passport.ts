@@ -13,7 +13,10 @@ passport.serializeUser((user: User, done: (err: any, id?: number) => void): void
 });
 
 // TODO(mike): type of id normally was number | string
-passport.deserializeUser(async (id: number, done): Promise<void> => {
+passport.deserializeUser(async (
+  id: number,
+  done: (err?: Error | null, user?: User) => void,
+): Promise<void> => {
   try {
     const user = await User.findByPk<User>(id);
     if (user) {
@@ -36,16 +39,23 @@ passport.use(new SteamStrategy({
   returnURL: appHelpers.apiUrlWithPortFor('/login/handle/steam'),
   realm: appHelpers.rootUrlWithPort(),
   apiKey: config.steamApiKey,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-}, async (identifier: any, profile: any, done: any): Promise<void> => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+}, async (
+  identifier: any,
+  profile: any,
+  done: (err?: Error | null, user?: User | null) => void,
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+): Promise<void> => {
   try {
+    /* eslint-disable no-underscore-dangle */
     const [user] = await User.upsert({
-      steamid: profile.id,
-      username: profile.displayName,
-      avatar: profile.photos[0].value,
+      steamid: profile._json.steamid,
+      username: profile._json.personaname,
+      avatar: profile._json.avatar,
     }, {
       returning: true,
     });
+    /* eslint-enable no-underscore-dangle */
     done(null, user);
   } catch (e) {
     done(e);

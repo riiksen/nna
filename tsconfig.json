@@ -19,10 +19,18 @@
     },
     "pretty": true,
     "sourceMap": true,
+    "sourceRoot": "root",
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "typeRoots": [
+      "src/types",
+      "node_modules/@types"
+    ],
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "src/types"
   ]
 }

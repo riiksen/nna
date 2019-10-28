@@ -4,6 +4,8 @@ import * as express from 'express';
 import * as depositController from '../controllers/deposit.controller';
 import * as withdrawController from '../controllers/withdraw.controller';
 import * as sessionController from '../controllers/session.controller';
+
+// import middlewares from './middleware';
 // import { config } from './config';
 
 const router = express.Router();
