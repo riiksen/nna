@@ -1,14 +1,20 @@
-import * as passport from 'passport';
-// import * as SteamStrategy from 'passport-steam';
 import { Request, Response } from 'express';
-// import { Request, Response, NextFunction } from 'express';
+
+import passport from '../config/passport';
+import { validProvider } from '../helpers/session.helper';
 
 export function login(req: Request, res: Response): void {
-  passport.authenticate('steam')(req, res, (): void => {});
+  const { provider } = req.params;
+  if (validProvider(provider)) {
+    passport.authenticate(provider)(req, res, (): void => {});
+  }
 }
 
 export function handle(req: Request, res: Response): void {
-  passport.authenticate('steam')(req, res, (): void => res.redirect('/'));
+  const { provider } = req.params;
+  if (validProvider(provider)) {
+    passport.authenticate(provider)(req, res, (): void => res.redirect('/'));
+  }
 }
 
 export function logout(req: Request, res: Response): void {
