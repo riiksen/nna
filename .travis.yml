@@ -1,8 +1,6 @@
 language: node_js
 cache: yarn
-node_js:
-  - 11
-  - 12
+node_js: 12
 
 before_script:
   - psql -c 'create database vgoscam_test;' -U postgres

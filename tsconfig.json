@@ -11,8 +11,16 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "outDir": "dist",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "node_modules/@types/*",
+        "types/*"
+      ]
+    },
     "pretty": true,
     "sourceMap": true,
+    "sourceRoot": "root",
     "strict": true,
     "target": "es2017"
   },

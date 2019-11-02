@@ -9,11 +9,13 @@
     "lint": "eslint --ext .js,.ts db knexfile.ts",
     "lint:api": "cd packages/api && yarn lint",
     "lint:app": "cd packages/app && yarn lint",
-    "serve:all": "",
-    "serve:api": "",
+    "serve:all": "yarn serve:api && yarn serve:app",
+    "serve:api": "cd packages/api && yarn serve",
+    "serve:app": "",
     "test:all": "yarn test:api && yarn test:app",
     "test:api": "cd packages/api && yarn test",
-    "test:app": "cd packages/app && yarn test"
+    "test:app": "cd packages/app && yarn test",
+    "sequelize": "sequelize"
   },
   "private": true,
   "devDependencies": {
