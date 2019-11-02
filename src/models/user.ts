@@ -8,6 +8,7 @@ import {
   Model,
   PrimaryKey,
   Table,
+  Unique,
 } from 'sequelize-typescript';
 
 import Trade from './trade';
@@ -29,6 +30,7 @@ export default class User extends Model<User> {
   @Column
   public username!: string;
 
+  @Unique
   @Column
   public steamid!: string;
 

@@ -1,11 +1,11 @@
 import {
-  Table,
+  AutoIncrement,
+  BelongsTo,
   Column,
+  ForeignKey,
   Model,
   PrimaryKey,
-  AutoIncrement,
-  ForeignKey,
-  BelongsTo,
+  Table,
 } from 'sequelize-typescript';
 
 import User from './user';

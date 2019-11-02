@@ -11,8 +11,8 @@ import * as sessionController from '../controllers/session.controller';
 const router = express.Router();
 
 // Session routes
-router.get('/login/steam', sessionController.login);
-router.get('/login/steam/handle', sessionController.handle);
+router.get('/login/:provider', sessionController.login);
+router.get('/login/handle/:provider', sessionController.handle);
 router.post('/logout', sessionController.logout);
 
 // Withdraw routes
