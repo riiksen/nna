@@ -7,7 +7,6 @@ import * as helmet from 'helmet';
 // import * as httpError from 'http-errors';
 import * as logger from 'morgan';
 import * as methodOverride from 'method-override';
-import * as path from 'path';
 import * as session from 'express-session';
 
 import routes from './routes';
@@ -19,8 +18,6 @@ const app = express();
 if (config.env === 'development') {
   app.use(logger('dev'));
 }
-
-const publicDir = '../../public/';
 
 app.use(session({
   secret: config.sessionSecret,
@@ -34,12 +31,6 @@ app.use(session({
 // Load passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-
-// Set up static folder and send index.html for all requests that don't have api in it
-app.use(express.static(path.join(__dirname, publicDir)));
-app.use(/^((?!(api)).)*/, (req: express.Request, res: express.Response): void => {
-  res.sendFile(path.join(__dirname, `${publicDir}index.html`));
-});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
