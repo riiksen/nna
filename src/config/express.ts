@@ -20,8 +20,6 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 }
 
-const publicDir = '../../public/';
-
 app.use(session({
   secret: config.sessionSecret,
   resave: true,
