@@ -15,6 +15,7 @@
   },
   "private": true,
   "dependencies": {
+    "@types/socket.io": "^2.1.4",
     "body-parser": "^1.18.2",
     "compression": "^1.7.2",
     "cookie-parser": "^1.4.3",
@@ -38,6 +39,8 @@
     "sequelize": "^5.10.1",
     "sequelize-cli": "^5.4.0",
     "sequelize-typescript": "^1.0.0-beta.3",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "webpack": "^4.26.1"
   },
   "devDependencies": {
