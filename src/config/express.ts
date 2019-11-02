@@ -35,9 +35,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Set up static folder and send index.html for all requests that don't have api in it
-app.use(express.static(path.join(__dirname, publicDir)));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
