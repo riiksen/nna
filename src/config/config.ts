@@ -74,6 +74,7 @@ function convertToConfigSchema(config: any): ConfigSchema {
 
 const joiObjectConfig = {
   env: envVars.NODE_ENV,
+  host: envVars.SERVER_HOST,
   port: envVars.SERVER_PORT,
   sessionSecret: envVars.SESSION_SECRET,
   loginReturnURL: envVars.LOGIN_RETURN_URL,
