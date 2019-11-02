@@ -7,7 +7,6 @@ import * as helmet from 'helmet';
 // import * as httpError from 'http-errors';
 import * as logger from 'morgan';
 import * as methodOverride from 'method-override';
-import * as path from 'path';
 import * as session from 'express-session';
 
 import routes from './routes';
