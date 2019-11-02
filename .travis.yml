@@ -21,8 +21,8 @@ env:
     - DB_DRIVER=pg
 
 script:
-  - yarn run lint
-  - yarn test
+  - yarn run lint:all
+  - yarn run test:all
 
 services:
   - postgresql
