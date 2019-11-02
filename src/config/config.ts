@@ -32,7 +32,6 @@ const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
     .allow(['development', 'production', 'test'])
     .default('development'),
-  SERVER_HOST: Joi.string(),
   SERVER_PORT: Joi.number()
     .default(4040),
   LOGIN_RETURN_URL: Joi.string(),
@@ -74,7 +73,6 @@ function convertToConfigSchema(config: any): ConfigSchema {
 
 const joiObjectConfig = {
   env: envVars.NODE_ENV,
-  host: envVars.SERVER_HOST,
   port: envVars.SERVER_PORT,
   sessionSecret: envVars.SESSION_SECRET,
   loginReturnURL: envVars.LOGIN_RETURN_URL,
