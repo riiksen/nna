@@ -2,6 +2,7 @@ import config from './config/config';
 
 import app from './config/express';
 import './config/sequelize';
+import './config/socket';
 
 if (!module.parent) {
   /**
