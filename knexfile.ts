@@ -1,4 +1,4 @@
-import config from './packages/api/src/config/config';
+import config from './config/config';
 
 export = {
   client: config.db.driver,
