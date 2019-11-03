@@ -1,6 +1,9 @@
 import * as socketio from 'socket.io';
-import app from '../main';
 
-const io = socketio(app);
+let socket: socketio.Server | undefined;
+
+export function initialize(server: any) {
+  socket = socketio(server);
+}
 
 export default io;
