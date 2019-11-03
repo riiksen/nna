@@ -25,7 +25,7 @@
     "target": "es2017"
   },
   "include": [
-    "src/**/*.ts"
+    "app/**/*.ts"
   ],
   "exclude": [
     "test/**"

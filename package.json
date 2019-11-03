@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build:all": "yarn build:api && yarn build:app",
-    "build:api": "cd packages/api && yarn build",
+    "build:api": "tsc -p .",
     "build:app": "cd packages/app && yarn build",
     "lint:all": "yarn lint && yarn lint:api && yarn lint:app",
     "lint-n": "eslint --ext .js,.ts,.jsx,.tsx --ignore-pattern node_modules db packages/**",
