@@ -6,4 +6,4 @@ export function initialize(server: any) {
   socket = socketio(server);
 }
 
-export default io;
+export default socket;
