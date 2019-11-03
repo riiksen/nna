@@ -1,9 +1,12 @@
 import * as socketio from 'socket.io';
+import * as http from 'http';
 
-let socket: socketio.Server | undefined;
+type socketOrNull = socketio.Server | null;
+let socket: socketOrNull = null;
 
-export function initialize(server: any) {
+export function initialize(server: http.Server): void {
   socket = socketio(server);
 }
-
-export default socket;
+export function io(): socketOrNull {
+  return socket;
+}
