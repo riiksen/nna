@@ -19,7 +19,7 @@ describe('Socket', (): void => {
     socket = io(applicationHelper.rootUrlWithPort());
     done();
   });
-  it('Socket client should connect to socket server', (done): void => {
+  it('Socket client should connect to socket server', async(done): Promise<void> => {
     socket.on('connect', (): void => {
       expect(socket.connected).to.equal(true);
       done();
