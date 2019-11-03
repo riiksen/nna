@@ -12,7 +12,8 @@
     "noImplicitReturns": true,
     "outDir": "dist",
     "paths": {
-      "@config": ["./config/*"],
+      "@app/*": ["./app/*"],
+      "@config/*": ["./config/*"],
       "*": [
         "node_modules/*",
         "node_modules/@types/*",

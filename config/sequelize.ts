@@ -8,7 +8,7 @@ const connection = new Sequelize(
   {
     dialect: config.db.dialect,
     storage: ':memory:',
-    modelPaths: [`${__dirname}/../models/*`],
+    modelPaths: [`${__dirname}/../app/models/*`],
   },
 );
 

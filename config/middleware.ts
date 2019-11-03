@@ -1,4 +1,4 @@
-import role from '../middlewares/role';
+import role from '@app/middlewares/role';
 
 const middlewares = {
   role,

@@ -1,9 +1,9 @@
 // import * as asyncHandler from 'express-async-handler';
 import * as express from 'express';
 
-import * as depositController from '../controllers/deposit.controller';
-import * as withdrawController from '../controllers/withdraw.controller';
-import * as sessionController from '../controllers/session.controller';
+import * as depositController from '@app/controllers/deposit.controller';
+import * as withdrawController from '@app/controllers/withdraw.controller';
+import * as sessionController from '@app/controllers/session.controller';
 
 // import middlewares from './middleware';
 // import { config } from './config';
