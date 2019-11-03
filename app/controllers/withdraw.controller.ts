@@ -1,9 +1,9 @@
 // import * as crypto from 'crypto';
 // import * as Joi from 'joi';
 import { Request, Response } from 'express';
-// import * as tradeManager from '../config/expresstrade';
+// import * as tradeManager from '@config/expresstrade';
 
-// import config from '../config/config';
+// import config from '@config/config';
 
 import Trade from '../models/trade';
 

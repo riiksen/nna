@@ -1,7 +1,7 @@
-import config from './config/config';
+import config from '@config/config';
 
-import app from './config/express';
-import './config/sequelize';
+import app from '@config/express';
+import '@config/sequelize';
 
 if (!module.parent) {
   /**
