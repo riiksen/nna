@@ -1,8 +1,8 @@
 import { expect } from '../utils';
 
-import * as applicationHelper from '../../src/helpers/application.helper';
+import * as applicationHelper from '@app/helpers/application.helper';
 
-import config from '../../src/config/config';
+import config from '@config/config';
 
 describe('Application Helper', (): void => {
   // TODO(mike): Implement this
