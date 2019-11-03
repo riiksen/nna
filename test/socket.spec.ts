@@ -5,18 +5,20 @@ import * as applicationHelper from '../src/helpers/application.helper';
 describe('Socket', (): void => {
   let socket: SocketIOClient.Socket;
 
-  beforeEach((): void => {
+  beforeEach((done): void => {
     socket = io(applicationHelper.rootUrlWithPort());
+    done();
   });
-  it('Socket client should connect to socket server', async(done): Promise<void> => {
+  it('Socket client should connect to socket server', (done): void => {
     socket.on('connect', (): void => {
       expect(socket.connected).to.equal(true);
       done();
     });
   });
-  afterEach((): void => {
+  afterEach((done): void => {
     if (socket.connected) {
       socket.disconnect();
     }
+    done();
   });
 });
