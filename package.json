@@ -13,6 +13,8 @@
     "serve:all": "yarn serve:api && yarn serve:app",
     "serve:api": "cd packages/api && yarn serve",
     "serve:app": "",
+    "start:all": "yarn start:api && yarn start:app",
+    "start:api": "cd packages/api && yarn start",
     "start:app": "cd packages/app && yarn start",
     "test:all": "yarn test:api && yarn test:app",
     "test:api": "cd packages/api && yarn test",
