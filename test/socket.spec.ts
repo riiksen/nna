@@ -8,9 +8,10 @@ describe('Socket', (): void => {
   beforeEach((): void => {
     socket = io(applicationHelper.rootUrlWithPort());
   });
-  it('Socket client should connect to socket server', (): void => {
+  it('Socket client should connect to socket server', (done): void => {
     socket.on('connect', (): void => {
       expect(socket.connected).to.equal(true);
+      done();
     });
   });
   afterEach((): void => {
