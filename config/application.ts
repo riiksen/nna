@@ -1,6 +1,6 @@
 import { config } from './config';
 
-import { app, initialize as sockerInit } from './initializers';
+import { app, initialize as socketInit } from './initializers';
 
 if (!module.parent) {
   /**
