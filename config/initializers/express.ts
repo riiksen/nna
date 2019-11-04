@@ -48,4 +48,4 @@ app.use(cors());
 // API router
 app.use('/api/', routes);
 
-export default app;
+export { app };

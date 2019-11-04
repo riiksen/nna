@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import config from '../config';
 
-const connection = new Sequelize(
+const databaseConnection = new Sequelize(
   config.db.database,
   config.db.username,
   config.db.password,
@@ -12,4 +12,4 @@ const connection = new Sequelize(
   },
 );
 
-export default connection;
+export { databaseConnection };

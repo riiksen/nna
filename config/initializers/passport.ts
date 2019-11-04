@@ -58,4 +58,4 @@ passport.use(new SteamStrategy({
   }
 }));
 
-export default passport;
+export { passport };
