@@ -20,4 +20,4 @@ if (!module.parent) {
   });
 }
 
-export default app;
+export { app };

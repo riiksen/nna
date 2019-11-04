@@ -94,4 +94,4 @@ const joiObjectConfig = {
 
 const config = convertToConfigSchema(joiObjectConfig);
 
-export default config;
+export { config };

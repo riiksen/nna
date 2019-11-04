@@ -4,4 +4,4 @@ const middlewares = {
   role,
 };
 
-export default middlewares;
+export { middlewares };

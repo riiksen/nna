@@ -25,4 +25,4 @@ router.get('/deposit', depositController.index);
 router.get('/deposit/:id', depositController.show);
 router.post('/deposit', depositController.make);
 
-export default router;
+export { router };

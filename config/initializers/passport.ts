@@ -4,7 +4,7 @@ import { Strategy as SteamStrategy } from 'passport-steam';
 import * as appHelpers from '@app/helpers/application.helper';
 import User from '@app/models/user';
 
-import config from '../config';
+import { config } from '../config';
 
 type DoneFunction<T> = (err?: Error | null, subject?: T | null) => void;
 

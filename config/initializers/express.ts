@@ -9,9 +9,9 @@ import * as logger from 'morgan';
 import * as methodOverride from 'method-override';
 import * as session from 'express-session';
 
-import config from '../config';
-import passport from './passport';
-import routes from '../routes';
+import { config } from '../config';
+import { passport } from './passport';
+import { router as routes } from '../routes';
 
 const app = express();
 
