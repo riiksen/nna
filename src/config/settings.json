@@ -1,6 +1,7 @@
 {
+  "coins_to_usd_rate": 1000,
   "levels": {
-    "max_level": 100,
-    "level_multiplier": 1.2
+    "max": 100,
+    "multiplier": 1.2
   }
 }

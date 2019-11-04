@@ -1,9 +1,10 @@
 import settingsJSON from "./settings.json";
 
 interface Settings {
+  coins_to_usd_rate: number,
   levels: {
-    max_level: number;
-    level_multiplier: number;
+    max: number;
+    multiplier: number;
   };
 }
 
