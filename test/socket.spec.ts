@@ -1,9 +1,10 @@
-import * as io from 'socket.io-client';
 import * as http from 'http';
-import { expect } from './utils';
+import * as io from 'socket.io-client';
+
 import * as applicationHelper from '../src/helpers/application.helper';
-import { io as socketServer, initialize as initializeSocket } from '../src/config/socket';
 import config from '../src/config/config';
+import { io as socketServer, initialize as initializeSocket } from '../src/config/socket';
+import { expect } from './utils';
 
 let server: http.Server | null = null;
 
