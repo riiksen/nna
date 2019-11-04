@@ -3,35 +3,46 @@ import { Strategy as SteamStrategy } from 'passport-steam';
 
 import config from './config';
 
+import * as appHelpers from '../helpers/application.helper';
+
 import User from '../models/user';
 
-// eslint-disable-next-line
-passport.serializeUser((user: User, done: (err: any, id?: number) => void): void => {
-  done(null, user.id);
-});
+type DoneFunction<T> = (err?: Error | null, subject?: T | null) => void;
 
-// TODO(mike): type of id normally was number | string
-// eslint-disable-next-line
-passport.deserializeUser((id: number, done: (err: any, user?: User | null) => void): void => {
-  User.findByPk<User>(id).then((user): void => {
-    if (!user) {
-      done(new Error('user not found'));
+const userSerializer = (user: User, done: DoneFunction<number>): void => done(null, user.id);
+const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<void> => {
+  try {
+    const user = await User.findByPk<User>(id);
+    if (user) {
+      done(null, user);
+      return;
     }
 
-    done(null, user);
-  });
-});
+    done(new Error('user not found'));
+  } catch (e) {
+    done(e);
+  }
+};
+
+passport.serializeUser(userSerializer);
+passport.deserializeUser(userDeserializer);
 
 /**
  * Sign in with Steam
+ * TODO(mike): Automatically detect if port is needed to pass in helpers
+ * TODO(mike): Change withPort helpers to their equivalents without port
  */
-
 passport.use(new SteamStrategy({
-  returnURL: `http://localhost:${config.port}/api/login/steam/handle`,
-  realm: `http://localhost:${config.port}/`,
+  returnURL: appHelpers.apiUrlWithPortFor('/login/handle/steam'),
+  realm: appHelpers.rootUrlWithPort(),
   apiKey: config.steamApiKey,
-  // eslint-disable-next-line
-}, async(identifier: any, profile: any, done: (err: any, user?: User | null) => void): Promise<void> => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+}, async (
+  identifier: any,
+  profile: any,
+  done: DoneFunction<User>,
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+): Promise<void> => {
   try {
     /* eslint-disable no-underscore-dangle */
     const [user] = await User.upsert({
@@ -43,8 +54,8 @@ passport.use(new SteamStrategy({
     });
     /* eslint-enable no-underscore-dangle */
     done(null, user);
-  } catch (err) {
-    done(err);
+  } catch (e) {
+    done(e);
   }
 }));
 
