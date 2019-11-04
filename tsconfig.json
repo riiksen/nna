@@ -16,6 +16,7 @@
     "sourceRoot": "root",
     "strict": true,
     "target": "es2017",
+    "resolveJsonModule": true,
     "typeRoots": [
       "src/types",
       "node_modules/@types"
