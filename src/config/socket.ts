@@ -1,5 +1,5 @@
-import * as socketio from 'socket.io';
 import * as http from 'http';
+import * as socketio from 'socket.io';
 
 type socketOrNull = socketio.Server | null;
 let socket: socketOrNull = null;
