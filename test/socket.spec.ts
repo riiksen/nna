@@ -42,7 +42,7 @@ describe('Socket', (): void => {
 });
 
 afterAll((done): void => {
-  if (server !== null) {
+  if (server) {
     server.close();
   }
   done();
