@@ -27,7 +27,7 @@
     "target": "es2017"
   },
   "include": [
-    "app/**/*.ts"
+    "config/application.ts"
   ],
   "exclude": [
     "test/**"
