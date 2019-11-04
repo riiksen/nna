@@ -19,6 +19,7 @@
     "test:all": "yarn test:api && yarn test:app",
     "test:api": "cd packages/api && yarn test",
     "test:app": "cd packages/app && yarn test",
+    "test": "jest",
     "sequelize": "sequelize"
   },
   "private": true,
