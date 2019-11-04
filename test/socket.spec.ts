@@ -6,10 +6,10 @@ import config from '../src/config/config';
 import { io as socketServer, initialize as initializeSocket } from '../src/config/socket';
 import { expect } from './utils';
 
-let server: http.Server | null = null;
+let server: http.Server;
 
 beforeAll((done): void => {
-  if (socketServer() === null) {
+  if (!socketServer()) {
     server = http.createServer();
 
     initializeSocket(server);
