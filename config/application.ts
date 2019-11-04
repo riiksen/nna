@@ -1,6 +1,6 @@
 import { config } from './config';
 
-import { app } from './initializers';
+import { app, initialize as sockerInit } from './initializers';
 
 if (!module.parent) {
   /**
@@ -8,6 +8,8 @@ if (!module.parent) {
    */
   // eslint-disable-next-line
   const server = app.listen(config.port, () => {
+    socketInit(server);
+
     // eslint-disable-next-line
     console.log(
       '  App is running at http://localhost:%d in %s mode',
