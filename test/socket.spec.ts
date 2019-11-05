@@ -9,13 +9,11 @@ import { expect } from './utils';
 let server: http.Server;
 
 beforeAll((done): void => {
-  if (!socketServer()) {
-    server = http.createServer();
+  server = http.createServer();
+  initializeSocket(server);
+  
+  server.listen(config.port);
 
-    initializeSocket(server);
-
-    server.listen(config.port);
-  }
   done();
 });
 
