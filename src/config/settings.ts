@@ -1,5 +1,5 @@
 interface Settings {
-  coins_to_usd_rate: number,
+  coins_to_usd_rate: number;
   levels: {
     max: number;
     multiplier: number;
@@ -7,11 +7,11 @@ interface Settings {
 }
 
 const settings: Settings = {
-    coins_to_usd_rate: 1000,
-    levels: {
-      max: 100,
-      multiplier: 1.3,
-    }
+  coins_to_usd_rate: 1000,
+  levels: {
+    max: 100,
+    multiplier: 1.3,
+  },
 };
 
 export default settings;

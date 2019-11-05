@@ -11,7 +11,7 @@ let server: http.Server;
 beforeAll((done): void => {
   server = http.createServer();
   initializeSocket(server);
-  
+
   server.listen(config.testPort);
 
   done();
