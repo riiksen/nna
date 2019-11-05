@@ -2,7 +2,7 @@ import { clamp } from './math.helper';
 import settings from '../config/settings';
 
 export function getXp(level: number): number {
-  return Math.floor(settings.levels.multiplier ** level * settings.coins_to_usd_rate);
+  return Math.floor(Math.pow(settings.levels.multiplier, level) * settings.coins_to_usd_rate);
 }
 
 export function getLevel(xp: number): number {
