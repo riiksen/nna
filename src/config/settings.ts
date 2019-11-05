@@ -1,7 +1,3 @@
-import * as fs from 'fs';
-
-const settingsJSON = fs.readFileSync('./settings.json', 'utf8');
-
 interface Settings {
   coins_to_usd_rate: number,
   levels: {
@@ -10,6 +6,12 @@ interface Settings {
   };
 }
 
-const settings: Settings = JSON.parse(settingsJSON);
+const settings: Settings = {
+    coins_to_usd_rate: 1000,
+    levels: {
+      max: 100,
+      multiplier: 1.3,
+    }
+};
 
 export default settings;
