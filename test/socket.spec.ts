@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 
 import * as applicationHelper from '../src/helpers/application.helper';
 import config from '../src/config/config';
-import { io as socketServer, initialize as initializeSocket } from '../src/config/socket';
+import { initialize as initializeSocket } from '../src/config/socket';
 import { expect } from './utils';
 
 let server: http.Server;
