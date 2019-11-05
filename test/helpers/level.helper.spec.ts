@@ -3,7 +3,7 @@ import settings from '../../src/config/settings';
 import { expect } from '../utils';
 
 describe('Level Helper', (): void => {
-  const firstLevelXp = settings.levels.max * settings.coins_to_usd_rate; 
+  const firstLevelXp = settings.coins_to_usd_rate * settings.levels.multiplier
 
   describe('#getXp', (): void => {
     it('Return xp from level', (): void => {
