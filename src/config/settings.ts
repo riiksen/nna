@@ -1,4 +1,6 @@
-import settingsJSON from "./settings.json";
+import * as fs from 'fs';
+
+const settingsJSON = fs.readFileSync('./settings.json', 'utf8');
 
 interface Settings {
   coins_to_usd_rate: number,
@@ -8,6 +10,6 @@ interface Settings {
   };
 }
 
-const settings: Settings = settingsJSON;
+const settings: Settings = JSON.parse(settingsJSON);
 
 export default settings;
