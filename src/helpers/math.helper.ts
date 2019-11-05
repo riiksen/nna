@@ -1,9 +1,8 @@
 export function clamp(num: number, min: number, max: number): number {
-  if(num <= min) {
+  if (num < min) {
     return min;
-  } else if(num >= max) {
+  } else if (num > max) {
     return max;
-  } else {
-    return num;
   }
+  return num;
 }
