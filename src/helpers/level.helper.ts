@@ -6,6 +6,7 @@ export function getXp(level: number): number {
 }
 
 export function getLevel(xp: number): number {
-  const level = Math.floor(Math.log(xp / settings.coinsToUSDRate) / Math.log(settings.levels.multiplier));
+  const level = Math.floor(Math.log(xp / settings.coinsToUSDRate)
+    / Math.log(settings.levels.multiplier));
   return clamp(level, 0, settings.levels.max);
 }
