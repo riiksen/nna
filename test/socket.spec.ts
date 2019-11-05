@@ -12,7 +12,7 @@ beforeAll((done): void => {
   server = http.createServer();
   initializeSocket(server);
   
-  server.listen(config.port);
+  server.listen(config.testPort);
 
   done();
 });
