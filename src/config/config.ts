@@ -15,6 +15,7 @@ interface ConfigSchema {
   steamApiKey: string;
   opSkinsApiKey: string;
   opSkinsTwoFactorSecret: string;
+  testPort: number;
   db: {
     database: string;
     username: string;
@@ -35,6 +36,8 @@ const envVarsSchema = Joi.object({
   SERVER_HOST: Joi.string(),
   SERVER_PORT: Joi.number()
     .default(4040),
+  TEST_PORT: Joi.number()
+    .default(4041),
   LOGIN_RETURN_URL: Joi.string(),
   STEAM_API_KEY: Joi.string(),
   OPSKINS_API_KEY: Joi.string(),
@@ -81,6 +84,7 @@ const joiObjectConfig = {
   steamApiKey: envVars.STEAM_API_KEY,
   opSkinsApiKey: envVars.OPSKINS_API_KEY,
   opSkinsTwoFactorSecret: envVars.OPSKINS_TWOFACTOR_SECRET,
+  testPort: envVars.TEST_PORT,
   db: {
     database: envVars.DB_DATABASE,
     username: envVars.DB_USERNAME,
