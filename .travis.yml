@@ -10,6 +10,7 @@ env:
     - NODE_ENV=test
     - SERVER_HOST=localhost
     - SERVER_PORT=3000
+    - TEST_PORT=3001
     - SESSION_SECRET=alamakota
     - DB_USERNAME=postgres
     - DB_DATABASE=vgoscam_test
