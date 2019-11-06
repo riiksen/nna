@@ -21,7 +21,7 @@ describe('Socket', (): void => {
   let socket: SocketIOClient.Socket;
 
   beforeEach((done): void => {
-    socket = io(applicationHelper.rootUrlWithPort());
+    socket = io(`${applicationHelper.rootUrl()}:${config.testPort}`);
     done();
   });
 
