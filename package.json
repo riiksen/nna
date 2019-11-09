@@ -75,8 +75,5 @@
     "ts-jest": "^24.0.2",
     "ts-node": "~6.1.0",
     "typescript": "~3.6.0"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }
