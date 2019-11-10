@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -28,8 +28,5 @@
   },
   "include": [
     "config/application.ts"
-  ],
-  "exclude": [
-    "test/**"
   ]
 }
