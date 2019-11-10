@@ -8,14 +8,14 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import User from './user';
+import { User } from './user';
 
 @Table({
   tableName: 'trades',
   timestamps: true,
   underscored: true,
 })
-export default class Trade extends Model<Trade> {
+export class Trade extends Model<Trade> {
   @PrimaryKey
   @AutoIncrement
   @Column

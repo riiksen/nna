@@ -2,7 +2,7 @@ import * as passport from 'passport';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
 import * as appHelpers from '@app/helpers/application.helper';
-import User from '@app/models/user';
+import { User } from '@app/models';
 
 import { config } from '../config';
 

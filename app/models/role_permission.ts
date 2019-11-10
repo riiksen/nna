@@ -6,9 +6,9 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import Role from './role';
-import Permission from './permission';
-import User from './user';
+import { Role } from './role';
+import { Permission } from './permission';
+import { User } from './user';
 
 @Table({
   tableName: 'role_permissions',
@@ -16,7 +16,7 @@ import User from './user';
   underscored: true,
 })
 
-export default class RolePermission extends Model<RolePermission> {
+export class RolePermission extends Model<RolePermission> {
   @PrimaryKey
   @Column
   @ForeignKey((): typeof Role => Role)

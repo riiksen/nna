@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/user';
-import Role from '../models/role';
+import { Role, User } from '@app/models';
 
 export default function (role: string): (req: Request, res: Response, next: NextFunction) => void {
   return (req: Request, res: Response, next: NextFunction): void => {

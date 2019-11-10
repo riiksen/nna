@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 
 // import config from '@config/config';
 
-import Trade from '../models/trade';
+import { Trade } from '../models/trade';
 
 export async function index(req: Request, res: Response): Promise<void> {
   // const withdraws = req.session.user.withdraws

@@ -11,7 +11,7 @@ import {
   tableName: 'permissions',
   underscored: true,
 })
-export default class Permission extends Model<Permission> {
+export class Permission extends Model<Permission> {
   @PrimaryKey
   @AutoIncrement
   @Column
