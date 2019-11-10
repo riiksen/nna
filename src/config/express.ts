@@ -9,9 +9,10 @@ import * as logger from 'morgan';
 import * as methodOverride from 'method-override';
 import * as session from 'express-session';
 
-import routes from './routes';
-import passport from './passport';
 import config from './config';
+import passport from './passport';
+import routes from './routes';
+import { io } from './socket';
 
 const app = express();
 
@@ -19,14 +20,18 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 }
 
-app.use(session({
+const sessionMiddleware = session({
   secret: config.sessionSecret,
   resave: true,
   saveUninitialized: true,
   cookie: {
     path: '/', httpOnly: false, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000,
   },
-}));
+});
+
+io.use(sessionMiddleware(socket.request, socket.request.res, next));
+
+app.use(sessionMiddleware);
 
 // Load passport middleware
 app.use(passport.initialize());
