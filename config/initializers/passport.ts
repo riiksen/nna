@@ -1,7 +1,7 @@
 import * as passport from 'passport';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
-import * as appHelpers from '@app/helpers';
+import { apiUrlWithPortFor, rootUrlWithPort } from '@app/helpers';
 import { User } from '@app/models';
 
 import { config } from '../config';
@@ -32,8 +32,8 @@ passport.deserializeUser(userDeserializer);
  * TODO(mike): Change withPort helpers to their equivalents without port
  */
 passport.use(new SteamStrategy({
-  returnURL: appHelpers.apiUrlWithPortFor('/login/handle/steam'),
-  realm: appHelpers.rootUrlWithPort(),
+  returnURL: apiUrlWithPortFor('/login/handle/steam'),
+  realm: rootUrlWithPort(),
   apiKey: config.steamApiKey,
   /* eslint-disable @typescript-eslint/no-explicit-any */
 }, async (
