@@ -1,10 +1,11 @@
 import { clamp } from './math.helper';
 import settings from '../config/settings';
 
-const maxLevelXp = Math.floor((settings.levels.multiplier ** (settings.levels.max - 1)) * settings.coinsToUSDRate);
+const maxLevelXp = Math.floor((settings.levels.multiplier ** (settings.levels.max - 1))
+  * settings.coinsToUSDRate);
 
 export function getXp(level: number): number {
-  if(level <= 1) return 0;
+  if (level <= 1) return 0;
 
   const xp = Math.floor((settings.levels.multiplier ** (level - 1)) * settings.coinsToUSDRate);
 

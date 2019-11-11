@@ -3,7 +3,6 @@ import { AddressInfo } from 'net';
 import * as io from 'socket.io-client';
 
 import * as applicationHelper from '../src/helpers/application.helper';
-import config from '../src/config/config';
 import { initialize as initializeSocket } from '../src/config/socket';
 import { expect } from './utils';
 
@@ -22,7 +21,7 @@ describe('Socket', (): void => {
   let socket: SocketIOClient.Socket;
 
   beforeEach((done): void => {
-    const { port } = server.address() as AddressInfo;   
+    const { port } = server.address() as AddressInfo;
     socket = io(`${applicationHelper.rootUrl()}:${port}`);
 
     done();
