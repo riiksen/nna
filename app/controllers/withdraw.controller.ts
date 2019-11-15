@@ -1,7 +1,7 @@
 // import * as crypto from 'crypto';
 // import * as Joi from 'joi';
 import { Request, Response } from 'express';
-// import * as tradeManager from '@config/initializers/expresstrade';
+// import * as tradeManager from '@initializers/expresstrade';
 
 // import config from '@config/config';
 
