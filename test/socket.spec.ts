@@ -1,11 +1,11 @@
 import * as http from 'http';
 import * as io from 'socket.io-client';
 
-import { config } from '@config/config';
-import { io as socketServer, initialize as initializeSocket } from '@config/initializers';
-import { expect } from './utils';
-
 import * as applicationHelper from '@app/helpers/application.helper';
+import { io as socketServer, initialize as initializeSocket } from '@config/initializers';
+import { config } from '@config/config';
+
+import { expect } from './utils';
 
 let server: http.Server;
 

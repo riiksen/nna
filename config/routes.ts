@@ -7,9 +7,6 @@ import {
   sessionController,
 } from '@app/controllers';
 
-// import middlewares from './middleware';
-// import { config } from './config';
-
 const router = express.Router();
 
 // Session routes
