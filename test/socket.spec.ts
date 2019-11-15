@@ -1,22 +1,20 @@
 import * as http from 'http';
+import { AddressInfo } from 'net';
 import * as io from 'socket.io-client';
 
-import * as applicationHelper from '@app/helpers/application.helper';
-import { io as socketServer, initialize as initializeSocket } from '@config/initializers';
-import { config } from '@config/config';
+import { rootUrl } from '@app/helpers/application.helper';
+import { initialize as initializeSocket } from '@config/initializers';
 
 import { expect } from './utils';
 
 let server: http.Server;
 
 beforeAll((done): void => {
-  if (!socketServer()) {
-    server = http.createServer();
+  server = http.createServer();
+  initializeSocket(server);
 
-    initializeSocket(server);
+  server.listen(0);
 
-    server.listen(config.port);
-  }
   done();
 });
 
@@ -24,7 +22,9 @@ describe('Socket', (): void => {
   let socket: SocketIOClient.Socket;
 
   beforeEach((done): void => {
-    socket = io(applicationHelper.rootUrlWithPort());
+    const { port } = server.address() as AddressInfo;
+    socket = io(`${rootUrl()}:${port}`);
+
     done();
   });
 
