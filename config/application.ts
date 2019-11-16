@@ -1,5 +1,4 @@
 import { config } from './config';
-
 import { app, initialize as socketInit } from './initializers';
 
 if (!module.parent) {
