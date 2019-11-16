@@ -7,7 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import User from './user';
+import { User } from './user';
 
 @Table({
   timestamps: true,
@@ -15,7 +15,7 @@ import User from './user';
   underscored: true,
 })
 
-export default class Role extends Model<Role> {
+export class Role extends Model<Role> {
   @PrimaryKey
   @AutoIncrement
   @Column

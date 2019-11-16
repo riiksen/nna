@@ -20,7 +20,7 @@ env:
 
 script:
   - yarn run lint
-  - yarn test
+  - yarn run test
 
 services:
   - postgresql

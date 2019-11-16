@@ -1,8 +1,5 @@
-import config from './config/config';
-
-import app from './config/express';
-import './config/sequelize';
-import { initialize as socketInit } from './config/socket';
+import { config } from './config';
+import { app, initialize as socketInit } from './initializers';
 
 if (!module.parent) {
   /**
@@ -24,4 +21,4 @@ if (!module.parent) {
   });
 }
 
-export default app;
+export { app };

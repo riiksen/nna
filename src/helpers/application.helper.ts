@@ -1,4 +1,4 @@
-import config from '../config/config';
+import { config } from '@config/config';
 
 // TODO(mike): Automatically detect current protocol
 export function appProtocol(): string {

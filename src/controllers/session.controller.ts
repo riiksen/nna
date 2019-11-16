@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import passport from '../config/passport';
-import { validProvider } from '../helpers/session.helper';
+import { passport } from '@initializers/passport';
+import { validProvider } from '@app/helpers';
 
 export function login(req: Request, res: Response): void {
   const { provider } = req.params;

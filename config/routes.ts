@@ -1,12 +1,11 @@
 // import * as asyncHandler from 'express-async-handler';
 import * as express from 'express';
 
-import * as depositController from '../controllers/deposit.controller';
-import * as withdrawController from '../controllers/withdraw.controller';
-import * as sessionController from '../controllers/session.controller';
-
-// import middlewares from './middleware';
-// import { config } from './config';
+import {
+  depositController,
+  withdrawController,
+  sessionController,
+} from '@app/controllers';
 
 const router = express.Router();
 
@@ -25,4 +24,4 @@ router.get('/deposit', depositController.index);
 router.get('/deposit/:id', depositController.show);
 router.post('/deposit', depositController.make);
 
-export default router;
+export { router };

@@ -11,17 +11,17 @@ import {
   Unique,
 } from 'sequelize-typescript';
 
-import Trade from './trade';
-import Role from './role';
-import Permission from './permission';
-import RolePermission from './role_permission';
+import { Trade } from './trade';
+import { Role } from './role';
+import { Permission } from './permission';
+import { RolePermission } from './role_permission';
 
 @Table({
   tableName: 'users',
   timestamps: true,
   underscored: true,
 })
-export default class User extends Model<User> {
+export class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
   @Column

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -12,6 +12,9 @@
     "noImplicitReturns": true,
     "outDir": "dist",
     "paths": {
+      "@app/*": ["./src/*"],
+      "@config/*": ["./config/*"],
+      "@initializers/*": ["./config/initializers/*"],
       "*": [
         "node_modules/*",
         "node_modules/@types/*",
@@ -25,6 +28,6 @@
     "target": "es2017"
   },
   "include": [
-    "src/**/*.ts"
+    "config/application.ts"
   ]
 }

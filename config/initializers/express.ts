@@ -9,9 +9,9 @@ import * as logger from 'morgan';
 import * as methodOverride from 'method-override';
 import * as session from 'express-session';
 
-import routes from './routes';
-import passport from './passport';
-import config from './config';
+import { config } from '../config';
+import { passport } from './passport';
+import { router as routes } from '../routes';
 
 const app = express();
 
@@ -48,4 +48,4 @@ app.use(cors());
 // API router
 app.use('/api/', routes);
 
-export default app;
+export { app };

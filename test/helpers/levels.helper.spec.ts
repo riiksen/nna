@@ -1,5 +1,6 @@
-import * as levelsHelper from '../../src/helpers/levels.helper';
-import settings from '../../src/config/settings';
+import * as levelsHelper from '@app/helpers/levels.helper';
+import settings from '@config/settings';
+
 import { expect } from '../utils';
 
 describe('Level Helper', (): void => {

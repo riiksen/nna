@@ -1,15 +1,15 @@
 import { Sequelize } from 'sequelize-typescript';
-import config from './config';
+import { config } from '../config';
 
-const connection = new Sequelize(
+const databaseConnection = new Sequelize(
   config.db.database,
   config.db.username,
   config.db.password,
   {
     dialect: config.db.dialect,
     storage: ':memory:',
-    modelPaths: [`${__dirname}/../models/*`],
+    modelPaths: [`${__dirname}/../app/models/*`],
   },
 );
 
-export default connection;
+export { databaseConnection };

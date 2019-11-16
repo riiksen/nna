@@ -1,5 +1,6 @@
+import settings from '@config/settings';
+
 import { clamp } from './math.helper';
-import settings from '../config/settings';
 
 const maxLevelXp = Math.floor((settings.levels.multiplier ** (settings.levels.max - 1))
   * settings.coinsToUSDRate);

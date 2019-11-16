@@ -2,8 +2,9 @@ import * as http from 'http';
 import { AddressInfo } from 'net';
 import * as io from 'socket.io-client';
 
-import * as applicationHelper from '../src/helpers/application.helper';
-import { initialize as initializeSocket } from '../src/config/socket';
+import { rootUrl } from '@app/helpers/application.helper';
+import { initialize as initializeSocket } from '@config/initializers';
+
 import { expect } from './utils';
 
 let server: http.Server;
@@ -22,7 +23,7 @@ describe('Socket', (): void => {
 
   beforeEach((done): void => {
     const { port } = server.address() as AddressInfo;
-    socket = io(`${applicationHelper.rootUrl()}:${port}`);
+    socket = io(`${rootUrl()}:${port}`);
 
     done();
   });

@@ -1,6 +1,6 @@
 import { expect } from '../utils';
 
-import * as sessionHelper from '../../src/helpers/session.helper';
+import * as sessionHelper from '@app/helpers/session.helper';
 
 describe('Session Helper', (): void => {
   describe('#validProvider', (): void => {
