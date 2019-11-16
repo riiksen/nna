@@ -14,7 +14,7 @@
     "paths": {
       "@app/*": ["./app/*"],
       "@config/*": ["./config/*"],
-      "@initializers": ["./config/initializers/*"],
+      "@initializers/*": ["./config/initializers/*"],
       "*": [
         "node_modules/*",
         "node_modules/@types/*",
