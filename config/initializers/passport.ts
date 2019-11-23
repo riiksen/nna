@@ -27,10 +27,10 @@ const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<v
 passport.serializeUser(userSerializer);
 passport.deserializeUser(userDeserializer);
 
-// TODO: add iss, aud jwt fields
+// TODO: add iss and aud jwt fields
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-  secretOrKey: 'adsf',
+  secretOrKey: config.jwtSecret,
 }, async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any,
