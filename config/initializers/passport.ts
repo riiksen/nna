@@ -43,8 +43,8 @@ passport.use(new JWTStrategy({
       return;
     }
 
-    // Should never happen as we issue jwt's so if this would be called that
-    // could mean that someone extracted jwt secret and crafted jwt by himself
+    // Should never happen as we issue jwt's, so if this would be called that could
+    // mean that someone somehow extracted jwt secret and crafted jwt by himself
     done(new Error('user not found'));
   } catch (e) {
     done(e);
