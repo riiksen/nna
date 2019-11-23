@@ -11,7 +11,6 @@ interface ConfigSchema {
   host: string;
   port: number;
   jwtSecret: string;
-  sessionSecret: string;
   loginReturnURL: string;
   steamApiKey: string;
   opSkinsApiKey: string;
@@ -41,7 +40,6 @@ const envVarsSchema = Joi.object({
   OPSKINS_API_KEY: Joi.string(),
   OPSKINS_TWOFACTOR_SECRET: Joi.string(),
   JWT_SECRET: Joi.string(),
-  SESSION_SECRET: Joi.string(),
   DB_USERNAME: Joi.string(),
   DB_PASSWORD: Joi.string().allow(''),
   DB_DATABASE: Joi.string(),
@@ -79,7 +77,6 @@ const joiObjectConfig = {
   host: envVars.SERVER_HOST,
   port: envVars.SERVER_PORT,
   jwtSecret: envVars.JWT_SECRET,
-  sessionSecret: envVars.SESSION_SECRET,
   loginReturnURL: envVars.LOGIN_RETURN_URL,
   steamApiKey: envVars.STEAM_API_KEY,
   opSkinsApiKey: envVars.OPSKINS_API_KEY,
