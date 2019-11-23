@@ -1,4 +1,5 @@
 import * as passport from 'passport';
+import { ExtractJwt as ExtractJWT, Strategy as JWTStrategy } from 'passport-jwt';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
 import { apiUrlWithPortFor, rootUrlWithPort } from '@app/helpers';
@@ -25,6 +26,30 @@ const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<v
 
 passport.serializeUser(userSerializer);
 passport.deserializeUser(userDeserializer);
+
+// TODO: add iss, aud jwt fields
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: 'adsf',
+}, async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: any,
+  done: DoneFunction<User>,
+): Promise<void> => {
+  try {
+    const user = await User.findByPk<User>(payload.id);
+    if (user) {
+      done(null, user);
+      return;
+    }
+
+    // Should never happen as we issue jwt's so if this would be called that
+    // could mean that someone extracted jwtsecret and crafted jwt by himself
+    done(new Error('user not found'));
+  } catch (e) {
+    done(e);
+  }
+}));
 
 /**
  * Sign in with Steam
