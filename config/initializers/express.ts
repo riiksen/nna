@@ -19,23 +19,12 @@ if (config.env === 'development') {
   app.use(logger('dev'));
 }
 
-app.use(session({
-  secret: config.sessionSecret,
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    path: '/', httpOnly: false, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000,
-  },
-}));
-
 // Load passport middleware
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser(config.sessionSecret));
 app.use(compress());
 app.use(methodOverride());
 
