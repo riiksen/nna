@@ -55,6 +55,7 @@
     "@types/http-errors": "^1.6.1",
     "@types/jest": "^24.0.17",
     "@types/joi": "^14.3.1",
+    "@types/jsonwebtoken": "^8.3.5",
     "@types/method-override": "0.0.31",
     "@types/morgan": "^1.7.35",
     "@types/node": "^10.12.21",
