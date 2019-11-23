@@ -1,4 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
+
+import * as models from '@app/models';
 import { config } from '../config';
 
 const databaseConnection = new Sequelize(
@@ -8,7 +10,7 @@ const databaseConnection = new Sequelize(
   {
     dialect: config.db.dialect,
     storage: ':memory:',
-    modelPaths: [`${__dirname}/../app/models/*`],
+    models: Object.values(models),
   },
 );
 
