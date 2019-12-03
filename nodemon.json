@@ -1,0 +1,5 @@
+{
+  "watch": ["config", "src"],
+  "ext": "ts",
+  "exec": "ts-node -r ./tsconfigPathsBootstrap.js"
+}
