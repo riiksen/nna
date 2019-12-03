@@ -1,5 +1,6 @@
 // import * as asyncHandler from 'express-async-handler';
 import * as express from 'express';
+import * as passport from 'passport';
 
 import {
   depositController,
@@ -10,9 +11,11 @@ import {
 const router = express.Router();
 
 // Session routes
-router.get('/login/:provider', sessionController.login);
-router.get('/login/handle/:provider', sessionController.handle);
+router.get('/login/steam',passport.authenticate('steam', { session: false }), sessionController.login);
+router.get('/login/handle/steam', passport.authenticate('steam', { session: false }), sessionController.handle);
 router.post('/logout', sessionController.logout);
+router.get('/refreshAccessToken', sessionController.refreshAccessToken);
+router.get('/getUser', sessionController.getUser);
 
 // Withdraw routes
 router.get('/withdraw', withdrawController.index);
