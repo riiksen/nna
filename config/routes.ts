@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 // Session routes
-router.get('/login/steam',passport.authenticate('steam', { session: false }), sessionController.login);
+router.get('/login/steam', passport.authenticate('steam', { session: false }));
 router.get('/login/handle/steam', passport.authenticate('steam', { session: false }), sessionController.handle);
 router.post('/logout', sessionController.logout);
 router.get('/refreshAccessToken', sessionController.refreshAccessToken);
