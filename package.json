@@ -67,7 +67,6 @@
     "@typescript-eslint/parser": "^2.6.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "concurrently": "^3.5.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-import-resolver-typescript": "^2.0.0",
