@@ -19,9 +19,9 @@ export function login(req: Request, res: Response): void {
 
 export function handle(req: Request, res: Response): void | Response {
   const { provider } = req.params;
-  if(validProvider(provider)) {
+  if (validProvider(provider)) {
     passport.authenticate(provider, (err: Error): void => {
-      if(!err) {
+      if (!err) {
         const payload: refreshTokenPayloadType = {
           id: (req.user as User).id,
           isRefreshToken: true,
