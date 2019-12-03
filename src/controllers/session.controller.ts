@@ -1,22 +1,40 @@
 import { Request, Response } from 'express';
 import { sign as signJWT, verify as verifyJWT } from 'jsonwebtoken';
 
-import { config } from '@config/config';
+import { validProvider } from '@app/helpers';
 import { User } from '@app/models';
+
+import { config } from '@config/config';
+import { passport } from '@initializers/passport';
 
 type accessTokenPayloadType = { id: number };
 type refreshTokenPayloadType = { id: number; isRefreshToken: boolean };
 
-export function handle(req: Request, res: Response): Response {
-  const payload: refreshTokenPayloadType = {
-    id: (req.user as User).id,
-    isRefreshToken: true,
-  };
-  const refreshToken = signJWT(payload, config.jwtSecret, { expiresIn: '30 days' });
+export function login(req: Request, res: Response): void {
+  const { provider } = req.params;
+  if (validProvider(provider)) {
+    passport.authenticate(provider)(req, res, (): void => {});
+  }
+}
 
-  res.cookie('refreshToken', refreshToken, { httpOnly: true });
+export function handle(req: Request, res: Response): void | Response {
+  const { provider } = req.params;
+  if(validProvider(provider)) {
+    passport.authenticate(provider, (err: Error): void => {
+      if(!err) {
+        const payload: refreshTokenPayloadType = {
+          id: (req.user as User).id,
+          isRefreshToken: true,
+        };
+        const refreshToken = signJWT(payload, config.jwtSecret, { expiresIn: '30 days' });
 
-  return res.json({ status: 'OK' });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true });
+
+        res.json({ status: 'OK' });
+      }
+      res.sendStatus(422);
+    })(req, res);
+  }
 }
 
 export function logout(req: Request, res: Response): Response {
