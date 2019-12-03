@@ -1,5 +1,6 @@
 import * as bodyParser from 'body-parser';
 import * as compress from 'compression';
+import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
 import * as helmet from 'helmet';
@@ -19,6 +20,9 @@ if (config.env === 'development') {
 
 // Load passport middleware
 app.use(passport.initialize());
+
+// We still need it to get cookie using req.cookie
+app.use(cookieParser());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
