@@ -7,7 +7,7 @@
     "lint": "eslint --ext .js,.ts config db src jest.config.js knexfile.ts tsconfigPathsBootstrap.js",
     "serve": "node -r ./tsconfigPathsBootstrap.js dist/config/application.js",
     "sequelize": "sequelize",
-    "start": "concurrently -c \"yellow.bold,green.bold\" -n \"SERVER,BUILD\" \"yarn watch\" \"nodemon --exec 'node -r ./tsconfigPathsBootstrap.js dist/config/application.js' --watch 'dist/**/*js' \"",
+    "start": "nodemon config/application.ts",
     "test": "jest",
     "watch": "tsc -w -p ."
   },
