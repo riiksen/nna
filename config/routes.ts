@@ -3,8 +3,9 @@ import * as express from 'express';
 
 import {
   depositController,
-  withdrawController,
   sessionController,
+  userController,
+  withdrawController,
 } from '@app/controllers';
 
 const router = express.Router();
@@ -12,9 +13,11 @@ const router = express.Router();
 // Session routes
 router.get('/login/:provider', sessionController.login);
 router.get('/login/handle/:provider', sessionController.handle);
-router.post('/logout', sessionController.logout);
 router.get('/refreshAccessToken', sessionController.refreshAccessToken);
-router.get('/getUser', sessionController.getUser);
+router.post('/logout', sessionController.logout);
+
+// User routes
+router.get('/user/get', userController.getUser);
 
 // Withdraw routes
 router.get('/withdraw', withdrawController.index);
