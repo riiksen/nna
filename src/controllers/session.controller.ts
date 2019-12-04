@@ -7,8 +7,13 @@ import { User } from '@app/models';
 import { config } from '@config/config';
 import { passport } from '@initializers/passport';
 
-type accessTokenPayloadType = { id: number };
-type refreshTokenPayloadType = { id: number; isRefreshToken: boolean };
+interface RefreshTokenPayloadInterface {
+  id: number;
+  isRefreshToken: boolean;
+}
+interface AccessTokenPayloadInterface {
+  id: number;
+}
 
 export function login(req: Request, res: Response): void {
   const { provider } = req.params;
@@ -17,12 +22,12 @@ export function login(req: Request, res: Response): void {
   }
 }
 
-export function handle(req: Request, res: Response): void | Response {
+export function handle(req: Request, res: Response): void {
   const { provider } = req.params;
   if (validProvider(provider)) {
     passport.authenticate(provider, (err: Error): void => {
       if (!err) {
-        const payload: refreshTokenPayloadType = {
+        const payload: RefreshTokenPayloadInterface = {
           id: (req.user as User).id,
           isRefreshToken: true,
         };
@@ -37,21 +42,17 @@ export function handle(req: Request, res: Response): void | Response {
   }
 }
 
-export function logout(req: Request, res: Response): Response {
-  req.logout();
-
-  return res.json({ status: 'OK' });
-}
-
 export function refreshAccessToken(req: Request, res: Response): void | Response {
   try {
-    const payload = verifyJWT(req.cookies.refreshToken,
-      config.jwtSecret) as refreshTokenPayloadType;
+    const payload = verifyJWT(
+      req.cookies.refreshToken,
+      config.jwtSecret,
+    ) as RefreshTokenPayloadInterface;
 
     if (!payload.isRefreshToken) {
       return res.sendStatus(401);
     }
-    const accessToken = signJWT({ id: payload.id as number }, config.jwtSecret, { expiresIn: 30 });
+    const accessToken = signJWT({ id: payload.id }, config.jwtSecret, { expiresIn: 30 });
 
     res.cookie('accessToken', accessToken, { httpOnly: true });
 
@@ -60,18 +61,9 @@ export function refreshAccessToken(req: Request, res: Response): void | Response
     return res.sendStatus(401);
   }
 }
-export async function getUser(req: Request, res: Response): Promise<Response> {
-  try {
-    const payload = verifyJWT(req.cookies.accessToken,
-      config.jwtSecret) as accessTokenPayloadType;
 
-    const user = await User.findByPk<User>(payload.id);
+export function logout(req: Request, res: Response): Response {
+  req.logout();
 
-    if (user) {
-      return res.json(user);
-    }
-    return res.json({ err: 'Could not get user' });
-  } catch (e) {
-    return res.sendStatus(401);
-  }
+  return res.json({ status: 'OK' });
 }
