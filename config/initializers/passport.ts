@@ -1,3 +1,4 @@
+import { Request } from 'express'; 
 import * as passport from 'passport';
 import { ExtractJwt as ExtractJWT, Strategy as JWTStrategy } from 'passport-jwt';
 import { Strategy as SteamStrategy } from 'passport-steam';
@@ -27,12 +28,20 @@ const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<v
 passport.serializeUser(userSerializer);
 passport.deserializeUser(userDeserializer);
 
+function extractAccessTokenFromCookie(req: Request) {
+  let token = null;
+  if (req && req.cookies) token = req.cookies.accessToken;
+  return token;
+}
+
 // TODO: add iss and aud jwt fields
 passport.use(new JWTStrategy({
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: extractAccessTokenFromCookie,
   secretOrKey: config.jwtSecret,
+  passReqToCallback: true,
 }, async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  req: Request,
   payload: any,
   done: DoneFunction<User>,
 ): Promise<void> => {
@@ -40,6 +49,7 @@ passport.use(new JWTStrategy({
     const user = await User.findByPk<User>(payload.id);
     if (user) {
       done(null, user);
+      req.user = user;
       return;
     }
 

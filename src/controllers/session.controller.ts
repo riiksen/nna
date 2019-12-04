@@ -36,8 +36,9 @@ export function handle(req: Request, res: Response): void {
         res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
         res.json({ status: 'OK' });
+      } else {
+        res.sendStatus(422);
       }
-      res.sendStatus(422);
     })(req, res);
   }
 }

@@ -1,5 +1,6 @@
 // import * as asyncHandler from 'express-async-handler';
 import * as express from 'express';
+import * as passport from 'passport';
 
 import {
   depositController,
