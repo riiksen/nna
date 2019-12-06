@@ -22,10 +22,10 @@ export function login(req: Request, res: Response): void {
 export function handle(req: Request, res: Response): void {
   const { provider } = req.params;
   if (validProvider(provider)) {
-    passport.authenticate(provider, (err: Error): void => {
+    passport.authenticate(provider, (err: Error, user: User): void => {
       if (!err) {
         const payload: RefreshTokenPayload = {
-          id: (req.user as User).id,
+          id: user.id,
           isRefreshToken: true,
         };
         const refreshToken = signJWT(payload, config.jwtSecret, { expiresIn: '30 days' });
@@ -34,6 +34,7 @@ export function handle(req: Request, res: Response): void {
 
         res.json({ status: 'OK' });
       } else {
+        console.log(err);
         res.sendStatus(422);
       }
     })(req, res);

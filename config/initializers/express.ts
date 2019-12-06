@@ -37,6 +37,7 @@ app.use(helmet());
 app.use(cors());
 
 // API router
+app.use('/api/user/', passport.authenticate('jwt', { session: false }));
 app.use('/api/', routes);
 
 export { app };
