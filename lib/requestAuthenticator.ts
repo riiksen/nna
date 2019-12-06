@@ -14,7 +14,7 @@ export function getRefreshTokenPayload(refreshToken: string): TokenPayload | nul
       config.jwtSecret,
     ) as TokenPayload;
 
-    if(payload.type !== 'refresh') {
+    if (payload.type !== 'refresh') {
       return null;
     }
 
@@ -25,28 +25,27 @@ export function getRefreshTokenPayload(refreshToken: string): TokenPayload | nul
 }
 
 export function signAccessFromRefreshToken(payload: TokenPayload): string | null {
-  if(payload.type !== 'refresh') {
+  if (payload.type !== 'refresh') {
     return null;
   }
 
   const accessToken = signJWT({
-      type: 'access',
-      id: payload.id,
-    },
-    config.jwtSecret,
-    { expiresIn: 30 },
-  );
+    type: 'access',
+    id: payload.id,
+  },
+  config.jwtSecret,
+  { expiresIn: 30 });
 
   return accessToken;
 }
 
-export function signRefreshToken(id: number) {
+export function signRefreshToken(id: number): string {
   const payload: TokenPayload = {
     type: 'refresh',
-    id: id,
+    id,
   };
 
-  const refreshToken = signJWT(payload, config.jwtSecret, { expiresIn: '30 days'});
+  const refreshToken = signJWT(payload, config.jwtSecret, { expiresIn: '30 days' });
 
   return refreshToken;
 }
@@ -58,7 +57,7 @@ export function checkAccessToken(accessToken: string): boolean {
       config.jwtSecret,
     ) as TokenPayload;
 
-    if(payload.type !== 'access') {
+    if (payload.type !== 'access') {
       return false;
     }
 
@@ -67,4 +66,3 @@ export function checkAccessToken(accessToken: string): boolean {
     return false;
   }
 }
-
