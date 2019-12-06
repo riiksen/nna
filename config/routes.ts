@@ -13,7 +13,7 @@ const router = express.Router();
 // Session routes
 router.get('/login/:provider', sessionController.login);
 router.get('/login/handle/:provider', sessionController.handle);
-router.post('/refreshAccessToken', sessionController.refreshAccessToken);
+router.get('/refreshAccessToken', sessionController.refreshAccessToken);
 router.post('/logout', sessionController.logout);
 
 // User routes

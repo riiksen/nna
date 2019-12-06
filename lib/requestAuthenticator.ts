@@ -8,16 +8,20 @@ interface TokenPayload {
 }
 
 export function getRefreshTokenPayload(refreshToken: string): TokenPayload | null {
-  const payload = verifyJWT(
-    refreshToken,
-    config.jwtSecret,
-  ) as TokenPayload;
+  try {
+    const payload = verifyJWT(
+      refreshToken,
+      config.jwtSecret,
+    ) as TokenPayload;
 
-  if(payload.type !== 'refresh') {
+    if(payload.type !== 'refresh') {
+      return null;
+    }
+
+    return payload;
+  } catch (e) {
     return null;
   }
-
-  return payload;
 }
 
 export function signAccessFromRefreshToken(payload: TokenPayload): string | null {
@@ -48,15 +52,19 @@ export function signRefreshToken(id: number) {
 }
 
 export function checkAccessToken(accessToken: string): boolean {
-  const payload = verifyJWT(
-    accessToken,
-    config.jwtSecret,
-  ) as TokenPayload;
+  try {
+    const payload = verifyJWT(
+      accessToken,
+      config.jwtSecret,
+    ) as TokenPayload;
 
-  if(payload.type !== 'access') {
+    if(payload.type !== 'access') {
+      return false;
+    }
+
+    return true;
+  } catch (e) {
     return false;
   }
-
-  return true;
 }
 
