@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import * as passport from 'passport';
-import { ExtractJwt as ExtractJWT, Strategy as JWTStrategy } from 'passport-jwt';
+import { Strategy as JWTStrategy } from 'passport-jwt';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
 import { apiUrlWithPortFor, rootUrlWithPort } from '@app/helpers';
@@ -38,8 +38,8 @@ passport.use(new JWTStrategy({
   secretOrKey: config.jwtSecret,
   passReqToCallback: true,
 }, async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   req: Request,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any,
   done: DoneFunction<User>,
 ): Promise<void> => {
