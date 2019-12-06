@@ -34,7 +34,6 @@ export function handle(req: Request, res: Response): void {
 
         res.json({ status: 'OK' });
       } else {
-        console.log(err);
         res.sendStatus(422);
       }
     })(req, res);
