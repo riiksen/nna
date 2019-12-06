@@ -7,12 +7,9 @@ import { User } from '@app/models';
 import { config } from '@config/config';
 import { passport } from '@initializers/passport';
 
-interface RefreshTokenPayloadInterface {
+interface RefreshTokenPayload {
   id: number;
   isRefreshToken: boolean;
-}
-interface AccessTokenPayloadInterface {
-  id: number;
 }
 
 export function login(req: Request, res: Response): void {
@@ -27,7 +24,7 @@ export function handle(req: Request, res: Response): void {
   if (validProvider(provider)) {
     passport.authenticate(provider, (err: Error): void => {
       if (!err) {
-        const payload: RefreshTokenPayloadInterface = {
+        const payload: RefreshTokenPayload = {
           id: (req.user as User).id,
           isRefreshToken: true,
         };
@@ -48,7 +45,7 @@ export function refreshAccessToken(req: Request, res: Response): void | Response
     const payload = verifyJWT(
       req.cookies.refreshToken,
       config.jwtSecret,
-    ) as RefreshTokenPayloadInterface;
+    ) as RefreshTokenPayload;
 
     if (!payload.isRefreshToken) {
       return res.sendStatus(401);
