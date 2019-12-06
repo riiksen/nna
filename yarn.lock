@@ -470,6 +470,11 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/hapi__joi@^16.0.4":
+  version "16.0.4"
+  resolved "https://registry.yarnpkg.com/@types/hapi__joi/-/hapi__joi-16.0.4.tgz#c894d6498cc64aa56b73fbc175bb2c6be8c5f543"
+  integrity sha512-wyZP3JUZNra0Mn6jlYkGorouWJ00K0r0Qys5j8Ycp0ssF267NMfpQNgHWAcV14xXSuChF7H68CPuqJO15YuHyQ==
+
 "@types/helmet@^0.0.45":
   version "0.0.45"
   resolved "https://registry.yarnpkg.com/@types/helmet/-/helmet-0.0.45.tgz#3eab6550a4e19acf86012596a7f1981529480fd5"
