@@ -53,7 +53,6 @@ passport.use(new JWTStrategy({
     const user = await User.findByPk<User>(payload.id);
     if (user) {
       done(null, user);
-      req.user = user;
       return;
     }
 
