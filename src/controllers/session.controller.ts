@@ -1,16 +1,10 @@
 import { Request, Response } from 'express';
-import { sign as signJWT, verify as verifyJWT } from 'jsonwebtoken';
 
 import { validProvider } from '@app/helpers';
 import { User } from '@app/models';
 
-import { config } from '@config/config';
 import { passport } from '@initializers/passport';
-
-interface RefreshTokenPayload {
-  id: number;
-  isRefreshToken: boolean;
-}
+import { getRefreshTokenPayload, signAccessFromRefreshToken, signRefreshToken } from '@lib/requestAuthenticator';
 
 export function login(req: Request, res: Response): void {
   const { provider } = req.params;
@@ -24,11 +18,7 @@ export function handle(req: Request, res: Response): void {
   if (validProvider(provider)) {
     passport.authenticate(provider, (err: Error, user: User): void => {
       if (!err) {
-        const payload: RefreshTokenPayload = {
-          id: user.id,
-          isRefreshToken: true,
-        };
-        const refreshToken = signJWT(payload, config.jwtSecret, { expiresIn: '30 days' });
+        const refreshToken = signRefreshToken(user.id);
 
         res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
@@ -42,15 +32,12 @@ export function handle(req: Request, res: Response): void {
 
 export function refreshAccessToken(req: Request, res: Response): void | Response {
   try {
-    const payload = verifyJWT(
-      req.cookies.refreshToken,
-      config.jwtSecret,
-    ) as RefreshTokenPayload;
-
-    if (!payload.isRefreshToken) {
+    const payload = getRefreshTokenPayload(req?.cookies?.refreshToken);
+    if (!payload) {
       return res.sendStatus(401);
     }
-    const accessToken = signJWT({ id: payload.id }, config.jwtSecret, { expiresIn: 30 });
+
+    const accessToken = signAccessFromRefreshToken(payload);
 
     res.cookie('accessToken', accessToken, { httpOnly: true });
 

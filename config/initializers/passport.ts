@@ -6,6 +6,8 @@ import { Strategy as SteamStrategy } from 'passport-steam';
 import { apiUrlWithPortFor, rootUrlWithPort } from '@app/helpers';
 import { User } from '@app/models';
 
+import { checkAccessToken } from '@lib/requestAuthenticator';
+
 import { config } from '../config';
 
 type DoneFunction<T> = (err?: Error | null, subject?: T | null) => void;
@@ -28,8 +30,12 @@ const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<v
 passport.serializeUser(userSerializer);
 passport.deserializeUser(userDeserializer);
 
-function extractAccessTokenFromCookie(req: Request): string {
-  return req?.cookies?.accessToken;
+function extractAccessTokenFromCookie(req: Request): string | null {
+  const accessToken = req?.cookies?.accessToken;
+  if (checkAccessToken(accessToken)) {
+    return accessToken;
+  }
+  return null;
 }
 
 // TODO: add iss and aud jwt fields
@@ -44,10 +50,6 @@ passport.use(new JWTStrategy({
   done: DoneFunction<User>,
 ): Promise<void> => {
   try {
-    if (payload.isRefreshToken) {
-      done(new Error('Can not use refresh token as access token'));
-      return;
-    }
     const user = await User.findByPk<User>(payload.id);
     if (user) {
       done(null, user);
