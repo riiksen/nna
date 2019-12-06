@@ -1,6 +1,5 @@
 // import * as asyncHandler from 'express-async-handler';
 import * as express from 'express';
-import * as passport from 'passport';
 
 import {
   depositController,
@@ -14,11 +13,11 @@ const router = express.Router();
 // Session routes
 router.get('/login/:provider', sessionController.login);
 router.get('/login/handle/:provider', sessionController.handle);
-router.get('/refreshAccessToken', sessionController.refreshAccessToken);
+router.post('/refreshAccessToken', sessionController.refreshAccessToken);
 router.post('/logout', sessionController.logout);
 
 // User routes
-router.get('/user/get', userController.getUser);
+router.get('/user', userController.getUser);
 
 // Withdraw routes
 router.get('/withdraw', withdrawController.index);

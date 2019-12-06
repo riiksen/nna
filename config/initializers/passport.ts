@@ -1,4 +1,4 @@
-import { Request } from 'express'; 
+import { Request } from 'express';
 import * as passport from 'passport';
 import { ExtractJwt as ExtractJWT, Strategy as JWTStrategy } from 'passport-jwt';
 import { Strategy as SteamStrategy } from 'passport-steam';
@@ -28,10 +28,8 @@ const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<v
 passport.serializeUser(userSerializer);
 passport.deserializeUser(userDeserializer);
 
-function extractAccessTokenFromCookie(req: Request) {
-  let token = null;
-  if (req && req.cookies) token = req.cookies.accessToken;
-  return token;
+function extractAccessTokenFromCookie(req: Request): string {
+  return req?.cookies?.accessToken;
 }
 
 // TODO: add iss and aud jwt fields
