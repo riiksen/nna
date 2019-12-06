@@ -1,9 +1,12 @@
+import { Request } from 'express';
 import * as passport from 'passport';
-import { ExtractJwt as ExtractJWT, Strategy as JWTStrategy } from 'passport-jwt';
+import { Strategy as JWTStrategy } from 'passport-jwt';
 import { Strategy as SteamStrategy } from 'passport-steam';
 
 import { apiUrlWithPortFor, rootUrlWithPort } from '@app/helpers';
 import { User } from '@app/models';
+
+import { checkAccessToken } from '@lib/requestAuthenticator';
 
 import { config } from '../config';
 
@@ -27,11 +30,21 @@ const userDeserializer = async (id: number, done: DoneFunction<User>): Promise<v
 passport.serializeUser(userSerializer);
 passport.deserializeUser(userDeserializer);
 
+function extractAccessTokenFromCookie(req: Request): string | null {
+  const accessToken = req?.cookies?.accessToken;
+  if (checkAccessToken(accessToken)) {
+    return accessToken;
+  }
+  return null;
+}
+
 // TODO: add iss and aud jwt fields
 passport.use(new JWTStrategy({
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: extractAccessTokenFromCookie,
   secretOrKey: config.jwtSecret,
+  passReqToCallback: true,
 }, async (
+  req: Request,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any,
   done: DoneFunction<User>,
