@@ -44,6 +44,9 @@ passport.use(new JWTStrategy({
   done: DoneFunction<User>,
 ): Promise<void> => {
   try {
+    if(payload.isRefreshToken) {
+      return done(new Error('Can not use refresh token as access token'));
+    }
     const user = await User.findByPk<User>(payload.id);
     if (user) {
       done(null, user);
