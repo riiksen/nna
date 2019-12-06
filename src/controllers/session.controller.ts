@@ -15,7 +15,7 @@ interface RefreshTokenPayload {
 export function login(req: Request, res: Response): void {
   const { provider } = req.params;
   if (validProvider(provider)) {
-    passport.authenticate(provider)(req, res, (): void => {});
+    passport.authenticate(provider)(req, res);
   }
 }
 

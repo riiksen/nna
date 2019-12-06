@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import * as Joi from '@hapi/joi';
 
 import * as dotenv from 'dotenv';
 
@@ -30,7 +30,7 @@ interface ConfigSchema {
 // TODO: Redesign this validation cause it is not the best and could be better
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
-    .allow(['development', 'production', 'test'])
+    .allow('development', 'production', 'test')
     .default('development'),
   SERVER_HOST: Joi.string(),
   SERVER_PORT: Joi.number()
@@ -46,12 +46,12 @@ const envVarsSchema = Joi.object({
   DB_HOST: Joi.string(),
   DB_PORT: Joi.number(),
   DB_DIALECT: Joi.string()
-    .allow(['mysql', 'postgres', 'sqlite', 'mariadb', 'mssql']),
+    .allow('mysql', 'postgres', 'sqlite', 'mariadb', 'mssql'),
   DB_DRIVER: Joi.string(),
 }).unknown()
   .required();
 
-const { error, value: envVars } = Joi.validate(process.env, envVarsSchema);
+const { error, value: envVars } = envVarsSchema.validate(process.env);
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
@@ -61,7 +61,7 @@ if (error) {
 function convertToConfigSchema(config: any): ConfigSchema {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function validate(x: any): x is ConfigSchema {
-    return envVarsSchema.validate(x).error === null;
+    return envVarsSchema.validate(x).error === undefined;
   }
 
   if (validate(config)) {
