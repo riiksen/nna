@@ -3,17 +3,18 @@ import { User } from '@app/models';
 import { userAgent } from '../helpers_for_tests/userAgent';
 import { request } from '../utils';
 
-let firstUser: User | null;
-let firstUserAgent: request.SuperTest<request.Test>;
-
-beforeAll(async(done) => {
-  firstUser = await User.findByPk<User>(1);
-  firstUserAgent = await userAgent(firstUser);
-
-  done();
-});
-
 describe('User', (): void => {
+
+  let firstUser: User | null;
+  let firstUserAgent: request.SuperTest<request.Test>;
+
+  beforeAll(async(done) => {
+    firstUser = await User.findByPk<User>(1);
+    firstUserAgent = await userAgent(firstUser);
+
+    done();
+  });
+  
   describe('#getUser', (): void => {
     it('Should return user object or 401', async(): Promise<void> => {
       const res = await firstUserAgent.get('/api/user/');
