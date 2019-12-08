@@ -1,7 +1,3 @@
-import * as chai from 'chai';
+import * as request from 'supertest';
 
-import chaiHttp = require('chai-http');
-
-chai.use(chaiHttp);
-
-export { request, expect } from 'chai';
+export { request };
