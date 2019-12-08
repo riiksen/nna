@@ -6,9 +6,11 @@ import { request } from '../utils';
 let firstUser: User | null;
 let firstUserAgent: request.SuperTest<request.Test>;
 
-beforeAll(async() => {
+beforeAll(async(done) => {
   firstUser = await User.findByPk<User>(1);
   firstUserAgent = await userAgent(firstUser);
+
+  done();
 });
 
 describe('User', (): void => {
