@@ -5,8 +5,6 @@ import * as io from 'socket.io-client';
 import { rootUrl } from '@app/helpers/application.helper';
 import { initialize as initializeSocket } from '@config/initializers';
 
-import { expect } from './utils';
-
 let server: http.Server;
 
 beforeAll((done): void => {
@@ -30,7 +28,7 @@ describe('Socket', (): void => {
 
   it('Socket client should connect to socket server', async (done): Promise<void> => {
     socket.on('connect', (): void => {
-      expect(socket.connected).to.equal(true);
+      expect(socket.connected).toEqual(true);
       done();
     });
   });
