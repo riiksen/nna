@@ -3,11 +3,11 @@ import { config } from '@config/config';
 
 describe('Application Helper', (): void => {
   // TODO(mike): Implement this
-  describe('#appProtocol', (): void => {
-    it('it returns https if supported otherwise http', async (): Promise<void> => {
+  // describe('#appProtocol', (): void => {
+  //   it('it returns https if supported otherwise http', async (): Promise<void> => {
 
-    });
-  });
+  //   });
+  // });
 
   describe('#apiUrlWithPortFor', (): void => {
     it('returns a correct api url with port', async (): Promise<void> => {
