@@ -20,6 +20,7 @@ env:
     - DB_DRIVER=pg
 
 script:
+  - yarn run knex migrate:latest
   - yarn run lint
   - yarn run test
 
