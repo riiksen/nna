@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc -p .",
     "coverage": "jest --coverage",
-    "lint": "eslint --ext .js,.ts config db lib src jest.config.js knexfile.ts tsconfigPathsBootstrap.js",
+    "lint": "eslint --ext .js,.ts config db lib src test jest.config.js knexfile.ts tsconfigPathsBootstrap.js",
     "serve": "node -r ./tsconfigPathsBootstrap.js dist/config/application.js",
     "sequelize": "sequelize",
     "start": "nodemon config/application.ts",
