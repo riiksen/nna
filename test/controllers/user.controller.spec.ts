@@ -5,20 +5,24 @@ import { request } from '../utils';
 
 describe('User', (): void => {
 
-  let firstUser: User | null;
-  let firstUserAgent: request.SuperTest<request.Test>;
+  let testUser: User | null;
+  let testUserAgent: request.SuperTest<request.Test>;
 
   beforeAll(async(done) => {
-    firstUser = await User.findByPk<User>(1);
-    firstUserAgent = await userAgent(firstUser);
+    [testUser] = await User.findOrCreate<User>({
+      where: {
+        steamid: 'test',
+      }
+    });
+    testUserAgent = await userAgent(testUser);
 
     done();
   });
   
   describe('#getUser', (): void => {
     it('Should return user object or 401', async(): Promise<void> => {
-      const res = await firstUserAgent.get('/api/user/');
-      expect(res.text).toEqual(JSON.stringify(firstUser));
+      const res = await testUserAgent.get('/api/user/');
+      expect(res.body).toEqual(JSON.parse(JSON.stringify(testUser)));
       expect(res.status).toEqual(200);
 
       const notLoggedAgent = await userAgent(null);
