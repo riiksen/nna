@@ -9,6 +9,7 @@ const databaseConnection = new Sequelize(
   config.db.password,
   {
     dialect: config.db.dialect,
+    port: config.db.port,
     storage: ':memory:',
     models: Object.values(models),
   },

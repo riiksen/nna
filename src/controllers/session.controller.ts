@@ -4,7 +4,7 @@ import { validProvider } from '@app/helpers';
 import { User } from '@app/models';
 
 import { passport } from '@initializers/passport';
-import { getRefreshTokenPayload, signAccessFromRefreshToken, signRefreshToken } from '@lib/requestAuthenticator';
+import { getRefreshTokenPayload, signAccessFromRefreshTokenPayload, signRefreshToken } from '@lib/requestAuthenticator';
 
 export function login(req: Request, res: Response): void {
   const { provider } = req.params;
@@ -37,7 +37,7 @@ export function refreshAccessToken(req: Request, res: Response): void | Response
       return res.sendStatus(401);
     }
 
-    const accessToken = signAccessFromRefreshToken(payload);
+    const accessToken = signAccessFromRefreshTokenPayload(payload);
 
     res.cookie('accessToken', accessToken, { httpOnly: true });
 

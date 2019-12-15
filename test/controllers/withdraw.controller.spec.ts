@@ -1,6 +1,6 @@
 import { app } from '@config/application';
 
-import { request } from './utils';
+import { request } from '../utils';
 
 describe('Withdraw', (): void => {
   it('/withdraw should return ok', async (): Promise<void> => {

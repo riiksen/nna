@@ -24,7 +24,7 @@ export function getRefreshTokenPayload(refreshToken: string): TokenPayload | nul
   }
 }
 
-export function signAccessFromRefreshToken(payload: TokenPayload): string | null {
+export function signAccessFromRefreshTokenPayload(payload: TokenPayload): string | null {
   if (payload.type !== 'refresh') {
     return null;
   }
